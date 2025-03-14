@@ -7,8 +7,6 @@ import sign from "../assets/sign.png";
 
 const SignIn = () => { 
   const [showPassword, setShowPassword] = useState(false);
-
-
   return (
     <div className="container">
       <div className="left-section">

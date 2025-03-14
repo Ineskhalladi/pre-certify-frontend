@@ -1,0 +1,269 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+
+/* Conteneur principal */
+.contact-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Section avec l'image de fond */
+.contact-section {
+  background-image: url(../assets/bgcontact.png);
+  height: 450px;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-size: 100% 450px;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+}
+
+/* Flèches */
+.fleche {
+  width: 200px;
+  height: 70px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  
+}
+
+.fleche1 {
+  left: 10%;
+  margin-top: -80px;
+  
+}
+
+.fleche2 {
+  right: 10%;
+  margin-top: 80px;
+}
+
+/* Contenu texte */
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+h2 {
+  font-size: 70px;
+  font-weight: bold;
+  color: rgba(31, 58, 36, 0.92);
+}
+
+.line {
+  width: 400px;
+  height: 20px;
+  margin-top: -50px;
+}
+
+p {
+  max-width: 500px;
+  color: rgba(31, 58, 36, 0.92);
+  font-size: 14px;
+  margin-top: 30px;
+}
+
+/* Formulaire EN DEHORS du fond gris */
+.contact-form {
+  background-color: white; /* Fond blanc pour bien séparer */
+  width: 100%;
+  padding: 30px 0;
+  display: flex;
+  flex-direction: column;
+  align-items:baseline;
+  gap: 1.5rem;
+  margin-left: 130px;
+  margin-top: 100px;
+
+  
+}
+.inputat{
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  
+}
+.input {
+  width: 400px;
+  padding: 20px;
+  font-size: 150px;
+  background:rgba(77, 125, 64, 0.3);
+  border: rgba(77, 125, 64, 0.3);
+  border-radius: 300px ;
+  font-size: 16px;
+  color: rgba(31, 58, 36, 0.92);
+}
+.inputE {
+  width: 855px;
+  padding: 20px;
+  font-size: 150px;
+  background:rgba(77, 125, 64, 0.3);
+  border: rgba(77, 125, 64, 0.3);
+  border-radius: 300px ;
+  font-size: 16px;
+  color: rgba(31, 58, 36, 0.92);
+}
+.inputM {
+  width: 855px;
+  padding: 20px;
+  height: 70px;
+  font-size: 150px;
+  background:rgba(77, 125, 64, 0.3);
+  border: rgba(77, 125, 64, 0.3);
+  border-radius: 30px ;
+  font-size: 16px;
+  color:rgba(31, 58, 36, 0.92) ;
+}
+.input::placeholder,.inputE::placeholder, 
+.inputM::placeholder{
+  color:rgba(31, 58, 36, 0.92) ;
+}
+.input:focus,.inputE:focus,.inputM:focus{
+  border: 2px solid rgba(77, 125, 64, 0.3) ;
+  outline: none;
+  box-shadow:2px 2px 3px 2px rgba(77, 125, 64, 0.3);
+  
+}
+.envoyer{
+  width: 200px;
+  padding: 10px;
+  font-size: 150px;
+  background:rgba(77, 125, 64, 0.88);
+  border: rgba(77, 125, 64, 0.88);
+  border-radius: 300px ;
+  font-size: 18px;
+  color: #ffff; 
+  font-weight:inherit;
+  cursor: pointer;
+
+}
+.envoyer:hover{
+  background:rgba(58, 92, 49, 0.88) ;
+}
+.news{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 120px;
+  margin-right: 80px;
+  height: 350px;
+  background:rgba(77, 125, 64, 0.88) ;
+  border-radius: 25px;
+  text-align: center;
+}
+.input3{
+  
+  background:#ffff ;
+  border-radius: 300px;
+  width: 250px;
+  padding: 10px;
+  margin: 0 auto;
+  border:  rgba(77, 125, 64, 0.88);
+}
+.input3:focus{
+  border: 2px solid rgba(77, 125, 64, 0.88) ;
+  outline: none;
+  
+  
+}
+.news p{
+  margin-top: 20px;
+  color: #ffff;
+  margin: 0 auto;
+}
+.news h1{
+  color: #ffff;
+  font-weight: inherit;
+  margin-top: 50px;
+  
+  
+}
+.cont{
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  
+}
+.btn{
+  background:#E0A600 ;
+  border-radius: 300px;
+  width: 250px;
+  padding: 10px;
+  margin: 0 auto;
+  border:  #E0A600;
+  color: black;
+  font-size: 15px;
+  font-weight: bolder;
+cursor: pointer;
+}
+
+
+.btn:hover{
+  background:#ffd152  ;
+}
+.contact-info {
+  display: flex;
+  justify-content: center;
+  gap: 10rem;
+  margin-top: 50px;
+}
+
+.info-box {
+  background: rgba(224, 166, 0, 0.49);
+  padding: 15px;
+  border-radius: 10px;
+  text-align: left; /* Align text to the left */
+  width: 300px;
+  text-align: center;
+}
+ .icones{
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+ }
+.info-box:nth-child(2) {
+  background:rgba(77, 125, 64, 0.5);
+}
+.info-box:nth-child(3) {
+  background:rgba(224, 166, 0, 0.31);
+}
+
+.info-content {
+  display: flex; /* Use flexbox for alignment */
+  align-items: center; /* Center items vertically */
+  
+}
+
+.icon {
+  font-size: 24px;
+  width: 30px;
+  height: 30px;
+  color: #2d4829;
+  margin-right: 10px; /* Space between icon and text */
+}
+
+.info-text {
+  font-weight:bolder;
+  font-size: 18px;
+}
+
+.info-description {
+  font-size: 15px;
+  color: rgba(0, 0, 0, 0.52);
+}
+
+
+

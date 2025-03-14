@@ -33,7 +33,7 @@ const SignUp = () => {
             </div>
             <div className="input-group2">
               <FaIdCard className="icon2" />
-              <input type="text" placeholder="Your CIN" className="input-field2" required />
+              <input type="text" placeholder="Your CIN" className="input-field2" required pattern="[0-9]{8}" />
             </div>
             <div className="input-group2">
               <FaBriefcase className="icon2" />

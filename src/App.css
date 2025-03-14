@@ -16,7 +16,7 @@
 
 .right-section {
   flex: 1;
-  background-color: #1F3A24; 
+  background-color: rgba(31, 58, 36, 0.92); 
 }
 .right-section img {
   max-width: 100%; 
@@ -166,7 +166,7 @@
 
 .right-section2 {
   flex: 1;
-  background-color: #1F3A24; 
+  background-color: rgba(31, 58, 36, 0.92); 
 }
 .right-section2 img {
   max-width: 100%; 
