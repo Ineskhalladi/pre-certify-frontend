@@ -25,12 +25,12 @@ const SignIn = () => {
 
             <br/>
             <div className="input-group">
-              <FaUser className="icon" />
+              <FaUser className="icons" />
               <input type="text" placeholder="In your name" className="input-field" required  />
             </div>
             <br/>
             <div className="input-group">
-              <FaLock className="icon" />
+              <FaLock className="icons" />
               <input 
                 type={showPassword ? "text" : "password"} 
                 placeholder="Your password" 

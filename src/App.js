@@ -1,31 +1,43 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import ContactUs from "./pages/ContactUs";
+import NavigationBar from "./components/NavBar";
+import Footer from "./components/Footer"
 
 const App = () => {
+ /* const location = useLocation();*/
   return (
-    <div className="App">
-      <ContactUs />
+
+    <div>
+      <Footer />
     </div>
+  /*<>
+    {location.pathname !== '/signin' && location.pathname !== '/signup' && <NavigationBar />}
 
-/*<Router>
+    
       <Routes>
-        
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/ContactUs" element={<ContactUs/>} />
-        <Route path="/" element={<ContactUs/>} />
-
-
+      <Route path="/signin" element={<SignIn />} />
+      <Route path="/signup" element={<SignUp />} />
+      <Route path="/" element={<ContactUs />} />
       </Routes>
-    </Router>*/
+  
+    </>*/
+
+
   );
 };
 
-export default App;
+const AppWrapper = () => {
+  return (
+    <Router>
+      <App />
+    </Router>
+  );
+};
+
+export default AppWrapper;
 
 
 
-/*<Route path="//" element={<Navigate replace to="/signin" />} />*/
