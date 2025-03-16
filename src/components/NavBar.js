@@ -19,8 +19,9 @@ const [showSearch, setShowSearch] = useState(false);
         <Link to="/normes" className='na'>Normes</Link>
         <Link to="/secteurs" className='na'>Secteurs</Link>
         <Link to="/info" className='na'>Information et actualités</Link>
-        <Link to="/" className='na'>Contact</Link>
         <Link to="/veille" className='na'>Veille</Link>
+        <Link to="/" className='na'>Contact</Link>
+       
       </div>
       
       <div className="navbar-right">

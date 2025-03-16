@@ -260,6 +260,11 @@ cursor: pointer;
 .info-text {
   font-weight:bolder;
   font-size: 17px;
+  
+}
+.info-text a ,.info-text2 a {
+  text-decoration: none;
+  color: #000;
 }
 .info-text2 {
   font-weight:bolder;

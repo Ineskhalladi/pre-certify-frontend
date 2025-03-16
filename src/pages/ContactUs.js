@@ -2,7 +2,7 @@ import React from "react";
 import "../pages/ContactUs.css";
 import flechet from "../assets/iconesfleshet.png";
 import line from "../assets/iconeslineC.png";
-import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt } from "react-icons/fa";
 
 
 const ContactUs = () => {
@@ -47,18 +47,18 @@ const ContactUs = () => {
         </div>
         <div className="contact-info">
         <div className="info-box">
-        <FaPhone className="icones2" />
-          <p className="info-text">71 900 975 - 71 900 977</p>
+        <FaPhoneAlt className="icones2" />
+          <p className="info-text"><a href="tel:+2171900975">71 900 975</a> - <a href="tel:+2171900977">71 900 977</a></p>
           <p className="info-description">Contact us via phone</p>
         </div>
         <div className="info-box">
         <FaEnvelope className="icones2" />
-          <p className="info-text">precertify-info@gmail.com</p>
+          <p className="info-text"><a href="mailto:precertify-info@gmail.com">precertify-info@gmail.com</a></p>
           <p className="info-description">Get in touch via email</p>
         </div>
         <div className="info-box">
         <FaMapMarkerAlt className="icones2" />
-          <p className="info-text2">Av. Habib Bourguiba, Bou Hjar Monastir</p>
+          <p className="info-text2"><a href="https://maps.app.goo.gl/oNN7hBme1nnheWWy5">Av. Habib Bourguiba, Bou Hjar Monastir</a></p>
           <p className="info-description">Visit us at our location</p>
         </div>
       </div>

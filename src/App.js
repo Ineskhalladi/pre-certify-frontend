@@ -3,18 +3,16 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from "react-route
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import ContactUs from "./pages/ContactUs";
-import NavigationBar from "./components/NavBar";
+import NavBar from "./components/NavBar";
 import Footer from "./components/Footer"
 
 const App = () => {
- /* const location = useLocation();*/
+  const location = useLocation();
   return (
 
-    <div>
-      <Footer />
-    </div>
-  /*<>
-    {location.pathname !== '/signin' && location.pathname !== '/signup' && <NavigationBar />}
+   
+  <>
+    {location.pathname !== '/signin' && location.pathname !== '/signup' && <NavBar />}
 
     
       <Routes>
@@ -22,8 +20,8 @@ const App = () => {
       <Route path="/signup" element={<SignUp />} />
       <Route path="/" element={<ContactUs />} />
       </Routes>
-  
-    </>*/
+   {location.pathname !== '/signin' && location.pathname !== '/signup' && <Footer />}
+    </>
 
 
   );
