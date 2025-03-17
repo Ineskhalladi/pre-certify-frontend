@@ -5,7 +5,6 @@ import "../App.css";
 import logo from "../assets/logo.png";
 import sign from "../assets/sign.png";
 
-
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
