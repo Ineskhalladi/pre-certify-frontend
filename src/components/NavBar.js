@@ -34,20 +34,20 @@ const Navbar = () => {
         <Link to="/home" className='na'>Home</Link>
         <Link to="/normes" className='na'>Normes</Link>
         
-        <div className='dropdown'>
-          <button className='naa' onClick={() => setShowSectors(!showSectors)}>Secteurs</button>
-          {showSectors && (
-            <div className='sectors-dropdown' onClick={(e) => e.stopPropagation()}>
-              <div className='sectors-grid'>
-                {sectors.map((sector, index) => (
-                  <Link key={index} to={sector.path} className='sector-item' onClick={() => setShowSectors(false)}>
-                    {sector.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
+        <div className="dropdown" tabIndex={0} onBlur={() => setShowSectors(false)}>
+      <button className="naa" onClick={() => setShowSectors(!showSectors)}>Secteurs</button>
+      {showSectors && (
+        <div className="sectors-dropdown">
+          <div className="sectors-grid">
+            {sectors.map((sector, index) => (
+              <Link key={index} to={sector.path} className="sector-item" onClick={() => setShowSectors(false)}>
+                {sector.name}
+              </Link>
+            ))}
+          </div>
         </div>
+      )}
+    </div>
         
         <Link to="/info" className='na'>Information et actualités</Link>
         <Link to="/veille" className='na'>Veille</Link>

@@ -38,8 +38,8 @@ const NavBar2 = () => {
       </div>
 
       <nav className="navbar-bottom3">
-        <Link to="/tableau de bord" className="menu-item3"><FiMonitor className="icon-nav3" /> Tableau de Bord</Link>
-        <Link to="/base generale" className="menu-item3"><LuList className="icon-nav3" /> Base Générale</Link>
+        <Link to="/dashboard" className="menu-item3"><FiMonitor className="icon-nav3" /> Tableau de Bord</Link>
+        <Link to="/basegenerale" className="menu-item3"><LuList className="icon-nav3" /> Base Générale</Link>
 
         <div 
           className="dropdown3" 
