@@ -113,15 +113,10 @@
     color: white;
     text-decoration: none;
   }
-  .rue{
+  .contact p{
     color: #fff;
-
   }
-  .rue:hover{
-    text-decoration: underline;
-    color:rgba(252, 196, 25, 1);
-    font-size:17px ; 
-  }
+  
   .contact a:hover {
     text-decoration: underline;
     color:rgba(252, 196, 25, 1);

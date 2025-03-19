@@ -7,16 +7,19 @@
 .container {
   display: flex;
   height: 100vh;
+
 }
 
 .left-section {
   flex: 1;
   background-color: #ffff; 
+  
 }
 
 .right-section {
   flex: 1;
   background-color: rgba(31, 58, 36, 0.92); 
+  
 }
 .right-section img {
   max-width: 100%; 
@@ -214,7 +217,7 @@
 
 .active2 {
   color:#E0A600 ;
-  font-size: 25px;
+  font-size: 28px;
   font-weight: bold;
   border-bottom: 4px solid #E0A600;
   padding-bottom: 5px;
@@ -225,7 +228,7 @@
 
 .inactive2 {
   color: white;
-  font-size: 25px;
+  font-size: 28px;
   border-bottom: 4px solid #ffff;
   padding-bottom: 5px;
   margin-right: 15px;
@@ -283,7 +286,9 @@
 }
 option{
   color: #1F3A24;
+  
 }
+
 
 .terms {
   display: block;

@@ -4,26 +4,27 @@ import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import ContactUs from "./pages/ContactUs";
 import NavBar from "./components/NavBar";
-import Footer from "./components/Footer"
+import Footer from "./components/Footer";
+import Dashboard from "./pages/Dashbord"; // Nouvelle page avec uniquement NavBar2
 
 const App = () => {
   const location = useLocation();
+  const isAuthPage = location.pathname === "/signin" || location.pathname === "/signup";
+  const isDashboard = location.pathname === "/dashboard";
+
   return (
+    <>
+      {!isAuthPage && !isDashboard && <NavBar />}
 
-   
-  <>
-    {location.pathname !== '/signin' && location.pathname !== '/signup' && <NavBar />}
-
-    
       <Routes>
-      <Route path="/signin" element={<SignIn />} />
-      <Route path="/signup" element={<SignUp />} />
-      <Route path="/" element={<ContactUs />} />
+        <Route path="/" element={<ContactUs />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
-   {location.pathname !== '/signin' && location.pathname !== '/signup' && <Footer />}
+
+      {!isAuthPage && !isDashboard && <Footer />}
     </>
-
-
   );
 };
 
@@ -36,6 +37,3 @@ const AppWrapper = () => {
 };
 
 export default AppWrapper;
-
-
-

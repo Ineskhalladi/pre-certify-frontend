@@ -56,14 +56,14 @@ const SignUp = () => {
               <FaLock className="icon2" />
               <input type={showPassword ? "text" : "password"} placeholder="Your password" className="input-field2"  required/>
               <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
-                {showPassword ? <FaEye /> : <FaEyeSlash />}
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
             <div className="input-group2">
               <FaLock className="icon2" />
               <input type={showConfirmPassword ? "text" : "password"} placeholder="Confirm password" className="input-field2" required />
               <span className="password-toggle" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-                {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
+                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
             </div>
             <div className="terms">

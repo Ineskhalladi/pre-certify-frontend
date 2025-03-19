@@ -1,11 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../pages/ContactUs.css";
 import flechet from "../assets/iconesfleshet.png";
 import line from "../assets/iconeslineC.png";
-import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt } from "react-icons/fa";
+import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt, FaArrowUp } from "react-icons/fa";
 
 
 const ContactUs = () => {
+  const [showButton, setShowButton] = useState(false);
+
+  // Vérifier le scroll pour afficher le bouton
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowButton(window.scrollY > 200);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Fonction pour remonter en haut
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   return (
     <div className="contact-container">
       {/* Section Contact avec le fond */}
@@ -64,6 +80,13 @@ const ContactUs = () => {
       </div>
       <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3241.268391091146!2d10.85821457563429!3d35.67039287259064!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x130211a2bc90c5ed%3A0xab3e2f549428606b!2sSWConsulting!5e0!3m2!1sfr!2stn!4v1741984642706!5m2!1sfr!2stn" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" width="100%"
   height="300x" style={{border:0, marginTop:100}}></iframe>
+   {/* Bouton pour remonter en haut */}
+   {showButton && (
+        <button className="scroll-to-top" onClick={scrollToTop}>
+          <FaArrowUp />
+        </button>
+      )}
+   
     </div>
   
   );

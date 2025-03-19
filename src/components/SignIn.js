@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import "../App.css"; 
 import logo from "../assets/logo.png";
@@ -7,6 +7,12 @@ import sign from "../assets/sign.png";
 
 const SignIn = () => { 
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    // Ajoute ici la logique de vérification si besoin
+    navigate("/dashboard"); // Redirige vers la page Dashboard
+  };
   return (
     <div className="container">
       <div className="left-section">
@@ -38,12 +44,12 @@ const SignIn = () => {
               required />
                
                 <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
-                  {showPassword ? <FaEye /> : <FaEyeSlash />}
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </span>
             
             </div>
             <a href="#" className="forgot-password">Forgot password?</a>
-            <button className="login-button">Login</button>
+            <button className="login-button" onClick={handleLogin}>Login</button>
           </div>
         </div>
       </div>
