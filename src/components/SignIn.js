@@ -11,7 +11,8 @@ const SignIn = () => {
 
   const handleLogin = () => {
     // Ajoute ici la logique de vérification si besoin
-    navigate("/dashboard"); // Redirige vers la page Dashboard
+    navigate("/dashboard");
+    navigate("/forget"); // Redirige vers la page Dashboard
   };
   return (
     <div className="container">
@@ -48,7 +49,7 @@ const SignIn = () => {
                 </span>
             
             </div>
-            <a href="#" className="forgot-password">Forgot password?</a>
+            <a href="#" className="forgot-password"onClick={handleLogin}>Forgot password?</a>
             <button className="login-button" onClick={handleLogin}>Login</button>
           </div>
         </div>

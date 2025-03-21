@@ -30,7 +30,7 @@ const ContactUs = () => {
         <img src={flechet} className="fleche fleche1" alt="Flèche gauche" />
         <div className="content">
           <h2>Contact Us</h2>
-          <img src={line} className="line" alt="Ligne décorative" />
+          <img src={line} className="line-cont" alt="Ligne décorative" />
           <p>
             Lorem ipsum dolor sit amet. In voluptas rerum aut voluptatem et quia natus qui
             perferendis soluta.

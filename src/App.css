@@ -30,11 +30,12 @@
 }
 .left-section img {
   position: absolute;
-  height: 900px;
-  width: 900px;
+  height: 700px;
+  width: 700px;
   max-width: 50%; 
   max-height: 100%;
-  left: 40px;
+  left: 30px;
+  margin-top: 20px;
  
 }
 
@@ -180,11 +181,12 @@
 }
 .left-section2 img {
   position: absolute;
-  height: 900px;
-  width: 900px;
+  height: 700px;
+  width: 700px;
   max-width: 50%; 
   max-height: 100%;
-  right: -40px;
+  right: 15px;
+  margin-top: 20px;
 }
 
 .container-sign {

@@ -6,7 +6,7 @@ import NavBar2 from "../components/NavBar2";
 const SearchFilters = () => {
   return (
     <div className="search-container">
-      <h2>🔍 Recherche Multicritères</h2>
+      <h2 className="titre-base">🔍 Recherche Multicritères</h2>
       <div className="filters">
         <select>
           <option>--Choisir un domaine--</option>
@@ -34,7 +34,7 @@ const SearchFilters = () => {
 const TextList = () => {
   return (
     <div className="text-list-container">
-      <h3><FaFolderOpen /> Liste des Textes</h3>
+      <h3 className="text-base"><FaFolderOpen /> Liste des Textes</h3>
       <table>
         <thead>
           <tr>
