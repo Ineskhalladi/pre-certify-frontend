@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+
+}
+.left-section3 {
+    flex: 1;
+    background-color: rgba(31, 58, 36, 0.92); 
+  
+  }
+  
+.right-section3 {
+    flex: 1;
+    background-color: #ffff;   
+  }
+  .right-section3 img {
+    position: absolute;
+    height: 800px;
+    width: 800px;
+    max-width: 50%; 
+    max-height: 100%;
+    right: 5px;
+    margin-top: 20px;
+   
+    
+  }
+  .left-section3 img {
+    max-width: 100%; 
+    height: auto; 
+    width: 300px; 
+    margin-top: 15px;
+    margin-left: 10px;
+  }
+
+
+  .container-sign {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 92vh;
+  
+  }
+
+.box-reset {
+  height: 85vh;
+}
+
+.title-forget {
+    color: white;
+    font-size: 40px;
+    font-weight: 600;
+    margin-bottom: 10px;
+
+}
+
+.phrase {
+    color: white;
+    font-size: 20px;
+    margin-bottom: 40px;
+    font-weight: lighter;
+ 
+}
+
+
+.input-group3 {
+    position: relative;
+    margin-bottom: 0.7rem;
+    display: flex;
+    align-items: center;
+
+  }
+
+.input-field6 {
+  width: 500px;
+  padding: 15px 20px 15px 45px;
+  background-color: #ffff;
+  border: none;
+  border-radius: 20px;
+  color: rgba(31, 58, 36, 0.92);
+  font-size: 20px;
+  margin-left: 5px;
+  box-shadow: 0 0 5px #E0A600;
+  margin-top: 15px;
+ 
+}
+.input-field7 {
+    width: 500px;
+    padding: 15px 20px 15px 45px;
+    background-color: #ffff;
+    border: none;
+    border-radius: 20px;
+    color: rgba(31, 58, 36, 0.92);
+    font-size: 20px;
+    margin-left: 5px;
+    box-shadow: 0 0 5px #E0A600;
+    margin-top: 50px;
+    
+   
+  }
+.input-field6:focus,.input-field7:focus {
+  outline: none;
+  border: 2px solid #E0A600;
+  box-shadow:3px 3px 3px 3px rgba(224, 166, 0, 0.47);
+}
+.password-toggle2 {
+    position: absolute;
+    right: 20px;
+    top: 67%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 25px;
+    color: #B3B3B3 !important;
+   
+  }
+.password-toggle3 {
+    position: absolute;
+    right: 20px;
+    top: 77%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 25px;
+    color: #B3B3B3 !important;
+   
+  }
+  small {
+    display: block;
+    font-size: 12px;
+    color: #ccc;
+  }
+  
+  .error-message {
+    color: #E0A600;
+    font-size: 15px;
+    margin-top: 8px;
+    margin-left: 15px;
+  }
+
+.Reset-button {
+    background-color: #E0A600;
+    color: #ffff;
+    padding: 7px 0;
+    width: 50%;
+    font-weight: bold;
+    border-radius: 20px;
+    font-size: 22px;
+    cursor: pointer;
+    text-align: center;
+    margin-left: 140px;
+    border: 0;
+    margin-top: 50px;
+}
+.Reset-button:hover{
+  background-color: #c99a1a;
+
+}

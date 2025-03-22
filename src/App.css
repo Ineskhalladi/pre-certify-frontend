@@ -158,6 +158,8 @@
   margin-left:55%;
   margin-top: 20px;
   cursor: pointer;
+  border: 0;
+
 }
 .login-button:hover{
   background-color: #c99a1a;
@@ -320,6 +322,8 @@ option{
   cursor: pointer;
   text-align: center;
   margin-left: 150px;
+  border: 0;
+
 }
 
 .signup-button:hover {

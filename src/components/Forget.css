@@ -14,6 +14,7 @@
   flex: 1;
   background-color: #ffff; 
   
+  
 }
 
 .right-section {
@@ -30,11 +31,11 @@
 }
 .left-section img {
   position: absolute;
-  height: 700px;
-  width: 700px;
+  height: 800px;
+  width: 800px;
   max-width: 50%; 
   max-height: 100%;
-  left: 30px;
+  left: 10px;
   margin-top: 20px;
  
 }
@@ -48,13 +49,13 @@
 
 }
 
-.login-box {
-  height: 80vh;
+.box {
+  height: 90vh;
 }
 
 .title-forget {
     color: white;
-    font-size: 28px;
+    font-size: 40px;
     font-weight: 600;
     margin-bottom: 10px;
 
@@ -62,17 +63,19 @@
 
 .phrase {
     color: white;
-    font-size: 14px;
-    margin-bottom: 20px;
+    font-size: 22px;
+    margin-bottom: 40px;
+    font-weight: lighter;
  
 }
 .label {
     display: block;
     text-align: left;
     color: #E0A600;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 500;
-    margin-bottom: 5px;
+    margin-bottom: 15px;
+    margin-left: 15px;
 }
 
 
@@ -84,21 +87,25 @@
   background-color: #ffff;
   border: none;
   border-radius: 20px;
-  color: #1F3A24;
+  color: rgba(31, 58, 36, 0.92);
   font-size: 20px;
   margin-left: 5px;
+  box-shadow: 0 0 5px #E0A600;
  
 }
 
 .input-field5:focus {
   outline: none;
   border: 2px solid #E0A600;
-  box-shadow:4px 4px 6px 6px rgba(224, 166, 0, 0.47);
+  box-shadow:3px 3px 3px 3px rgba(224, 166, 0, 0.47);
 }
-.code-container {
+.verification-code {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
+    justify-content: start;
+    gap: 1.5rem;
+    margin-bottom: 30px;
+    margin-top: 25px;
+    margin-left: 15px;
 }
 
 .code-input {
@@ -112,7 +119,11 @@
     box-shadow: 0 0 5px #E0A600;
 }
 
-  
+ .code-input:focus{
+  outline: none;
+  border: 2px solid #E0A600;
+  box-shadow:3px 3px 3px 3px rgba(224, 166, 0, 0.47)
+ } 
 
 .send-button {
   background-color: #E0A600;
@@ -122,22 +133,32 @@
   font-weight: bold;
   border-radius: 20px;
   font-size: 25px;
-  margin-left:55%;
+  margin-left:10px;
   margin-top: 20px;
   cursor: pointer;
+  border: 0;
 }
 .send-button:hover{
   background-color: #c99a1a;
 
 }
 .back-link {
-    color: white;
-    margin-top: 10px;
-    font-size: 14px;
+  color: white;
+  font-size: 18px;
+  text-decoration: none;
+  font-weight: lighter;
+  position: relative;
+  display: block;
+  text-align: right;
+  margin-top: 10px; 
+  margin-right: -70px; 
 }
 
-.login-link {
+.lien-login {
     color: #E0A600;
     font-weight: bold;
     text-decoration: none;
+}
+.lien-login:hover{
+  text-decoration: underline;
 }

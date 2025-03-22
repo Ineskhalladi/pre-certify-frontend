@@ -4,16 +4,27 @@ import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import "../App.css"; 
 import logo from "../assets/logo.png";
 import sign from "../assets/sign.png";
+import axios from "axios";
 
 const SignIn = () => { 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    // Ajoute ici la logique de vérification si besoin
-    navigate("/dashboard");
-    navigate("/forget"); // Redirige vers la page Dashboard
+  const handleSignIn = async () => {
+    try {
+      const response = await axios.post("http://localhost:5000/api/auth/signin", { email, password });
+      console.log('Réponse du serveur:', response.data);
+      localStorage.setItem("token", response.data.token);
+      navigate("/dashboard");
+    } catch (error) {
+      setError(error.response?.data?.message || "Erreur de connexion au serveur");
+    }
   };
+
+
   return (
     <div className="container">
       <div className="left-section">
@@ -29,11 +40,18 @@ const SignIn = () => {
               <Link to="/signin" className="active">Sign in</Link>
               <Link to="/signup" className="inactive">Sign up</Link>
             </div>
-
+            {error && <p className="error-message">{error}</p>}
             <br/>
             <div className="input-group">
               <FaUser className="icons" />
-              <input type="text" placeholder="In your name" className="input-field" required  />
+              <input 
+                type="text" 
+                placeholder="In your email" 
+                className="input-field" 
+                required 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
             <br/>
             <div className="input-group">
@@ -42,15 +60,16 @@ const SignIn = () => {
                 type={showPassword ? "text" : "password"} 
                 placeholder="Your password" 
                 className="input-field" 
-              required />
-               
-                <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </span>
-            
+                required 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? <FaEye /> : <FaEyeSlash />}
+              </span>
             </div>
-            <a href="#" className="forgot-password"onClick={handleLogin}>Forgot password?</a>
-            <button className="login-button" onClick={handleLogin}>Login</button>
+            <Link to="/forget" className="forgot-password">Forgot password?</Link>
+            <button className="login-button" onClick={handleSignIn}>Login</button>
           </div>
         </div>
       </div>
