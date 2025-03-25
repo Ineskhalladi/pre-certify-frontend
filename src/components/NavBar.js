@@ -31,7 +31,7 @@ const Navbar = () => {
       </div>
       
       <div className="navbar-menu">
-        <Link to="/home" className='na'>Home</Link>
+        <Link to="/" className='na'>Home</Link>
         <Link to="/normes" className='na'>Normes</Link>
         
         <div className="dropdown" tabIndex={0} onBlur={() => setShowSectors(false)}>
@@ -51,7 +51,7 @@ const Navbar = () => {
         
         <Link to="/info" className='na'>Information et actualités</Link>
         <Link to="/veille" className='na'>Veille</Link>
-        <Link to="/" className='na'>Contact</Link>
+        <Link to="/contact" className='na'>Contact</Link>
       </div>
       
       <div className="navbar-right">

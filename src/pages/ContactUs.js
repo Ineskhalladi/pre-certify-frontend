@@ -69,7 +69,7 @@ const ContactUs = () => {
         </div>
         <div className="info-box">
         <FaEnvelope className="icones2" />
-          <p className="info-text"><a href="mailto:precertify-info@gmail.com">precertify-info@gmail.com</a></p>
+          <p className="info-text"><a href="mailto:precertify-info@gmail.com">precertify28@gmail.com</a></p>
           <p className="info-description">Get in touch via email</p>
         </div>
         <div className="info-box">

@@ -27,6 +27,7 @@
   width: 300px; 
   margin-top: 15px;
   margin-left: 10px;
+  
 }
 .left-section img {
   position: absolute;
@@ -189,6 +190,8 @@
   max-height: 100%;
   right: 15px;
   margin-top: 20px;
+  transform: scaleX(-1);
+
 }
 
 .container-sign {

@@ -32,7 +32,7 @@ const Footer = () => {
             <Link to="/secteurs">Secteurs</Link>
             <Link to="/actualites">Information et actualités</Link>
             <Link to="/veille">Veille</Link>
-            <Link to="/">Contact</Link>
+            <Link to="/contact">Contact</Link>
            
           </div>
         </div>
@@ -43,7 +43,7 @@ const Footer = () => {
           <br/>Monastir </a></p>
           <p><FaPhoneAlt className="icon-footer" /> <a href="tel:+2171900975">71 900 975</a> - <a href="tel:+2171900977">71 900 977</a></p>
           <p><img src={fixe} className="icon-fixe" /> <a href="tel:+2171900976">71 900 976</a></p>
-          <p><FaEnvelope className="icon-footer" /> <a href="mailto:precertify-info@gmail.com">precertify-info@gmail.com</a></p>
+          <p><FaEnvelope className="icon-footer" /> <a href="mailto:precertify-info@gmail.com">precertify28@gmail.com</a></p>
         </div>
       </div>
       <div className="footer-bottom">

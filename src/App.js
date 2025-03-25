@@ -9,6 +9,7 @@ import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import Dashboard from "./pages/Dashboard"; 
 import BaseGenerale from "./pages/BaseGenerale";
+import Home from "./pages/Home";
 const App = () => {
   const location = useLocation();
   const isAuthPage = location.pathname === "/signin" || location.pathname === "/signup" || location.pathname === "/forget" || location.pathname === "/resetpwd";
@@ -20,7 +21,8 @@ const App = () => {
       {!isAuthPage && !isDashboard && !isBaseGenerale && <NavBar />}
 
       <Routes>
-        <Route path="/" element={<ContactUs />} />
+      <Route path="/" element={<Home />} />
+        <Route path="/contact" element={<ContactUs />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forget" element={<Forget />} />
