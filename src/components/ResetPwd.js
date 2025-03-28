@@ -111,7 +111,6 @@ const ResetPwd = () => {
                             <button className="Reset-button" type="submit">Reset Password</button>
                         </form>
 
-                        <Link to="/signin">Back to Sign In</Link>
                     </div>
                 </div>
             </div>

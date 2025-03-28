@@ -40,18 +40,19 @@ const handleSendEmail = async () => {
     }
     setLoading(true);
     try {
-      console.log('codeverif', email, code);
+      console.log('code-verif', email, code);
       const response = await axios.post('http://localhost:5000/api/auth/verify-code', { email, code });
       console.log('response', response);
       console.log("Backend response:", response.data);
-
       if (response.data.success) {
         navigate("/resetpwd");
 
       }
       
     } catch (error) {
-      setMessage(error.response?.data?.message || "Invalid code.");
+      setMessage(error.response?.data?.message || "Code invalide. Veuillez réessayer.");
+      setVerificationCode(['', '', '', '', '', '']); // Efface les champs
+      document.getElementById("input-0").focus();
     } finally {
       setLoading(false);
     }
@@ -60,20 +61,31 @@ const handleSendEmail = async () => {
    // Gestion de la saisie du code OTP
    const handleInput = (index, event) => {
     const value = event.target.value;
-    if (/^\d*$/.test(value) && value.length === 1) {
+    if (/^\d*$/.test(value)) {
       const newVerificationCode = [...verificationCode];
-      newVerificationCode[index] = value;
-      setVerificationCode(newVerificationCode);
+      newVerificationCode[index] = value.length === 1 ? value : '';      setVerificationCode(newVerificationCode);
       
-      if (index < 5) {
+      if (value.length === 1 && index < 5) {
         document.getElementById(`input-${index + 1}`).focus();
       }
     }
   };
   const handleBackspace = (index, event) => {
-    if (event.key === "Backspace" && !verificationCode[index] && index > 0) {
-        document.getElementById(`input-${index - 1}`).focus();
-    }
+    if (event.key === "Backspace") {
+      const newVerificationCode = [...verificationCode];
+
+      // Efface uniquement si le champ n'est pas déjà vide
+      if (verificationCode[index]) {
+          newVerificationCode[index] = '';
+          setVerificationCode(newVerificationCode);
+      } 
+      // Passe à l'input précédent si le champ est vide
+      else if (index > 0) {
+          newVerificationCode[index - 1] = '';
+          setVerificationCode(newVerificationCode);
+          document.getElementById(`input-${index - 1}`).focus();
+      }
+  }
 };
     
 

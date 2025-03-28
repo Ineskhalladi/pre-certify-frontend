@@ -11,9 +11,40 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const [passwordError, setPasswordError] = useState("");
 
+  const navigate = useNavigate();
+  
+  const validatePassword = (pwd) => {
+    const minLength = /.{8,}/;
+    const upperCase = /[A-Z]/;
+    const lowerCase = /[a-z]/;
+    const digit = /[0-9]/;
+    const specialChar = /[\W_]/;
+  
+    if (!minLength.test(pwd)) return "Minimum 8 caractères requis.";
+    if (!upperCase.test(pwd)) return "Au moins 1 lettre majuscule.";
+    if (!lowerCase.test(pwd)) return "Au moins 1 lettre minuscule.";
+    if (!digit.test(pwd)) return "Au moins 1 chiffre.";
+    if (!specialChar.test(pwd)) return "Au moins 1 symbole (@, #, $, ...).";
+    
+    return "";
+  };
+  
+  const handlePasswordChange = (e) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    setPasswordError(validatePassword(newPassword));
+  };
+
+  const handleFocus = () => {
+    setError(""); // Réinitialise l'erreur dès qu'on clique sur un champ
+  };
   const handleSignIn = async () => {
+     if (passwordError) {
+      setError(passwordError);
+      return;
+    }
     try {
       const response = await axios.post("http://localhost:5000/api/auth/signin", { email, password });
       console.log('Réponse du serveur:', response.data);
@@ -31,7 +62,7 @@ const SignIn = () => {
         <img src={sign} alt="Sign In" />
       </div>
       <div className="right-section">
-        <img src={logo} alt="Logo" />
+        <img src={logo} alt="Logo" className="logo-sign" />
         <div className="container-sign">
           <div className="login-box">
             <h2 className="title">VEILLE REGLEMENTAIRE</h2>
@@ -40,7 +71,6 @@ const SignIn = () => {
               <Link to="/signin" className="active">Sign in</Link>
               <Link to="/signup" className="inactive">Sign up</Link>
             </div>
-            {error && <p className="error-message">{error}</p>}
             <br/>
             <div className="input-group">
               <FaUser className="icons" />
@@ -51,7 +81,7 @@ const SignIn = () => {
                 required 
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)}
-              />
+                onFocus={handleFocus} />
             </div>
             <br/>
             <div className="input-group">
@@ -62,14 +92,18 @@ const SignIn = () => {
                 className="input-field" 
                 required 
                 value={password} 
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={handlePasswordChange}
+                onFocus={handleFocus} 
               />
               <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? <FaEye /> : <FaEyeSlash />}
               </span>
             </div>
+            {error && <p className="error-msg">{error}</p>}
+            {passwordError && <p className="error-msg">{passwordError}</p>}
+
             <Link to="/forget" className="forgot-password">Forgot password?</Link>
-            <button className="login-button" onClick={handleSignIn}>Login</button>
+            <button className="login-button" onClick={handleSignIn} disabled={!!passwordError}>Login</button>
           </div>
         </div>
       </div>
