@@ -42,14 +42,18 @@ const handleSendEmail = async () => {
     try {
       console.log('code-verif', email, code);
       const response = await axios.post('http://localhost:5000/api/auth/verify-code', { email, code });
-      console.log('response', response);
-      console.log("Backend response:", response.data);
       if (response.data.success) {
-        navigate("/resetpwd");
-
+        console.log("✅ Code vérifié avec succès ! Redirection en cours...");
+        setTimeout(() => {
+          navigate("/resetpwd");
+        }, 500); // Petit délai pour éviter les conflits
+      } else {
+        console.log("❌ Erreur: response.data.success est false");
+        setMessage("Code invalide, veuillez réessayer.");
       }
       
     } catch (error) {
+      console.error("❌ Erreur lors de la vérification du code:", error);
       setMessage(error.response?.data?.message || "Code invalide. Veuillez réessayer.");
       setVerificationCode(['', '', '', '', '', '']); // Efface les champs
       document.getElementById("input-0").focus();
