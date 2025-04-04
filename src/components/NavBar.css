@@ -74,6 +74,16 @@ width: 96%;
   color: #E0A600;;
   text-decoration: underline;
 }
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 .sectors-dropdown {
   position: absolute;
   top: 100%;
@@ -85,6 +95,7 @@ width: 96%;
   display: flex;
   justify-content: center;
 }
+
 
 .sectors-grid {
   display: grid;
@@ -103,10 +114,13 @@ width: 96%;
   height: 50px; /* Ajuste la hauteur si nécessaire */
   font-size: 17px;
   color: rgba(31, 58, 36, 0.92);
-  background-color: rgba(233, 242, 235, 0.92); /* Assure une bonne visibilité */
   border-radius: 5px;
   text-decoration: none;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideUp 0.5s ease-out forwards;
 }
+
 
 .sector-item:hover {
   color: #E0A600;

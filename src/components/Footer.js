@@ -10,7 +10,7 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer-container">
         <div className="footer-section ">
-          <img src={logo} className="logo3" />
+          <img src={logo} className="logo-footer" />
           <p className="p0">
             PreCertify - Votre assistant de pré-audit ISO. Simplifiez votre conformité et
             préparez-vous efficacement aux certifications.
