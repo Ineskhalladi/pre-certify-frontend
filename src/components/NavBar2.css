@@ -98,20 +98,27 @@
 }
 
 .menu-item3 {
-    text-decoration: none;
+   
     color: rgba(31, 58, 36, 0.92);
     font-size: 17px;
     display: flex;
     align-items: center;
     gap: 5px;
     margin-left: 30px;
+    text-decoration: none ;
+    border-bottom: none !important;
 }
 
 .menu-item3:hover {
     color: rgba(224, 166, 0, 1);
     font-weight: bold;
 }
-
+.menu-item3.active {
+    color: rgba(224, 166, 0, 1);
+    font-weight: bold;
+    text-decoration: underline rgba(224, 166, 0, 1);
+margin-bottom: -5px;
+  }
 .icon-nav3 {
     font-size: 24px;
 }

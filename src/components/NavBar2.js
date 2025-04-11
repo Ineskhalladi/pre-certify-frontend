@@ -1,12 +1,8 @@
 
 
-
-
-
-
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import "./NavBar2.css";
 import { FaRegUserCircle, FaChevronDown, FaChevronUp, FaSignOutAlt } from "react-icons/fa";
 import logo from "../assets/logo.png";
@@ -18,6 +14,7 @@ const NavBar2 = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMaVeilleOpen, setIsMaVeilleOpen] = useState(false);
   const [isExigencesOpen, setIsExigencesOpen] = useState(false);
+  const location = useLocation();
 
   return (
     <div className="navbar-container3">
@@ -38,15 +35,17 @@ const NavBar2 = () => {
       </div>
 
       <nav className="navbar-bottom3">
-        <Link to="/dashboard" className="menu-item3"><FiMonitor className="icon-nav3" /> Tableau de Bord</Link>
-        <Link to="/basegenerale" className="menu-item3"><LuList className="icon-nav3" /> Base Générale</Link>
+        <Link to="/dashboard" className={`menu-item3 ${location.pathname === "/dashboard" ? "active" : ""}`}><FiMonitor className="icon-nav3" /> Tableau de Bord</Link>
+        <Link to="/basegenerale" className={`menu-item3 ${location.pathname === "/basegenerale" ? "active" : ""}`}
+        ><LuList className="icon-nav3" /> Base Générale</Link>
 
         <div 
           className="dropdown3" 
           onMouseEnter={() => setIsMaVeilleOpen(true)}
           onMouseLeave={() => setIsMaVeilleOpen(false)}
         >
-          <div className="menu-item3">
+          <div className={`menu-item3 ${location.pathname === "/veille" ? "active" : ""}`}
+          >
             <FiLayout className="icon-nav3" /> Ma Veille 
           </div>
           {isMaVeilleOpen && (
@@ -66,7 +65,7 @@ const NavBar2 = () => {
           onMouseEnter={() => setIsExigencesOpen(true)}
           onMouseLeave={() => setIsExigencesOpen(false)}
         >
-          <div className="menu-item3">
+          <div className={`menu-item3 ${location.pathname === "/mes autres exigences" ? "active" : ""}`}>
             <FiZap className="icon-nav3" /> Mes Autres Exigences 
           </div>
           {isExigencesOpen && (
@@ -79,9 +78,11 @@ const NavBar2 = () => {
           )}
         </div>
 
-        <Link to="/monitoring" className="menu-item3"><FiGrid className="icon-nav3" /> Monitoring</Link>
-        <Link to="/mes alertes" className="menu-item3"><LuBell className="icon-nav3" /> Mes Alertes <span className="alert-count">20</span></Link>
-        <Link to="/faq" className="menu-item3"><FiMessageCircle className="icon-nav3" /> FAQ</Link>
+        <Link to="/monitoring" className={`menu-item3 ${location.pathname === "/monitoring" ? "active" : ""}`}>
+        <FiGrid className="icon-nav3" /> Monitoring</Link>
+        <Link to="/mes alertes"  className={`menu-item3 ${location.pathname === "/mes alertes" ? "active" : ""}`}>
+        <LuBell className="icon-nav3" /> Mes Alertes <span className="alert-count">20</span></Link>
+        <Link to="/faq" className={`menu-item3 ${location.pathname === "/faq" ? "active" : ""}`}><FiMessageCircle className="icon-nav3" /> FAQ</Link>
         
         <div className="search-container3">
   <BiSearch className="search-icon3" onClick={() => console.log("Recherche activée")} />
