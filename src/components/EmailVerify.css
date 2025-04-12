@@ -1,0 +1,52 @@
+/* src/styles/EmailVerification.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+  font-family: "Poppins", sans-serif;
+
+}
+
+.verify-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background:rgba(31, 58, 36, 0.92);
+    font-family: "Poppins", sans-serif;
+  }
+  
+  .verify-card {
+    text-align: center;
+  }
+  
+  .verify-icon {
+    font-size: 130px;
+    color: #E0A600;
+    margin-bottom: 20px;
+  }
+  
+  .verify-message {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #ffff;
+  }
+  
+  .verify-btn {
+    background-color: #E0A600;
+    color: #ffff;
+    border: none;
+    padding: 10px 45px;
+    border-radius: 30px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: 600;
+    margin-top: 10px;
+  }
+  
+  .verify-btn:hover {
+    background-color: #f5d57c;
+    color: rgba(31, 58, 36, 0.92);
+  }
+  

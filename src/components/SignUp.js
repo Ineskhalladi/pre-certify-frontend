@@ -8,6 +8,7 @@ import axios from "axios";
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const [successMessage, setSuccessMessage] = useState("");
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -88,9 +89,11 @@ const SignUp = () => {
 
     try {
       const response = await axios.post("http://localhost:5000/api/auth/signup", { name, email, cin, sector, password });
-      console.log('Réponse du serveur:', response.data);
-      alert(`Bienvenue ${response.data.user.name} ! Connectez-vous maintenant.`);
-      navigate("/signin");
+      setSuccessMessage("✅ Compte créé. Veuillez vérifier votre email.");
+      console.log("Réponse du serveur:", response.data);
+      setTimeout(() => {
+        navigate("/signin");
+      }, 20000);
 
     } catch (error) {
       setError(error.response?.data?.message || "Erreur de connexion au serveur");
@@ -111,6 +114,7 @@ const SignUp = () => {
               <Link to="/signup" className="active2">Sign up</Link>
             </div>
             {error && <p className="error-message">{error}</p>}
+            {successMessage && <p className="error-message">{successMessage}</p>}
 
             <div className="input-group2">
               <FaUser className="icon2" />

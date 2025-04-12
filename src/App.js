@@ -10,9 +10,15 @@ import Footer from "./components/Footer";
 import Dashboard from "./pages/Dashboard"; 
 import BaseGenerale from "./pages/BaseGenerale";
 import Home from "./pages/Home";
+import EmailVerification from "./components/EmailVerification";
+
 const App = () => {
   const location = useLocation();
-  const isAuthPage = location.pathname === "/signin" || location.pathname === "/signup" || location.pathname === "/forget" || location.pathname === "/resetpwd";
+  const isAuthPage = location.pathname === "/signin" 
+  || location.pathname === "/signup" 
+  || location.pathname === "/forget" 
+  || location.pathname === "/resetpwd"
+  || location.pathname.startsWith("/verify");
   const isDashboard = location.pathname === "/dashboard";
   const isBaseGenerale = location.pathname === "/basegenerale";
 
@@ -25,6 +31,7 @@ const App = () => {
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/verify/:token" element={<EmailVerification />} />
         <Route path="/forget" element={<Forget />} />
         <Route path="/resetpwd" element={<ResetPwd />} />
         <Route path="/dashboard" element={<Dashboard />} />
