@@ -47,12 +47,12 @@ const Home = () => {
     <div className="home-container">
       <section className="home-section">
         <div className="content-home">
-          <h2><span className="pre">PreCertify :</span> votre plateforme de recommandation de pré-audit <br></br>pour la certification ISO HCQM</h2>
-          <p>
+          <h2 className="sentence delay-1"><span className="pre">PreCertify :</span> votre plateforme de recommandation de pré-audit <br></br>pour la certification ISO HCQM</h2>
+          <p className="sentence delay-2">
             Vous aide à garantir <span className="kelma">fiabilité et conformité.</span> Optimisez vos démarches  <br></br>et atteignez 
             <span className="kelma"> les plus hauts standards de qualité.</span>
           </p>
-          <p>Rendre la vie plus facile, plus sûre et meilleure.</p>
+          <p className="sentence delay-3">Rendre la vie plus facile, plus sûre et meilleure.</p>
         </div>
         <img src={imghome} className="imghome" alt="Plateforme PreCertify" />
       </section>

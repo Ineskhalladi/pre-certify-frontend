@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import BaseGenerale from "./pages/BaseGenerale";
 import Home from "./pages/Home";
 import EmailVerification from "./components/EmailVerification";
+import VeilleReg from "./pages/VeilleReg";
 
 const App = () => {
   const location = useLocation();
@@ -28,6 +29,7 @@ const App = () => {
 
       <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/veillereg" element={<VeilleReg />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
