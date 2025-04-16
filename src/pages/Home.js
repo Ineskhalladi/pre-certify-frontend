@@ -60,13 +60,22 @@ const Home = () => {
       <section className="normes-section">
         <h2>Que peuvent <span className="partie2-home">faire les normes pour vous</span> ?</h2>
         <p className="normes-description">
-          Les normes internationales garantissent que les produits et services que vous utilisez au quotidien sont <strong>sûrs</strong>, <strong>fiables</strong> et de <strong>haute qualité</strong>. Elles guident également les entreprises dans l’adoption de pratiques <strong>durables</strong> et <strong>éthiques</strong>, contribuant ainsi à créer un avenir où vos achats seront non seulement excellents, mais protégeront également notre planète. En substance, les normes associent harmonieusement qualité et conscience, améliorant ainsi vos expériences et vos choix au quotidien.
+          Les normes internationales garantissent que les produits et services que vous utilisez au quotidien sont
+           <strong>sûrs</strong>, 
+           <strong>fiables</strong>
+            et de <strong>haute qualité</strong>.
+             Elles guident également les entreprises dans l’adoption de pratiques 
+             <strong>durables</strong> et 
+             <strong>éthiques</strong>, 
+             contribuant ainsi à créer un avenir où vos achats seront non seulement excellents,
+              mais protégeront également notre planète. En substance, les normes associent harmonieusement qualité et conscience,
+               améliorant ainsi vos expériences et vos choix au quotidien.
         </p>
         <div className="normes-cards">
           <div className="card">
             <h3>Qu’est-ce qu’une norme ?</h3>
             <p>Plongez dans le monde de la qualité et de <br></br>la cohérence.</p>
-            <a href="#">En savoir plus sur les normes</a>
+            <Link to="/normes">En savoir plus sur les normes</Link>
           </div>
           <div className="card2">
             <h3>Vous souhaitez obtenir une certification ?</h3>
