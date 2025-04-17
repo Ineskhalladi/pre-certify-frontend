@@ -149,7 +149,7 @@
 }
 
 .text-base {
-  font-size: 25px;
+  font-size: 22px;
   font-weight: 500;
   margin-bottom: 20px;
   display: flex;
@@ -462,4 +462,78 @@ table td svg:hover {
 .btn-item.active {
   background-color: #E0A600;
   color: #fff;
+}
+
+.barre-haut {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    margin-bottom: 10px;
+  }
+  
+  .gauche-phrase{
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: #4d7d40;
+    margin-left: -35px;
+    margin-top: -50px;
+    margin-bottom: -25px;
+    text-decoration: none;
+
+  }
+  
+  .droite-phrase {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(77, 125, 64, 0.88);
+    margin-right: -35px;
+    margin-top: -50px;
+    margin-bottom: -25px;
+    text-decoration: none;
+  }
+  .gauche-phrase .icon-app,
+  .droite-phrase .icon-app {
+    margin: 0 2px;
+    font-size: 18px;
+  }
+  .gauche-phrase:hover, .icon-app:hover,
+  .droite-phrase:hover, .icon-app:hover{
+    color: rgba(31, 58, 36, 0.92);
+  }
+  .export-section {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+  }
+  
+  .exp-pdf {
+    border: 1px solid #E0A600;
+    background-color: #E0A600;
+    color: #ffff;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    margin-left: 50px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .exp-pdf:hover {
+    background-color: #f9dd90;
+    color: rgba(31, 58, 36, 0.92);
+  }
+  
+  .exp-pdf svg{
+    font-size: 19px;
+    margin-bottom: 0px;
 }

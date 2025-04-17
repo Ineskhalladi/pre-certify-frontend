@@ -5,8 +5,11 @@ import NavBar2 from "../components/NavBar2";
 import { MdRefresh } from "react-icons/md";
 import { BsEye, BsEyeSlash, BsInfoCircle } from "react-icons/bs";
 import { ImFilePdf } from "react-icons/im";
+import "../pages/TexteApp.css"
+import { FiArrowRight } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
-const BaseGenerale = () => {
+const TexteApp = () => {
 
   const [isAbreviationOpen, setIsAbreviationOpen] = useState(false);
   const [data, setData] = useState([
@@ -67,7 +70,7 @@ const BaseGenerale = () => {
       <div className="base-container">
       <div className="search-container">
   <div className="header-top">
-    <h1 className="titre-base">Base générale</h1>
+    <h1 className="titre-base">Textes applicables</h1>
     <div className="icon-actions">
       <span className="icon-base" title="Réduire">─</span>
       <span className="icon-base" title="Rafraîchir"><MdRefresh/></span>
@@ -117,7 +120,7 @@ const BaseGenerale = () => {
 
         <div className="text-list-container">
         <div className="text-list-header">
-    <h3 className="text-base"><FaFolderOpen /> Liste des Textes</h3>
+    <h3 className="text-base"><FaFolderOpen /> Liste des Textes applicables</h3>
     <div 
   className="abreviation" 
   onMouseEnter={() => setIsAbreviationOpen(true)}
@@ -142,6 +145,19 @@ const BaseGenerale = () => {
 
   </div>
 <div className="line-horiz"></div>
+
+<div className="barre-haut1">
+  <Link to="/conformev" className="droite-phrase">
+    Evaluation de conformité
+    <FiArrowRight className="icon-app" />
+  </Link>
+</div>
+
+{/* NOUVEAU BOUTON PDF EN DESSOUS */}
+<div className="export-section">
+  <button className="exp-pdf">Exporter vers PDF <ImFilePdf /></button>
+</div>
+
       <table>
         <thead>
           <tr>
@@ -156,6 +172,7 @@ const BaseGenerale = () => {
             <th>Année de publication</th>
             <th>Texte</th>
             <th>APP/N APP/Info</th>
+            <th>AV/C/NC</th>
             <th>PDF</th>
           </tr>
         </thead>
@@ -194,6 +211,7 @@ const BaseGenerale = () => {
     </div>
   </div>
 </td>
+<td></td>
               <td>
                 <ImFilePdf />
               </td>
@@ -219,4 +237,4 @@ const BaseGenerale = () => {
   );
 };
 
-export default BaseGenerale;
+export default TexteApp;

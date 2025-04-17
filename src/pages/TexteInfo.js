@@ -5,8 +5,8 @@ import NavBar2 from "../components/NavBar2";
 import { MdRefresh } from "react-icons/md";
 import { BsEye, BsEyeSlash, BsInfoCircle } from "react-icons/bs";
 import { ImFilePdf } from "react-icons/im";
-
-const BaseGenerale = () => {
+import "../pages/TexteInfo.css"
+const TexteInfo = () => {
 
   const [isAbreviationOpen, setIsAbreviationOpen] = useState(false);
   const [data, setData] = useState([
@@ -67,7 +67,7 @@ const BaseGenerale = () => {
       <div className="base-container">
       <div className="search-container">
   <div className="header-top">
-    <h1 className="titre-base">Base générale</h1>
+    <h1 className="titre-base">Textes pour information</h1>
     <div className="icon-actions">
       <span className="icon-base" title="Réduire">─</span>
       <span className="icon-base" title="Rafraîchir"><MdRefresh/></span>
@@ -117,7 +117,7 @@ const BaseGenerale = () => {
 
         <div className="text-list-container">
         <div className="text-list-header">
-    <h3 className="text-base"><FaFolderOpen /> Liste des Textes</h3>
+    <h3 className="text-base"><FaFolderOpen /> Liste des Textes pour information</h3>
     <div 
   className="abreviation" 
   onMouseEnter={() => setIsAbreviationOpen(true)}
@@ -142,6 +142,7 @@ const BaseGenerale = () => {
 
   </div>
 <div className="line-horiz"></div>
+<button className="exp-pdf">Exporter vers PDF <ImFilePdf /></button>
       <table>
         <thead>
           <tr>
@@ -219,4 +220,4 @@ const BaseGenerale = () => {
   );
 };
 
-export default BaseGenerale;
+export default TexteInfo;

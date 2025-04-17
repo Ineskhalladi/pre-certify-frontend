@@ -13,6 +13,10 @@ import Home from "./pages/Home";
 import EmailVerification from "./components/EmailVerification";
 import VeilleReg from "./pages/VeilleReg";
 import Normes from "./pages/Normes";
+import TexteInfo from "./pages/TexteInfo";
+import TexteApp from "./pages/TexteApp";
+import ConformeV from "./pages/ConformeV";
+
 
 const App = () => {
   const location = useLocation();
@@ -23,10 +27,14 @@ const App = () => {
   || location.pathname.startsWith("/verify");
   const isDashboard = location.pathname === "/dashboard";
   const isBaseGenerale = location.pathname === "/basegenerale";
+  const isTexteInfo = location.pathname === "/texteinfo";
+  const isTexteApp = location.pathname === "/texteapp";
+  const isConformeV = location.pathname === "/conformev";
+
 
   return (
     <>
-      {!isAuthPage && !isDashboard && !isBaseGenerale && <NavBar />}
+      {!isAuthPage && !isDashboard && !isBaseGenerale && !isTexteInfo && !isTexteApp && !isConformeV && <NavBar />}
 
       <Routes>
       <Route path="/" element={<Home />} />
@@ -40,9 +48,13 @@ const App = () => {
         <Route path="/resetpwd" element={<ResetPwd />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/basegenerale" element={<BaseGenerale/>} />
+        <Route path="/texteinfo" element={<TexteInfo />} />
+        <Route path="/texteapp" element={<TexteApp />} />
+        <Route path="/conformev" element={<ConformeV />} />
+
       </Routes>
 
-      {!isAuthPage && !isDashboard && !isBaseGenerale && <Footer />}
+      {!isAuthPage && !isDashboard && !isBaseGenerale && !isTexteInfo && !isTexteApp && !isConformeV && <Footer />}
     </>
   );
 };

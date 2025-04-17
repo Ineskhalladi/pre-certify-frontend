@@ -5,8 +5,11 @@ import NavBar2 from "../components/NavBar2";
 import { MdRefresh } from "react-icons/md";
 import { BsEye, BsEyeSlash, BsInfoCircle } from "react-icons/bs";
 import { ImFilePdf } from "react-icons/im";
+import "../pages/ConformeV.css"
+import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
-const BaseGenerale = () => {
+const TexteApp = () => {
 
   const [isAbreviationOpen, setIsAbreviationOpen] = useState(false);
   const [data, setData] = useState([
@@ -67,7 +70,7 @@ const BaseGenerale = () => {
       <div className="base-container">
       <div className="search-container">
   <div className="header-top">
-    <h1 className="titre-base">Base générale</h1>
+    <h1 className="titre-base">Evaluation de conformité</h1>
     <div className="icon-actions">
       <span className="icon-base" title="Réduire">─</span>
       <span className="icon-base" title="Rafraîchir"><MdRefresh/></span>
@@ -117,7 +120,7 @@ const BaseGenerale = () => {
 
         <div className="text-list-container">
         <div className="text-list-header">
-    <h3 className="text-base"><FaFolderOpen /> Liste des Textes</h3>
+    <h3 className="text-base"><FaFolderOpen /> Liste des Textes pour évaluation de conformité</h3>
     <div 
   className="abreviation" 
   onMouseEnter={() => setIsAbreviationOpen(true)}
@@ -142,6 +145,23 @@ const BaseGenerale = () => {
 
   </div>
 <div className="line-horiz"></div>
+
+<div className="barre-haut">
+  <Link to="/texteapp" className="gauche-phrase">
+    <FiArrowLeft className="icon-app" />
+   Textes applicables
+  </Link>
+  <Link className="droite-phrase">
+    Mon plan d'action
+    <FiArrowRight className="icon-app" />
+  </Link>
+</div>
+
+{/* NOUVEAU BOUTON PDF EN DESSOUS */}
+<div className="export-section">
+  <button className="exp-pdf">Exporter vers PDF <ImFilePdf /></button>
+</div>
+
       <table>
         <thead>
           <tr>
@@ -219,4 +239,4 @@ const BaseGenerale = () => {
   );
 };
 
-export default BaseGenerale;
+export default TexteApp;

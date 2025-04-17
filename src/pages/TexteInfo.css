@@ -149,7 +149,7 @@
 }
 
 .text-base {
-  font-size: 25px;
+  font-size: 22px;
   font-weight: 500;
   margin-bottom: 20px;
   display: flex;
@@ -462,4 +462,27 @@ table td svg:hover {
 .btn-item.active {
   background-color: #E0A600;
   color: #fff;
+}
+
+.exp-pdf{
+    border: 1px solid #E0A600;
+    background-color: #E0A600;
+    color: #ffff;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 15px;
+    margin-left: 1198px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.exp-pdf:hover{
+    background-color: #f9dd90;
+    color: rgba(31, 58, 36, 0.92);
+}
+.exp-pdf svg{
+    font-size: 18px;
+    margin-bottom: -4px;
 }
