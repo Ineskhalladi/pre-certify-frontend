@@ -53,9 +53,10 @@ const NavBar2 = () => {
               <Link to="/texteinfo">Textes pour Information</Link>
               <Link to="/texteapp">Textes Applicables</Link>
               <Link to="/conformev">Évaluation de Conformité</Link>
-              <Link to="/mon Plan d'action">Mon Plan d'Action</Link>
+              <Link to="/planactionv">Mon Plan d'Action</Link>
+              <Link to="/statistiquesv">Mes Statistiques</Link>
               <Link to="/Suivie">Suivie</Link>
-              <Link to="/mes statistiques">Mes Statistiques</Link>
+
             </div>
           )}
         </div>

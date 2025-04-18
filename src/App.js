@@ -16,6 +16,7 @@ import Normes from "./pages/Normes";
 import TexteInfo from "./pages/TexteInfo";
 import TexteApp from "./pages/TexteApp";
 import ConformeV from "./pages/ConformeV";
+import PlanActionV from "./pages/PlanActionV";
 
 
 const App = () => {
@@ -30,11 +31,12 @@ const App = () => {
   const isTexteInfo = location.pathname === "/texteinfo";
   const isTexteApp = location.pathname === "/texteapp";
   const isConformeV = location.pathname === "/conformev";
+  const isPlanActionV = location.pathname === "/planactionv";
 
 
   return (
     <>
-      {!isAuthPage && !isDashboard && !isBaseGenerale && !isTexteInfo && !isTexteApp && !isConformeV && <NavBar />}
+      {!isAuthPage && !isDashboard && !isBaseGenerale && !isTexteInfo && !isTexteApp && !isConformeV && !isPlanActionV && <NavBar />}
 
       <Routes>
       <Route path="/" element={<Home />} />
@@ -51,10 +53,11 @@ const App = () => {
         <Route path="/texteinfo" element={<TexteInfo />} />
         <Route path="/texteapp" element={<TexteApp />} />
         <Route path="/conformev" element={<ConformeV />} />
+        <Route path="/planactionv" element={<PlanActionV />} />
 
       </Routes>
 
-      {!isAuthPage && !isDashboard && !isBaseGenerale && !isTexteInfo && !isTexteApp && !isConformeV && <Footer />}
+      {!isAuthPage && !isDashboard && !isBaseGenerale && !isTexteInfo && !isTexteApp && !isConformeV && !isPlanActionV && <Footer />}
     </>
   );
 };

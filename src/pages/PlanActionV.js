@@ -5,12 +5,12 @@ import NavBar2 from "../components/NavBar2";
 import { MdRefresh } from "react-icons/md";
 import { BsInfoCircle } from "react-icons/bs";
 import { ImFilePdf } from "react-icons/im";
-import "../pages/ConformeV.css"
+import "../pages/PlanActionV.css"
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { RiRefreshLine } from "react-icons/ri";
 
-const ConformeV = () => {
+const PlanActionV = () => {
 
   const [isAbreviationOpen, setIsAbreviationOpen] = useState(false);
   const [data, setData] = useState([
@@ -69,7 +69,7 @@ const ConformeV = () => {
       <div className="base-container">
       <div className="search-container">
   <div className="header-top">
-    <h1 className="titre-base">Evaluation de conformité</h1>
+    <h1 className="titre-base">Mon Plan d'action</h1>
     <div className="icon-actions">
       <span className="icon-base" title="Réduire">─</span>
       <span className="icon-base" title="Rafraîchir"><MdRefresh/></span>
@@ -142,12 +142,12 @@ const ConformeV = () => {
 <div className="line-horiz"></div>
 
 <div className="barre-haut">
-  <Link to="/texteapp" className="gauche-phrase">
+  <Link to="/conformeV" className="gauche-phrase">
     <FiArrowLeft className="icon-app" />
-   Textes applicables
+   Evaluation de conformité
   </Link>
-  <Link to="/planactionv" className="droite-phrase">
-    Mon plan d'action
+  <Link to="/statistiquesV" className="droite-phrase">
+    Statistiques
     <FiArrowRight className="icon-app" />
   </Link>
 </div>
@@ -162,17 +162,16 @@ const ConformeV = () => {
       <table>
         <thead>
           <tr>
-            <th>Thème</th>
-            <th>Sous thème</th>
+            <th>Action</th>
+            <th>Responsable</th>
             <th>Référence</th>
-            <th>P/I</th>
-            <th>AV/C/NC</th>
-            <th>Exigences</th>
-            <th>AV/C/NC</th>
-            <th>Constat</th>
-            <th>Preuve</th>
-            <th>Ajouter monitorning</th>
-           
+            <th>Echéance</th>
+            <th>Avancement</th>
+            <th>Efficacité</th>
+            <th>Conformité</th>
+            <th>Editer</th>
+          
+        
           </tr>
         </thead>
         <tbody>
@@ -186,6 +185,9 @@ const ConformeV = () => {
                 ))}
               </td>
               <td></td>
+              <td></td>
+              <td></td>
+
               <td>
   <div className="Status-container">
   <div className={`status-label status-${row.statusAvant?.toLowerCase()}`}>
@@ -206,49 +208,47 @@ const ConformeV = () => {
     </div>
   </div>
 </td>
-
-
-
               <td></td>
-              <td>
-  <div className="Status-container">
-  <div className={`status-label status-${row.statusAvant?.toLowerCase()}`}>
-  {row.statusApres}
-</div>
-
-    <div className="menu-Status">
-    {["C", "AV", "NC"].map((option) => (
-  <div
-    key={option}
-    className={`option-Status status-${option.toLowerCase()}`}
-    onClick={() => handleStatusChange(row.id, option, "statusAvant")}
-  >
-    {option}
-  </div>
-))}
-
-    </div>
-  </div>
-</td>
-
-              <td></td>
-              <td> <ImFilePdf /></td>
-              <td><input className="boxC" type="checkbox"/></td>
-            </tr>
+              </tr>
           ))}
         </tbody>
       </table>
-      <div className="pagination-container">
-  <ul className="pagination">
-    <li className="btn-item">Précédent</li>
-    <li className="btn-item active">1</li>
-    <li className="btn-item">2</li>
-    <li className="btn-item">3</li>
-    <li className="btn-item">Suivant</li>
-    <li className="btn-item">Fin</li>
-  </ul>
-</div>
+  
+    </div>
+    <div className="text-list-container">
+        <div className="text-list-header">
+    <h3 className="text-base"> Mes action réalisées</h3>
+  </div>
+<div className="line-horiz"></div>
 
+      <table>
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Responsable</th>
+            <th>Référence</th>
+            <th>Efficacité</th>
+            <th>Validation</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((row) => (
+            <tr key={row.id}>
+              <td>{row.theme}</td>
+              <td>{row.sousTheme}</td>
+              <td>
+                {row.reference.split("\n").map((line, idx) => (
+                  <div key={idx}>{line}</div>
+                ))}
+              </td>
+              <td></td>
+              <td></td>
+              </tr>
+          ))}
+        </tbody>
+      </table>
+    
     </div>
       </div>
     <p className="footer-base">Copyright © 2025 PreCertify. Tous les droits réservés.</p>
@@ -256,4 +256,4 @@ const ConformeV = () => {
   );
 };
 
-export default ConformeV;
+export default PlanActionV;

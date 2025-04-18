@@ -123,7 +123,7 @@ const TexteInfo = () => {
   onMouseEnter={() => setIsAbreviationOpen(true)}
   onMouseLeave={() => setIsAbreviationOpen(false)}
 >
-  <div className="menu-abrev abbr">
+  <div className="menu-abrev">
     <strong>Abréviation</strong> <BsInfoCircle />           
   </div>
 
@@ -152,7 +152,6 @@ const TexteInfo = () => {
             <th>Sous thème</th>
             <th>Référence</th>
             <th>P/I</th>
-            <th>A/M/C</th>
             <th>a/m/c</th>
             <th>Année de publication</th>
             <th>Texte</th>
@@ -172,7 +171,6 @@ const TexteInfo = () => {
                   <div key={idx}>{line}</div>
                 ))}
               </td>
-              <td></td>
               <td></td>
               <td></td>
               <td>{row.year}</td>
