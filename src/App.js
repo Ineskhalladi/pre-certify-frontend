@@ -17,6 +17,9 @@ import TexteInfo from "./pages/TexteInfo";
 import TexteApp from "./pages/TexteApp";
 import ConformeV from "./pages/ConformeV";
 import PlanActionV from "./pages/PlanActionV";
+import MonCompte from "./pages/MonCompte";
+import AjouterResponsable from "./pages/AjouterResponsable";
+import AjouterService from "./pages/AjouterService";
 
 
 const App = () => {
@@ -32,11 +35,15 @@ const App = () => {
   const isTexteApp = location.pathname === "/texteapp";
   const isConformeV = location.pathname === "/conformev";
   const isPlanActionV = location.pathname === "/planactionv";
-
+  const isMonCompte = location.pathname === "/moncompte";
+  const isAjouterResponsable = location.pathname === "/ajouterresponsable";
+  const isAjouterService = location.pathname === "/ajouterservice";
 
   return (
     <>
-      {!isAuthPage && !isDashboard && !isBaseGenerale && !isTexteInfo && !isTexteApp && !isConformeV && !isPlanActionV && <NavBar />}
+      {!isAuthPage && !isDashboard && !isBaseGenerale && !isTexteInfo
+       && !isTexteApp && !isConformeV && !isPlanActionV && !isMonCompte
+       && !isAjouterResponsable && !isAjouterService &&  <NavBar />}
 
       <Routes>
       <Route path="/" element={<Home />} />
@@ -54,10 +61,15 @@ const App = () => {
         <Route path="/texteapp" element={<TexteApp />} />
         <Route path="/conformev" element={<ConformeV />} />
         <Route path="/planactionv" element={<PlanActionV />} />
+        <Route path="/moncompte" element={<MonCompte />} />
+        <Route path="/ajouterresponsable" element={<AjouterResponsable />} />
+        <Route path="/ajouterservice" element={<AjouterService />} />
 
       </Routes>
 
-      {!isAuthPage && !isDashboard && !isBaseGenerale && !isTexteInfo && !isTexteApp && !isConformeV && !isPlanActionV && <Footer />}
+      {!isAuthPage && !isDashboard && !isBaseGenerale && !isTexteInfo 
+      && !isTexteApp && !isConformeV && !isPlanActionV && !isMonCompte
+      && !isAjouterResponsable && !isAjouterService && <Footer />}
     </>
   );
 };

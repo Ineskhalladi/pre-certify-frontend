@@ -129,7 +129,7 @@ const handleSendEmail = async () => {
                                         />
                                     ))}
                                 </div>
-                                <button className="send-button" onClick={handleVerifyCode} disabled={loading}>
+                                <button className="send-button" onMouseDown={handleVerifyCode} disabled={loading}>
                                 {loading ? 'Verifying...' : 'Verify Code'}
 
                                 </button>

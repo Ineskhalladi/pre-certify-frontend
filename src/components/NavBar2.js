@@ -1,21 +1,42 @@
 
 
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import "./NavBar2.css";
-import { FaRegUserCircle, FaChevronDown, FaChevronUp, FaSignOutAlt } from "react-icons/fa";
+import {  FaChevronDown, FaChevronUp } from "react-icons/fa";
 import logo from "../assets/logo.png";
-import { FiGrid, FiLayout, FiMonitor, FiZap } from "react-icons/fi";
+import { FiGrid, FiLayout, FiMonitor, FiPower, FiUsers, FiZap } from "react-icons/fi";
 import { LuBell, LuList } from "react-icons/lu";
-import { BiSearch } from "react-icons/bi";
-
+import { BiFolder, BiSearch, BiUser } from "react-icons/bi";
+import profile from "../assets/profile.png"
+import { TbUsersGroup } from "react-icons/tb";
 const NavBar2 = () => {
+  const navigate = useNavigate();
+
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMaVeilleOpen, setIsMaVeilleOpen] = useState(false);
   const [isExigencesOpen, setIsExigencesOpen] = useState(false);
   const location = useLocation();
+  const [userName, setUserName] = useState("");
 
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user && user.name) {
+      setUserName(user.name);
+    }
+  }, []);
+  
+  const handleLogout = () => {
+    console.log("Déconnecté");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setTimeout(() => {
+      navigate("/signin");
+    }, 300);
+  };
+  
+  
   return (
     <div className="navbar-container3">
       <div className="navbar-top3">
@@ -26,9 +47,11 @@ const NavBar2 = () => {
             <span className="user-expire">Expire le : <span className="num-date">12/06/2025</span></span>
           </div>
           <div className="user-profile"  tabIndex={0}  // Permet à l'élément de capter le focus
-              onBlur={() => setIsProfileOpen(false)}   >
-            <FaRegUserCircle className="user-icon3" />
-            <span className="user-name" onClick={() => setIsProfileOpen(!isProfileOpen)}>OUSSAMA_NC</span>
+              onBlur={() => setTimeout(() => setIsProfileOpen(false), 200)}              >
+<div className="avatar-container">
+    <img src={profile} alt="Profil" className="avatar-icon" />
+    <span className="online-dot"></span>
+  </div>            <span className="user-name" onClick={() => setIsProfileOpen(!isProfileOpen)}> {userName} </span>
             {isProfileOpen ? <FaChevronUp className="dropdown-icon3" /> : <FaChevronDown className="dropdown-icon3" />}
           </div>
         </div>
@@ -91,12 +114,28 @@ const NavBar2 = () => {
 
       {isProfileOpen && (
         <div className="dropdown-menu3">
-          <Link to="/moncompte" className="dropdown-item3">Mon compte</Link>
-          <Link to="/mesutilisateurs" className="dropdown-item3">Mes utilisateurs</Link>
-          <Link to="/messervices" className="dropdown-item3">Mes services</Link>
-          <Link to="/mesresponsables" className="dropdown-item3">Mes responsables</Link>
-
-          <Link to="/deconnexion" className="dropdown-item3 logout"><FaSignOutAlt className="logout-icon" /> Déconnexion</Link>
+            <div className="dropdown-item3">
+    <BiUser className="icon-profiles" />
+    <Link to="/moncompte">Mon compte</Link>
+  </div>
+  <div className="dropdown-item3">
+    <TbUsersGroup className="icon-profiles" />
+    <Link to="/mesutilisateurs">Mes utilisateurs</Link>
+  </div>
+  <div className="dropdown-item3">
+    <BiFolder className="icon-profiles" />
+    <Link to="/ajouterservice">Mes services</Link>
+  </div>
+  <div className="dropdown-item3">
+    <FiUsers className="icon-profiles" />
+    <Link to="/ajouterresponsable">Mes responsables</Link>
+  </div>
+          <div className="dropdown-item3 logout"
+           onMouseDown={handleLogout}
+           tabIndex="0"
+           role="button">
+  <FiPower className="logout-icon" /> Déconnexion
+</div>
         </div>
       )}
     </div>

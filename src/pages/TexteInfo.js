@@ -142,7 +142,7 @@ const TexteInfo = () => {
 
   </div>
 <div className="line-horiz"></div>
-<button className="exp-pdf">Exporter vers PDF <ImFilePdf /></button>
+<button className="exp-pdf-IN">Exporter vers PDF <ImFilePdf /></button>
       <table>
         <thead>
           <tr>

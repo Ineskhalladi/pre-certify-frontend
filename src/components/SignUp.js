@@ -118,7 +118,7 @@ const SignUp = () => {
 
             <div className="input-group2">
               <FaUser className="icon2" />
-              <input type="text" placeholder="In your name" className="input-field2" value={name}   onChange={handleInputChange(setName, "name")} required />
+              <input type="text" placeholder="In your name company" className="input-field2" value={name}   onChange={handleInputChange(setName, "name")} required />
             </div>
             {fieldErrors.name && <p className="error-msg2">{fieldErrors.name}</p>}
 

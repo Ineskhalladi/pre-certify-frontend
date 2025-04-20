@@ -138,7 +138,16 @@
   padding: 10px 35px;
 }
 
+.btn-search:hover {
+  background-color: rgba(130, 187, 115, 0.88);
+  color: rgba(31, 58, 36, 0.92);
+}
 
+.btn-cancel:hover {
+  background-color: rgba(255, 208, 79, 0.47);
+  color: rgba(31, 58, 36, 0.92);
+
+}
 /* LISTE DES TEXTES */
 .text-list-container {
   background-color: #fff;
@@ -464,7 +473,7 @@ table td svg:hover {
   color: #fff;
 }
 
-.exp-pdf{
+.exp-pdf-IN{
     border: 1px solid #E0A600;
     background-color: #E0A600;
     color: #ffff;
@@ -478,11 +487,11 @@ table td svg:hover {
     cursor: pointer;
 }
 
-.exp-pdf:hover{
+.exp-pdf-IN:hover{
     background-color: #f9dd90;
     color: rgba(31, 58, 36, 0.92);
 }
-.exp-pdf svg{
+.exp-pdf-IN svg{
     font-size: 18px;
     margin-bottom: -4px;
 }

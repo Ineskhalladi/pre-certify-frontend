@@ -49,6 +49,7 @@ const SignIn = () => {
       const response = await axios.post("http://localhost:5000/api/auth/signin", { email, password });
       console.log('Réponse du serveur:', response.data);
       localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user)); // 🆕
       navigate("/dashboard");
     } catch (error) {
       setError(error.response?.data?.message || "Erreur de connexion au serveur");

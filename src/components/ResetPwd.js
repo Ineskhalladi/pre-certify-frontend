@@ -80,28 +80,28 @@ const ResetPwd = () => {
                         <p className="phrase">Your new password must be different from previously used passwords.</p>
 
                         <form onSubmit={handleSubmit}>
-                            <div className="input-group3">
+                            <div className="input-reset">
                                 <input type={showPassword ? "text" : "password"}
                                     placeholder="New password"
                                     value={password}
                                     onChange={handlePasswordChange}
-                                    className="input-field6"
+                                    className="input-field-reset"
                                     required />
-                                <span className="password-toggle2" onClick={() => setShowPassword(!showPassword)}>
+                                <span className="password-toggle-reset" onClick={() => setShowPassword(!showPassword)}>
                                     {showPassword ? <FaEye /> : <FaEyeSlash />}
                                 </span>
                             </div>
 
                             {errorMessage && <small className="error-message">{errorMessage}</small>}
 
-                            <div className="input-group3">
+                            <div className="input-reset2">
                                 <input type={showConfirmPassword ? "text" : "password"}
                                     placeholder="Confirm password"
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
-                                    className="input-field7"
+                                    className="input-field-reset2"
                                     required />
-                                <span className="password-toggle3" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                                <span className="password-toggle-reset2" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
                                     {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
                                 </span>
                             </div>

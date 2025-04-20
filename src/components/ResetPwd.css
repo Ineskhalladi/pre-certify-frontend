@@ -68,15 +68,24 @@
 }
 
 
-.input-group3 {
+.input-reset {
     position: relative;
     margin-bottom: 0.7rem;
     display: flex;
     align-items: center;
+    margin-left: 50px;
 
   }
 
-.input-field6 {
+  .input-reset2 {
+    position: relative;
+    margin-bottom: 0.7rem;
+    display: flex;
+    align-items: center;
+    margin-left: 50px;
+
+  }
+.input-field-reset {
   width: 500px;
   padding: 15px 20px 15px 45px;
   background-color: #ffff;
@@ -89,7 +98,7 @@
   margin-top: 15px;
  
 }
-.input-field7 {
+.input-field-reset2 {
     width: 500px;
     padding: 15px 20px 15px 45px;
     background-color: #ffff;
@@ -103,25 +112,25 @@
     
    
   }
-.input-field6:focus,.input-field7:focus {
+.input-field-reset:focus,.input-field-reset2:focus {
   outline: none;
   border: 2px solid #E0A600;
   box-shadow:3px 3px 3px 3px rgba(224, 166, 0, 0.47);
 }
-.password-toggle2 {
+.password-toggle-reset {
     position: absolute;
-    right: 20px;
-    top: 67%;
+    right: 100px;
+    top: 65%;
     transform: translateY(-50%);
     cursor: pointer;
     font-size: 25px;
     color: #B3B3B3 !important;
    
   }
-.password-toggle3 {
+.password-toggle-reset2 {
     position: absolute;
-    right: 20px;
-    top: 77%;
+    right: 100px;
+    top: 76%;
     transform: translateY(-50%);
     cursor: pointer;
     font-size: 25px;

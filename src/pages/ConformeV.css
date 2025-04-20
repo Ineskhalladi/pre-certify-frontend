@@ -138,7 +138,16 @@
   padding: 10px 35px;
 }
 
+.btn-search:hover {
+  background-color: rgba(130, 187, 115, 0.88);
+  color: rgba(31, 58, 36, 0.92);
+}
 
+.btn-cancel:hover {
+  background-color: rgba(255, 208, 79, 0.47);
+  color: rgba(31, 58, 36, 0.92);
+
+}
 /* LISTE DES TEXTES */
 .text-list-container {
   background-color: #fff;
