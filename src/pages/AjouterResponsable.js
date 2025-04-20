@@ -23,7 +23,7 @@ const AjouterResponsable = () => {
   </div>
 
   <div className="titre-multicritere">
-    <FaUserPlus className="icon-search" />
+    <FaUserPlus className="icon-res" />
     <h2>Ajouter responsable </h2>
   </div>
   </div>

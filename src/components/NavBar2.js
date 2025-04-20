@@ -47,7 +47,7 @@ const NavBar2 = () => {
             <span className="user-expire">Expire le : <span className="num-date">12/06/2025</span></span>
           </div>
           <div className="user-profile"  tabIndex={0}  // Permet à l'élément de capter le focus
-              onBlur={() => setTimeout(() => setIsProfileOpen(false), 200)}              >
+              onClick={() => setIsProfileOpen(!isProfileOpen)}> 
 <div className="avatar-container">
     <img src={profile} alt="Profil" className="avatar-icon" />
     <span className="online-dot"></span>
@@ -116,19 +116,19 @@ const NavBar2 = () => {
         <div className="dropdown-menu3">
             <div className="dropdown-item3">
     <BiUser className="icon-profiles" />
-    <Link to="/moncompte">Mon compte</Link>
+    <Link to="/moncompte" onClick={() => setIsProfileOpen(false)}>Mon compte</Link>
   </div>
   <div className="dropdown-item3">
     <TbUsersGroup className="icon-profiles" />
-    <Link to="/mesutilisateurs">Mes utilisateurs</Link>
+    <Link to="/mesutilisateurs" onClick={() => setIsProfileOpen(false)}>Mes utilisateurs</Link>
   </div>
   <div className="dropdown-item3">
     <BiFolder className="icon-profiles" />
-    <Link to="/ajouterservice">Mes services</Link>
+    <Link to="/messervices" onClick={() => setIsProfileOpen(false)}>Mes services</Link>
   </div>
   <div className="dropdown-item3">
     <FiUsers className="icon-profiles" />
-    <Link to="/ajouterresponsable">Mes responsables</Link>
+    <Link to="/mesresponsables" onClick={() => setIsProfileOpen(false)}>Mes responsables</Link>
   </div>
           <div className="dropdown-item3 logout"
            onMouseDown={handleLogout}

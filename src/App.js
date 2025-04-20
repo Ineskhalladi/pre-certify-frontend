@@ -20,6 +20,9 @@ import PlanActionV from "./pages/PlanActionV";
 import MonCompte from "./pages/MonCompte";
 import AjouterResponsable from "./pages/AjouterResponsable";
 import AjouterService from "./pages/AjouterService";
+import MesResponsables from "./pages/MesResponsables";
+import MesServices from "./pages/MesServices";
+import MesUtilisateurs from "./pages/MesUtilisateurs";
 
 
 const App = () => {
@@ -38,12 +41,16 @@ const App = () => {
   const isMonCompte = location.pathname === "/moncompte";
   const isAjouterResponsable = location.pathname === "/ajouterresponsable";
   const isAjouterService = location.pathname === "/ajouterservice";
+  const isMesResponsables = location.pathname === "/mesresponsables";
+  const isMesServices = location.pathname === "/messervices";
+  const isMesUtilisateurs = location.pathname === "/mesutilisateurs";
 
   return (
     <>
       {!isAuthPage && !isDashboard && !isBaseGenerale && !isTexteInfo
        && !isTexteApp && !isConformeV && !isPlanActionV && !isMonCompte
-       && !isAjouterResponsable && !isAjouterService &&  <NavBar />}
+       && !isAjouterResponsable && !isAjouterService && !isMesResponsables 
+       && !isMesServices && !isMesUtilisateurs && <NavBar />}
 
       <Routes>
       <Route path="/" element={<Home />} />
@@ -64,12 +71,16 @@ const App = () => {
         <Route path="/moncompte" element={<MonCompte />} />
         <Route path="/ajouterresponsable" element={<AjouterResponsable />} />
         <Route path="/ajouterservice" element={<AjouterService />} />
+        <Route path="/mesresponsables" element={<MesResponsables />} />
+        <Route path="/messervices" element={<MesServices/>} />
+        <Route path="/mesutilisateurs" element={<MesUtilisateurs/>} />
 
       </Routes>
 
       {!isAuthPage && !isDashboard && !isBaseGenerale && !isTexteInfo 
       && !isTexteApp && !isConformeV && !isPlanActionV && !isMonCompte
-      && !isAjouterResponsable && !isAjouterService && <Footer />}
+      && !isAjouterResponsable && !isAjouterService && !isMesResponsables 
+      && !isMesServices && !isMesUtilisateurs &&  <Footer />}
     </>
   );
 };
