@@ -1,11 +1,8 @@
 import React, { useState} from "react";
 import "../pages/MonCompte.css";
-import { FaSearch, FaSyncAlt,  FaFolderOpen, FaUser, FaSave } from "react-icons/fa";
+import { FaSyncAlt, FaUser, FaSave } from "react-icons/fa";
 import NavBar2 from "../components/NavBar2";
 import { MdRefresh } from "react-icons/md";
-import { BsEye, BsEyeSlash, BsInfoCircle } from "react-icons/bs";
-import { ImFilePdf } from "react-icons/im";
-import { BiUser } from "react-icons/bi";
 
 const MonCompte = () => {
 

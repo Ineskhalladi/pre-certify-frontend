@@ -94,9 +94,9 @@ const NavBar2 = () => {
           </div>
           {isExigencesOpen && (
             <div className="dropdown-content3">
-              <Link to="/mes exigences">Mes Exigences</Link>
-              <Link to="/evaluation de conformite">Évaluation de Conformité</Link>
-              <Link to="/mon Plan d'action">Mon Plan d'Action</Link>
+              <Link to="/mesexigences">Mes Exigences</Link>
+              <Link to="/conformee">Évaluation de Conformité</Link>
+              <Link to="/planactione">Mon Plan d'Action</Link>
               <Link to="/statistiques des exigences">Statistiques des Exigences</Link>
             </div>
           )}

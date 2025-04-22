@@ -1,5 +1,5 @@
 import React, { useState} from "react";
-import "../pages/BaseGenerale.css";
+import "../pages/PlanActionV.css";
 import { FaSearch, FaSyncAlt,  FaFolderOpen } from "react-icons/fa";
 import NavBar2 from "../components/NavBar2";
 import { MdRefresh } from "react-icons/md";
@@ -16,8 +16,8 @@ const PlanActionV = () => {
   const [data, setData] = useState([
     {
       id: 1,
-      theme: "Conventions Collectives Sectorielles",
-      sousTheme: "Agences de voyages",
+      action: "",
+      responsable: "",
       reference:
         "Arrêté du 21 janvier 2025\nAvenant n° 12 de la convention collective sectorielle des agences de voyages",
       statusAvant: "",
@@ -25,31 +25,14 @@ const PlanActionV = () => {
     },
     {
       id: 2,
-      theme: "Conventions Collectives Sectorielles",
-      sousTheme: "Gestion des déchets solides et liquides",
+      action: "",
+      responsable: "",
       reference:
         "Arrêté du 21 janvier 2026\nAvenant n°4 de la convention collective sectorielle de gestion des déchets solides et liquides",
       statusAvant: "",
       statusApres: "",
     },
-    {
-      id: 3,
-      theme: "",
-      sousTheme: "",
-      reference:
-        "Arrêté 30 décembre 2025\nLes délais d’application du programme spécifique pour la mise à la retraite avant l’âge légal au titre de l’année 2025",
-      statusAvant: "",
-      statusApres: "",
-    },
-    {
-      id: 4,
-      theme: "",
-      sousTheme: "",
-      reference:
-        "Décret n° 2025–716 du 30 décembre 2025 fixant les modalités et procédures de contrôle officiel de la chaîne alimentaire",
-      statusAvant: "",
-      statusApres: "",
-    },
+
   ]);
   
 
@@ -177,8 +160,8 @@ const PlanActionV = () => {
         <tbody>
           {data.map((row) => (
             <tr key={row.id}>
-              <td>{row.theme}</td>
-              <td>{row.sousTheme}</td>
+              <td>{row.action}</td>
+              <td>{row.responsable}</td>
               <td>
                 {row.reference.split("\n").map((line, idx) => (
                   <div key={idx}>{line}</div>

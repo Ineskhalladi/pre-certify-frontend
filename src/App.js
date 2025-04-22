@@ -23,6 +23,10 @@ import AjouterService from "./pages/AjouterService";
 import MesResponsables from "./pages/MesResponsables";
 import MesServices from "./pages/MesServices";
 import MesUtilisateurs from "./pages/MesUtilisateurs";
+import MesExigences from "./pages/MesExigences";
+import ConformeE from "./pages/ConformeE";
+import PlanActionE from "./pages/PlanActionE";
+import Monitoring from "./pages/Monitoring";
 
 
 const App = () => {
@@ -44,13 +48,18 @@ const App = () => {
   const isMesResponsables = location.pathname === "/mesresponsables";
   const isMesServices = location.pathname === "/messervices";
   const isMesUtilisateurs = location.pathname === "/mesutilisateurs";
+  const isMesExigences = location.pathname === "/mesexigences";
+  const isConformeE = location.pathname === "/conformee";
+  const isPlanActionE = location.pathname === "/planactione";
+  const isMonitoring = location.pathname === "/monitoring";
 
   return (
     <>
       {!isAuthPage && !isDashboard && !isBaseGenerale && !isTexteInfo
        && !isTexteApp && !isConformeV && !isPlanActionV && !isMonCompte
        && !isAjouterResponsable && !isAjouterService && !isMesResponsables 
-       && !isMesServices && !isMesUtilisateurs && <NavBar />}
+       && !isMesServices && !isMesUtilisateurs && !isMesExigences && !isConformeE
+       && !isPlanActionE && !isMonitoring && <NavBar />}
 
       <Routes>
       <Route path="/" element={<Home />} />
@@ -74,13 +83,18 @@ const App = () => {
         <Route path="/mesresponsables" element={<MesResponsables />} />
         <Route path="/messervices" element={<MesServices/>} />
         <Route path="/mesutilisateurs" element={<MesUtilisateurs/>} />
+        <Route path="/mesexigences" element={<MesExigences/>} />
+        <Route path="/conformee" element={<ConformeE />} />
+        <Route path="/planactione" element={<PlanActionE />} />
+        <Route path="/monitoring" element={<Monitoring />} />
 
       </Routes>
 
       {!isAuthPage && !isDashboard && !isBaseGenerale && !isTexteInfo 
       && !isTexteApp && !isConformeV && !isPlanActionV && !isMonCompte
       && !isAjouterResponsable && !isAjouterService && !isMesResponsables 
-      && !isMesServices && !isMesUtilisateurs &&  <Footer />}
+      && !isMesServices && !isMesUtilisateurs && !isMesExigences && !isConformeE
+      && !isPlanActionE  && !isMonitoring &&  <Footer />}
     </>
   );
 };
