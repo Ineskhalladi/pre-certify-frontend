@@ -1,0 +1,13 @@
+/* src/components/EtatConformite.css */
+.etat-container {
+    margin: 40px;
+    font-family: 'Arial', sans-serif;
+    color: #00203f;
+  }
+  
+  .chart-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  

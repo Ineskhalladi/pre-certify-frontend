@@ -27,6 +27,7 @@ import MesExigences from "./pages/MesExigences";
 import ConformeE from "./pages/ConformeE";
 import PlanActionE from "./pages/PlanActionE";
 import Monitoring from "./pages/Monitoring";
+import StatistiquesV from "./pages/StatistiquesV";
 
 
 const App = () => {
@@ -52,6 +53,7 @@ const App = () => {
   const isConformeE = location.pathname === "/conformee";
   const isPlanActionE = location.pathname === "/planactione";
   const isMonitoring = location.pathname === "/monitoring";
+  const isStatistiquesV = location.pathname === "/statistiquesv";
 
   return (
     <>
@@ -59,7 +61,7 @@ const App = () => {
        && !isTexteApp && !isConformeV && !isPlanActionV && !isMonCompte
        && !isAjouterResponsable && !isAjouterService && !isMesResponsables 
        && !isMesServices && !isMesUtilisateurs && !isMesExigences && !isConformeE
-       && !isPlanActionE && !isMonitoring && <NavBar />}
+       && !isPlanActionE && !isMonitoring && !isStatistiquesV && <NavBar />}
 
       <Routes>
       <Route path="/" element={<Home />} />
@@ -87,6 +89,7 @@ const App = () => {
         <Route path="/conformee" element={<ConformeE />} />
         <Route path="/planactione" element={<PlanActionE />} />
         <Route path="/monitoring" element={<Monitoring />} />
+        <Route path="/statistiquesv" element={<StatistiquesV />} />
 
       </Routes>
 
@@ -94,7 +97,7 @@ const App = () => {
       && !isTexteApp && !isConformeV && !isPlanActionV && !isMonCompte
       && !isAjouterResponsable && !isAjouterService && !isMesResponsables 
       && !isMesServices && !isMesUtilisateurs && !isMesExigences && !isConformeE
-      && !isPlanActionE  && !isMonitoring &&  <Footer />}
+      && !isPlanActionE  && !isMonitoring && !isStatistiquesV &&  <Footer />}
     </>
   );
 };

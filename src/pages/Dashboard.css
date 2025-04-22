@@ -1,58 +1,51 @@
+.dashboard-charts-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 30px 10px;
+}
 
-/* Dashboard.css */
+.bar-chart-container,
+.pie-chart-container {
+  width: 100%;
+  max-width: 600px;
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  font-family: Arial, sans-serif;
+}
 
-.dashboard-container {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    background-color: #f8f9fa;
-  }
-  
-  .dashboard-header {
-    margin-bottom: 20px;
-  }
-  
-  .categories button {
-    background-color: #4f8a5f;
-    color: white;
-    border: none;
-    padding: 10px;
-    margin: 5px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  .dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-  }
-  
-  .card {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .chart, .pie-chart, .bar-chart {
-    height: 150px;
-    background-color: #eaeaea;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    color: #555;
-  }
-  
-  .action-button {
-    background-color: #4f8a5f;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    display: block;
-    margin: 20px auto;
-  }
-  
+.bar-chart-title,
+.pie-chart-title {
+  font-size: 20px;
+  margin-bottom: 20px;
+  text-align: left;
+  font-weight: bold;
+}
+
+.bar-chart-wrapper {
+  width: 100%;
+  height: 300px;
+}
+
+.pie-chart-wrapper2 {
+  width: 100%;
+  height: 300px;
+}
+
+.pie-chart-wrapper {
+  width: 100%;
+  height: 300px;
+  position: relative;
+}
+
+.centered-text {
+  position: absolute;
+  top: 50%;
+  left: 25.8%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  font-weight: bold;
+}
