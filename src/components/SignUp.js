@@ -139,18 +139,18 @@ const SignUp = () => {
               <FaBriefcase className="icon2" />
               <select className="select-field2" value={sector}   onChange={handleInputChange(setSector, "sector")} required>
                 <option value="">-- Choisir un secteur --</option>
-                <option value="Sante">Santé</option>
-                <option value="Informatique">Informatique et technologies connexes</option>
-                <option value="gestion">Gestion et services</option>
-                <option value="securite">Sécurité et risque</option>
-                <option value="transport">Transport</option>
-                <option value="energie">Énergie</option>
-                <option value="diversite">Diversité et inclusion</option>
-                <option value="durabilite">Durabilité environnementale</option>
-                <option value="alimentation">Alimentation et agriculture</option>
-                <option value="materiels">Matériels</option>
-                <option value="batiment">Bâtiment et construction</option>
-                <option value="ingenierie">Ingénierie</option>
+                <option value="Santé">Santé</option>
+                <option value="Informatique et technologies connexes">Informatique et technologies connexes</option>
+                <option value="Gestion et services">Gestion et services</option>
+                <option value="Sécurité, sûreté et risque">Sécurité, sûreté et risque</option>
+                <option value="Transport">Transport</option>
+                <option value="Énergie">Énergie</option>
+                <option value="Diversité et inclusion">Diversité et inclusion</option>
+                <option value="Durabilité environnementale">Durabilité environnementale</option>
+                <option value="Alimentation et agriculture">Alimentation et agriculture</option>
+                <option value="Matériels">Matériels</option>
+                <option value="Bâtiment et constructiont">Bâtiment et construction</option>
+                <option value="Ingénierie">Ingénierie</option>
               </select>
 
             </div>

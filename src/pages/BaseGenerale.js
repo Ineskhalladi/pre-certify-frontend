@@ -1,13 +1,18 @@
-import React, { useState} from "react";
+import React, { useState, useEffect} from "react";
 import "../pages/BaseGenerale.css";
 import { FaSearch, FaSyncAlt,  FaFolderOpen } from "react-icons/fa";
 import NavBar2 from "../components/NavBar2";
 import { MdRefresh } from "react-icons/md";
 import { BsEye, BsEyeSlash, BsInfoCircle } from "react-icons/bs";
 import { ImFilePdf } from "react-icons/im";
+import axios from "axios";
+import {jwtDecode} from "jwt-decode";
+
 
 const BaseGenerale = () => {
 
+  // Le tableau vide [] signifie que ça ne s’exécute qu’une fois au montage
+  
   const [isAbreviationOpen, setIsAbreviationOpen] = useState(false);
   const [data, setData] = useState([
     {
@@ -61,6 +66,48 @@ const BaseGenerale = () => {
     );
   };
   
+  const [domaines, setDomaines] = useState([]);
+  const [selectedDomaine, setSelectedDomaine] = useState("");
+  const [natures, setNatures] = useState([]);
+  const [themes, setThemes] = useState([]);
+
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+  
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        const userId = decoded.id; // ou decoded._id selon ton backend
+  
+        axios
+          .get(`http://localhost:5000/api/auth/user/${userId}/domaines`)
+          .then((res) => {
+            setDomaines(res.data);
+          })
+          .catch((err) => {
+            console.error("Erreur lors du chargement des domaines :", err);
+          });
+      } catch (error) {
+        console.error("Erreur lors du décodage du token :", error);
+      }
+    } else {
+      console.warn("Token non trouvé dans le localStorage");
+    }
+  }, []);
+  
+  useEffect(() => {
+    if (selectedDomaine) {
+      axios.get(`http://localhost:5000/api/auth/themes/byDomaine/${selectedDomaine}`)
+        .then(res => {
+          setThemes(res.data); // On suppose que res.data est un tableau de thèmes
+        })
+        .catch(err => console.error("Erreur lors du chargement des thèmes :", err));
+    } else {
+      setThemes([]); // Vide si aucun domaine sélectionné
+    }
+  }, [selectedDomaine]);
+  
   return (
     <>
       <NavBar2 />
@@ -84,19 +131,46 @@ const BaseGenerale = () => {
   <div className="filters">
     <div className="form-group">
       <label>Domaine</label>
-      <select><option>--Choisir un domaine --</option></select>
+      <select value={selectedDomaine} onChange={(e) => {
+  const selectedId = e.target.value;
+  setSelectedDomaine(selectedId);
+
+  // Trouve le domaine sélectionné
+  const domaineChoisi = domaines.find(d => d._id === selectedId);
+  // Mets à jour la liste des natures
+  setNatures(domaineChoisi ? domaineChoisi.nature : []);
+
+}}>
+  <option value="">--Choisir un domaine--</option>
+  {domaines.map((domaine) => (
+    <option key={domaine._id} value={domaine._id}>
+      {domaine.nom}
+    </option>
+  ))}
+</select>
     </div>
     <div className="form-group">
       <label>Thème</label>
-      <select><option>--Choisir un thème --</option></select>
-    </div>
+      <select>
+    <option value="">--Choisir un thème--</option>
+    {themes.map((theme, index) => (
+      <option key={index} value={theme.nom}>
+        {theme.nom}
+      </option>
+    ))}
+  </select>    </div>
     <div className="form-group">
       <label>Sous thème</label>
       <select><option>--Choisir un sous thème --</option></select>
     </div>
     <div className="form-group">
       <label>Nature</label>
-      <select><option>--Choisir une nature --</option></select>
+      <select>
+  <option>--Choisir une nature --</option>
+  {natures.map((nature, idx) => (
+    <option key={idx} value={nature}>{nature}</option>
+  ))}
+</select>
     </div>
     <div className="form-group">
       <label>Année de publication</label>
