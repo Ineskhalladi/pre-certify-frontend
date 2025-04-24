@@ -1,15 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../pages/MesResponsables.css";
-import {  FaFolderOpen, FaPlus } from "react-icons/fa";
+import { FaFolderOpen, FaPlus } from "react-icons/fa";
 import NavBar2 from "../components/NavBar2";
 import { MdRefresh } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { BiEdit, BiTrash } from "react-icons/bi";
+import axios from "axios";
 
 
 const MesResponsables = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  const [responsables, setResponsables] = useState([]);
 
+
+  useEffect(() => {
+    const fetchResponsables = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/auth/allres");
+        setResponsables(res.data);
+      } catch (err) {
+        console.error("Erreur récupération responsables :", err);
+      }
+    };
+  
+    fetchResponsables();
+  }, []);
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Voulez-vous vraiment supprimer ce responsable ?")) {
+      try {
+        await axios.delete(`http://localhost:5000/api/auth/${id}`);
+        setResponsables(responsables.filter(r => r._id !== id));
+      } catch (err) {
+        console.error("Erreur suppression :", err);
+      }
+    }
+  };
+  
+  const handleEdit = (responsable) => {
+    navigate(`/editerresponsable/${responsable._id}`);
+  };
+  
   return (
     <>
       <NavBar2 />
@@ -59,14 +91,31 @@ const MesResponsables = () => {
             </tr>
          </thead>
          <tbody>
-            <tr>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           <td></td>
-           </tr>
-         </tbody>
+         {responsables
+  .filter(r =>
+    r.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    r.prenom.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    r.emailres.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+  .map((resp) => (
+    <tr key={resp._id}>
+      <td>{resp.prenom} {resp.nom}</td>
+      <td>{resp.emailres}</td>
+      <td>{resp.telephone}</td>
+      <td>{resp.service}</td>
+      <td>
+        <div className="action-icones">
+          <BiEdit onClick={() => handleEdit(resp._id)} />
+          <BiTrash onClick={() => handleDelete(resp._id)} />
+        </div>
+      </td>
+    </tr>
+  ))}
+
+    
+        </tbody>
+            
+         
        </table>
 
        <div className="pagination-container">

@@ -1,13 +1,62 @@
-import React, { useState} from "react";
+import React, { useEffect, useState} from "react";
 import "../pages/AjouterResponsable.css";
 import { FaSyncAlt, FaSave, FaUserPlus } from "react-icons/fa";
 import NavBar2 from "../components/NavBar2";
 import { MdRefresh } from "react-icons/md";
-
+import axios from "axios"; 
+import { useNavigate } from "react-router-dom";
 
 const AjouterResponsable = () => {
+  const [prenom, setPrenom] = useState("");
+const [nom, setNom] = useState("");
+const [emailres, setEmailRes] = useState("");
+const [telephone, setTelephone] = useState("");
+const [accesModif, setAccesModif] = useState(false);
 
+  const [userEmail, setUserEmail] = useState("");
+  const [services, setServices] = useState([]); // 🔹 Liste des services
+  const [selectedService, setSelectedService] = useState(""); // 🔹 Service sélectionné
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user && user.email) {
+      setUserEmail(user.email);
+    }
+  }, []);
+
+  const handleSave = async () => {
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/ajoutres", {
+        prenom,
+        nom,
+        emailres,
+        telephone,
+        service: selectedService,
+        accesModif,
+        createdBy: userEmail,
+      });
+      console.log(" Responsable ajouter avec success")
+      navigate('/mesresponsables');
+        } catch (err) {
+      console.error("Erreur ajout responsable :", err);
+      alert("Erreur lors de l'ajout !");
+    }
+  };
   
+  useEffect(() => {
+    fetchServices();
+  }, []);
+
+  const fetchServices = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/api/auth/allservice");
+      setServices(res.data);
+    } catch (err) {
+      console.error("Erreur fetch services :", err);
+    }
+  };
+
   return (
     <>
       <NavBar2 />
@@ -32,52 +81,64 @@ const AjouterResponsable = () => {
   <div className="form-row">
     <div className="form-col">
       <label>Prénom</label>
-      <input type="text" className="input-res" placeholder="Entrer le prénom " />
+      <input type="text" className="input-res" placeholder="Entrer le prénom "  value={prenom}
+          onChange={(e) => setPrenom(e.target.value)}/>
     </div>
     <div className="form-col">
       <label>Nom</label>
-      <input type="text" className="input-res" placeholder="Entrer le nom" />
+      <input type="text" className="input-res" placeholder="Entrer le nom"   value={nom}
+          onChange={(e) => setNom(e.target.value)}/>
     </div>
   </div>
 
   <div className="form-row">
     <div className="form-col">
       <label>E-mail</label>
-      <input type="email" className="input-res" placeholder="Entrer l'email " />
+      <input type="email" className="input-res" placeholder="Entrer l'email "  value={emailres}
+          onChange={(e) => setEmailRes(e.target.value)}/>
     </div>
     <div className="form-col">
       <label>Téléphone</label>
-      <input type="text" className="input-res" placeholder="Entrer le numéro de phone" />
+      <input type="text" className="input-res" placeholder="Entrer le numéro de phone"  value={telephone}
+          onChange={(e) => setTelephone(e.target.value)}/>
     </div>
   </div>
 
   <div className="form-row">
     <div className="form-col-full">
       <label>Services</label>
-      <select className="input-res-select">
-        <option>--Choisir un service--</option>
-        <option>Service IT</option>
-        <option>Qualité</option>
-        <option>Production</option>
-      </select>
+      <select
+                className="input-res-select"
+                
+                value={selectedService}
+                onChange={(e) => setSelectedService(e.target.value)}
+              >
+                <option value="">-- Choisir un service --</option>
+                {services.map((service) => (
+                  <option key={service._id} value={service.nom}>
+                    {service.nom}
+                  </option>
+                ))}
+              </select>
     </div>
   </div>
 
   <div className="form-row form-row-bottom">
     <div className="form-col">
       <label>Associer ce compte à un compte utilisateur</label>
-      <select className="input-res">
-        <option>-- Choisir compte user--</option>
-        <option>user1@exemple.com</option>
-        <option>user2@exemple.com</option>
-      </select>
+      <select className="input-res" >
+  <option>-- Choisir compte user--</option>
+  <option>{userEmail}</option>
+
+</select>
+
     </div>
 
     <div className="form-col">
       <label>Donner accès à modifier les actions d'un responsable</label>
       <label className="switch">
-        <input type="checkbox" />
-        <span className="slider round"></span>
+  <input type="checkbox" checked={accesModif} onChange={(e) => setAccesModif(e.target.checked)} />
+  <span className="slider round"></span>
       </label>
     </div>
   </div>
@@ -86,7 +147,7 @@ const AjouterResponsable = () => {
 
 
 <div className="button-group">
-    <button className="btn-search"><FaSave /> Enregistrer</button>
+    <button className="btn-search" onClick={handleSave}><FaSave /> Enregistrer</button>
     <button className="btn-cancel"><FaSyncAlt /> Annuler</button>
   </div>
   </div>

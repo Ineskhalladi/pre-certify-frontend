@@ -1,15 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../pages/MesServices.css";
 import {  FaFolderOpen, FaPlus } from "react-icons/fa";
 import NavBar2 from "../components/NavBar2";
 import { MdRefresh } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { BiEdit, BiTrash } from "react-icons/bi";
+import axios from "axios";
 
 
 const MesServices = () => {
+  const [services, setServices] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    fetchServices();
+  }, []);
+
+  const fetchServices = async () => {
+    const res = await axios.get("http://localhost:5000/api/auth/allservice");
+    setServices(res.data);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("هل أنت متأكد من حذف هذا العنصر؟")) {
+      try {
+        await axios.delete(`http://localhost:5000/api/auth/deleteservice/${id}`);
+        fetchServices(); // إعادة التحديث
+      } catch (error) {
+        console.error("خطأ أثناء الحذف:", error);
+      }
+    }
+  };
+
+  const handleEdit = (service) => {
+    navigate(`/editerservice/${service._id}`, { state: service });
+  };
+
+  const filteredServices = services.filter((service) =>
+    service.nom.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   return (
     <>
       <NavBar2 />
@@ -57,13 +87,19 @@ const MesServices = () => {
             </tr>
          </thead>
          <tbody>
-            <tr>
-           <td></td>
-           <td></td>
-           <td></td>
-          
-           </tr>
-         </tbody>
+            {filteredServices.map((service) => (
+              <tr key={service._id}>
+                <td>{service.nom}</td>
+                <td>{service.actif ? "✅" : "❌"}</td>
+                <td>
+                  <div className="action-icones">
+                    <BiEdit  onClick={() => handleEdit(service)} className="icon-action" title="Modifier"  />
+                    <BiTrash onClick={() => handleDelete(service._id)} className="icon-action" title="Supprimer" />
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
        </table>
 
        <div className="pagination-container">

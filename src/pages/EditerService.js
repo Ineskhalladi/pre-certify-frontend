@@ -6,22 +6,28 @@ import { MdRefresh } from "react-icons/md";
 import { FaFolderPlus } from "react-icons/fa6";
 
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-const AjouterService = () => {
- 
-    const [nom, setNom] = useState("");
-    const [actif, setActif] = useState(true);
+import { useNavigate,useLocation  } from "react-router-dom";
+const EditerService = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const [nom, setNom] = useState(location.state?.nom || "");
+    const [actif, setActif] = useState(location.state?.actif || false);
+    const id = location.state?._id;
   
     const enregistrerService = async () => {
       try {
-        await axios.post("http://localhost:5000/api/auth/ajoutservice", { nom, actif });
+        if (id) {
+          await axios.put(`http://localhost:5000/api/auth/updateservice/${id}`, { nom, actif });
+        } else {
+          await axios.post("http://localhost:5000/api/auth/ajoutservice", { nom, actif });
+        }
         navigate("/messervices");
       } catch (error) {
-        console.error("Erreur lors de l'ajout :", error);
+        console.error("Erreur lors de l'enregistrement :", error);
       }
     };
-  
+ 
   return (
     <>
       <NavBar2 />
@@ -38,7 +44,7 @@ const AjouterService = () => {
 
   <div className="titre-multicritere">
     <FaFolderPlus className="icon-search" />
-    <h2>Ajouter service </h2>
+    <h2>Editer service </h2>
   </div>
   </div>
   <div className="line-horiz-compte"></div>
@@ -81,4 +87,4 @@ const AjouterService = () => {
   );
 };
 
-export default AjouterService ;
+export default EditerService ;

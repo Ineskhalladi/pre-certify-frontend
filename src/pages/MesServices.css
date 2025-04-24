@@ -171,4 +171,14 @@
     vertical-align: middle;
   }
   
- 
+  .action-icones{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+  justify-content: center; 
+   }
+    .action-icones svg{
+      font-size: 23px;
+      margin: 0;
+      padding: 0;
+    }
