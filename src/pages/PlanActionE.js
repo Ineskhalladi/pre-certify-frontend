@@ -1,11 +1,12 @@
-import React, { useState} from "react";
+import React, { useState, useEffect} from "react";
 import "../pages/PlanActionE.css";
 import { FaSearch, FaSyncAlt,  FaFolderOpen } from "react-icons/fa";
 import NavBar2 from "../components/NavBar2";
 import { MdRefresh } from "react-icons/md";
 import { ImFilePdf } from "react-icons/im";
 import "../pages/PlanActionE.css"
-
+import axios from "axios";
+import {jwtDecode} from "jwt-decode";
 
 const PlanActionE = () => {
 
@@ -30,50 +31,102 @@ const PlanActionE = () => {
     );
   };
   
+  const [domaines, setDomaines] = useState([]);
+    const [selectedDomaine, setSelectedDomaine] = useState("");
+    const [natures, setNatures] = useState([]);
+    
   
-  return (
-    <>
-      <NavBar2 />
-      <div className="base-container">
-      <div className="search-container">
-  <div className="header-top">
-    <h1 className="titre-base">Mes autres exigences</h1>
-    <div className="icon-actions">
-      <span className="icon-base" title="Réduire">─</span>
-      <span className="icon-base" title="Rafraîchir"><MdRefresh/></span>
-      <span className="icon-base" title="Agrandir">⛶</span>
-    </div>
-  </div>
-
-  <div className="titre-multicritere">
-    <FaSearch className="icon-search" />
-    <h2>Recherche Multicritères</h2>
-  </div>
-
-<div className="base-rech">
-  <div className="filters">
-    <div className="form-group">
-      <label>Domaine</label>
-      <select><option>--Choisir un domaine --</option></select>
-    </div>
+    useEffect(() => {
+      const token = localStorage.getItem("token");
+    
+      if (token) {
+        try {
+          const decoded = jwtDecode(token);
+          const userId = decoded.id; // ou decoded._id selon ton backend
+    
+          axios
+            .get(`http://localhost:5000/api/auth/user/${userId}/domaines`)
+            .then((res) => {
+              setDomaines(res.data);
+            })
+            .catch((err) => {
+              console.error("Erreur lors du chargement des domaines :", err);
+            });
+        } catch (error) {
+          console.error("Erreur lors du décodage du token :", error);
+        }
+      } else {
+        console.warn("Token non trouvé dans le localStorage");
+      }
+    }, []);
+    
    
-    <div className="form-group">
-      <label>Nature</label>
-      <select><option>--Choisir une nature --</option></select>
+    
+    return (
+      <>
+        <NavBar2 />
+        <div className="base-container">
+        <div className="search-container">
+    <div className="header-top">
+      <h1 className="titre-base">Base générale</h1>
+      <div className="icon-actions">
+        <span className="icon-base" title="Réduire">─</span>
+        <span className="icon-base" title="Rafraîchir"><MdRefresh/></span>
+        <span className="icon-base" title="Agrandir">⛶</span>
+      </div>
     </div>
- 
-    <div className="form-group">
-      <label>Mot clé</label>
-      <input type="text" placeholder="" />
+  
+    <div className="titre-multicritere">
+      <FaSearch className="icon-search" />
+      <h2>Recherche Multicritères</h2>
+    </div>
+  
+  <div className="base-rech">
+    <div className="filters">
+      <div className="form-group">
+        <label>Domaine</label>
+        <select value={selectedDomaine} onChange={(e) => {
+    const selectedId = e.target.value;
+    setSelectedDomaine(selectedId);
+  
+    // Trouve le domaine sélectionné
+    const domaineChoisi = domaines.find(d => d._id === selectedId);
+    // Mets à jour la liste des natures
+    setNatures(domaineChoisi ? domaineChoisi.nature : []);
+  
+  }}>
+    <option value="">--Choisir un domaine--</option>
+    {domaines.map((domaine) => (
+      <option key={domaine._id} value={domaine._id}>
+        {domaine.nom}
+      </option>
+    ))}
+  </select>
+      </div>
+      
+      
+      <div className="form-group">
+        <label>Nature</label>
+        <select>
+    <option>--Choisir une nature --</option>
+    {natures.map((nature, idx) => (
+      <option key={idx} value={nature}>{nature}</option>
+    ))}
+  </select>
+      </div>
+     
+      <div className="form-group">
+        <label>Mot clé</label>
+        <input type="text" placeholder="" />
+      </div>
+    </div>
+  
+    <div className="button-group">
+      <button className="btn-search"><FaSearch /> Recherche</button>
+      <button className="btn-cancel"><FaSyncAlt /> Annuler</button>
+    </div>
     </div>
   </div>
-
-  <div className="button-group">
-    <button className="btn-search"><FaSearch /> Recherche</button>
-    <button className="btn-cancel"><FaSyncAlt /> Annuler</button>
-  </div>
-  </div>
-</div>
 
         <div className="text-list-container">
         <div className="text-list-header">

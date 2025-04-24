@@ -70,7 +70,9 @@ const BaseGenerale = () => {
   const [selectedDomaine, setSelectedDomaine] = useState("");
   const [natures, setNatures] = useState([]);
   const [themes, setThemes] = useState([]);
-
+  const [selectedTheme, setSelectedTheme] = useState("");
+  const [sousThemes, setSousThemes] = useState([]);
+  
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -107,6 +109,18 @@ const BaseGenerale = () => {
       setThemes([]); // Vide si aucun domaine sélectionné
     }
   }, [selectedDomaine]);
+  
+  useEffect(() => {
+    if (selectedTheme) {
+      axios.get(`http://localhost:5000/api/auth/sousthemes/byTheme/${selectedTheme}`)
+        .then(res => {
+          setSousThemes(res.data);
+        })
+        .catch(err => console.error("Erreur lors du chargement des sous-thèmes :", err));
+    } else {
+      setSousThemes([]);
+    }
+  }, [selectedTheme]);
   
   return (
     <>
@@ -151,18 +165,25 @@ const BaseGenerale = () => {
     </div>
     <div className="form-group">
       <label>Thème</label>
-      <select>
-    <option value="">--Choisir un thème--</option>
-    {themes.map((theme, index) => (
-      <option key={index} value={theme.nom}>
-        {theme.nom}
-      </option>
-    ))}
-  </select>    </div>
+      <select onChange={(e) => setSelectedTheme(e.target.value)}>
+  <option value="">--Choisir un thème--</option>
+  {themes.map((theme, index) => (
+    <option key={index} value={theme._id}>
+      {theme.nom}
+    </option>
+  ))}
+</select>
+   </div>
     <div className="form-group">
       <label>Sous thème</label>
-      <select><option>--Choisir un sous thème --</option></select>
-    </div>
+      <select>
+  <option>--Choisir un sous thème --</option>
+  {sousThemes.map((sousTheme, index) => (
+    <option key={index} value={sousTheme._id}>
+      {sousTheme.nom}
+    </option>
+  ))}
+</select>    </div>
     <div className="form-group">
       <label>Nature</label>
       <select>

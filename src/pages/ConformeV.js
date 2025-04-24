@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState, useEffect} from "react";
 import "../pages/BaseGenerale.css";
 import { FaSearch, FaSyncAlt,  FaFolderOpen } from "react-icons/fa";
 import NavBar2 from "../components/NavBar2";
@@ -9,6 +9,8 @@ import "../pages/ConformeV.css"
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { RiRefreshLine } from "react-icons/ri";
+import axios from "axios";
+import {jwtDecode} from "jwt-decode";
 
 const ConformeV = () => {
 
@@ -62,6 +64,62 @@ const ConformeV = () => {
     );
   };
   
+
+  const [domaines, setDomaines] = useState([]);
+  const [selectedDomaine, setSelectedDomaine] = useState("");
+  const [natures, setNatures] = useState([]);
+  const [themes, setThemes] = useState([]);
+  const [selectedTheme, setSelectedTheme] = useState("");
+  const [sousThemes, setSousThemes] = useState([]);
+  
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+  
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        const userId = decoded.id; // ou decoded._id selon ton backend
+  
+        axios
+          .get(`http://localhost:5000/api/auth/user/${userId}/domaines`)
+          .then((res) => {
+            setDomaines(res.data);
+          })
+          .catch((err) => {
+            console.error("Erreur lors du chargement des domaines :", err);
+          });
+      } catch (error) {
+        console.error("Erreur lors du décodage du token :", error);
+      }
+    } else {
+      console.warn("Token non trouvé dans le localStorage");
+    }
+  }, []);
+  
+  useEffect(() => {
+    if (selectedDomaine) {
+      axios.get(`http://localhost:5000/api/auth/themes/byDomaine/${selectedDomaine}`)
+        .then(res => {
+          setThemes(res.data); // On suppose que res.data est un tableau de thèmes
+        })
+        .catch(err => console.error("Erreur lors du chargement des thèmes :", err));
+    } else {
+      setThemes([]); // Vide si aucun domaine sélectionné
+    }
+  }, [selectedDomaine]);
+  
+  useEffect(() => {
+    if (selectedTheme) {
+      axios.get(`http://localhost:5000/api/auth/sousthemes/byTheme/${selectedTheme}`)
+        .then(res => {
+          setSousThemes(res.data);
+        })
+        .catch(err => console.error("Erreur lors du chargement des sous-thèmes :", err));
+    } else {
+      setSousThemes([]);
+    }
+  }, [selectedTheme]);
   
   return (
     <>
@@ -69,7 +127,7 @@ const ConformeV = () => {
       <div className="base-container">
       <div className="search-container">
   <div className="header-top">
-    <h1 className="titre-base">Evaluation de conformité</h1>
+    <h1 className="titre-base">Base générale</h1>
     <div className="icon-actions">
       <span className="icon-base" title="Réduire">─</span>
       <span className="icon-base" title="Rafraîchir"><MdRefresh/></span>
@@ -86,19 +144,53 @@ const ConformeV = () => {
   <div className="filters">
     <div className="form-group">
       <label>Domaine</label>
-      <select><option>--Choisir un domaine --</option></select>
+      <select value={selectedDomaine} onChange={(e) => {
+  const selectedId = e.target.value;
+  setSelectedDomaine(selectedId);
+
+  // Trouve le domaine sélectionné
+  const domaineChoisi = domaines.find(d => d._id === selectedId);
+  // Mets à jour la liste des natures
+  setNatures(domaineChoisi ? domaineChoisi.nature : []);
+
+}}>
+  <option value="">--Choisir un domaine--</option>
+  {domaines.map((domaine) => (
+    <option key={domaine._id} value={domaine._id}>
+      {domaine.nom}
+    </option>
+  ))}
+</select>
     </div>
     <div className="form-group">
       <label>Thème</label>
-      <select><option>--Choisir un thème --</option></select>
-    </div>
+      <select onChange={(e) => setSelectedTheme(e.target.value)}>
+  <option value="">--Choisir un thème--</option>
+  {themes.map((theme, index) => (
+    <option key={index} value={theme._id}>
+      {theme.nom}
+    </option>
+  ))}
+</select>
+   </div>
     <div className="form-group">
       <label>Sous thème</label>
-      <select><option>--Choisir un sous thème --</option></select>
-    </div>
+      <select>
+  <option>--Choisir un sous thème --</option>
+  {sousThemes.map((sousTheme, index) => (
+    <option key={index} value={sousTheme._id}>
+      {sousTheme.nom}
+    </option>
+  ))}
+</select>    </div>
     <div className="form-group">
       <label>Nature</label>
-      <select><option>--Choisir une nature --</option></select>
+      <select>
+  <option>--Choisir une nature --</option>
+  {natures.map((nature, idx) => (
+    <option key={idx} value={nature}>{nature}</option>
+  ))}
+</select>
     </div>
     <div className="form-group">
       <label>Année de publication</label>
