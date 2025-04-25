@@ -96,7 +96,7 @@ const App = () => {
         <Route path="/monitoring" element={<Monitoring />} />
         <Route path="/statistiquesv" element={<StatistiquesV />} />
         <Route path="/editerservice/:id" element={<EditerService />} />
-        <Route path="/editerresponsable/:id" element={<EditerService />} />
+        <Route path="/editerresponsable/:id" element={<EditerResponsable />} />
 
       </Routes>
 

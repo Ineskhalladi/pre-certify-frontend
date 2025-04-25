@@ -30,7 +30,7 @@ const MesResponsables = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Voulez-vous vraiment supprimer ce responsable ?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/auth/${id}`);
+        await axios.delete(`http://localhost:5000/api/auth/deleteres/${id}`);
         setResponsables(responsables.filter(r => r._id !== id));
       } catch (err) {
         console.error("Erreur suppression :", err);
@@ -38,8 +38,8 @@ const MesResponsables = () => {
     }
   };
   
-  const handleEdit = (responsable) => {
-    navigate(`/editerresponsable/${responsable._id}`);
+  const handleEdit = async (responsable) => {
+    navigate(`/editerresponsable/${responsable._id}`, { state: responsable }); // تم تمرير المسؤول الحالي كـ state إلى صفحة التعديل
   };
   
   return (
@@ -100,7 +100,7 @@ const MesResponsables = () => {
   .map((resp) => (
     <tr key={resp._id}>
       <td>{resp.prenom} {resp.nom}</td>
-      <td>{resp.emailres}</td>
+      <td>{resp.emailRes}</td>
       <td>{resp.telephone}</td>
       <td>{resp.service}</td>
       <td>

@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 const AjouterResponsable = () => {
   const [prenom, setPrenom] = useState("");
 const [nom, setNom] = useState("");
-const [emailres, setEmailRes] = useState("");
+const [emailRes, setEmailRes] = useState("");
 const [telephone, setTelephone] = useState("");
 const [accesModif, setAccesModif] = useState(false);
 
@@ -30,19 +30,28 @@ const [accesModif, setAccesModif] = useState(false);
       const res = await axios.post("http://localhost:5000/api/auth/ajoutres", {
         prenom,
         nom,
-        emailres,
+        emailRes,
         telephone,
         service: selectedService,
         accesModif,
         createdBy: userEmail,
       });
-      console.log(" Responsable ajouter avec success")
-      navigate('/mesresponsables');
-        } catch (err) {
+  
+      console.log("Responsable ajouté avec succès");
+      navigate("/mesresponsables");
+  
+    } catch (err) {
       console.error("Erreur ajout responsable :", err);
-      alert("Erreur lors de l'ajout !");
+  
+      // ✅ Retourner l'erreur dans un alert
+      if (err.response && err.response.data && err.response.data.error) {
+        alert(`❌ ${err.response.data.error}`);
+      } else {
+        alert("❌ Erreur lors de l'ajout !");
+      }
     }
   };
+  
   
   useEffect(() => {
     fetchServices();
@@ -94,7 +103,7 @@ const [accesModif, setAccesModif] = useState(false);
   <div className="form-row">
     <div className="form-col">
       <label>E-mail</label>
-      <input type="email" className="input-res" placeholder="Entrer l'email "  value={emailres}
+      <input type="email" className="input-res" placeholder="Entrer l'email "  value={emailRes}
           onChange={(e) => setEmailRes(e.target.value)}/>
     </div>
     <div className="form-col">
