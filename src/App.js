@@ -30,6 +30,7 @@ import Monitoring from "./pages/Monitoring";
 import StatistiquesV from "./pages/StatistiquesV";
 import EditerService from "./pages/EditerService";
 import EditerResponsable from "./pages/EditerResponsable";
+import StatistiquesE from "./pages/StatistiquesE";
 
 
 const App = () => {
@@ -58,6 +59,7 @@ const App = () => {
   const isStatistiquesV = location.pathname === "/statistiquesv";
   const isEditerService = location.pathname.startsWith("/editerservice");
   const isEditerResponsable = location.pathname.startsWith("/editerresponsable");
+  const isStatistiquesE = location.pathname === "/statistiquese";
 
   return (
     <>
@@ -66,7 +68,7 @@ const App = () => {
        && !isAjouterResponsable && !isAjouterService && !isMesResponsables 
        && !isMesServices && !isMesUtilisateurs && !isMesExigences && !isConformeE
        && !isPlanActionE && !isMonitoring && !isStatistiquesV && !isEditerService
-      && !isEditerResponsable && <NavBar />}
+      && !isEditerResponsable && !isStatistiquesE && <NavBar />}
 
       <Routes>
       <Route path="/" element={<Home />} />
@@ -97,6 +99,7 @@ const App = () => {
         <Route path="/statistiquesv" element={<StatistiquesV />} />
         <Route path="/editerservice/:id" element={<EditerService />} />
         <Route path="/editerresponsable/:id" element={<EditerResponsable />} />
+        <Route path="/statistiquese" element={<StatistiquesE />} />
 
       </Routes>
 
@@ -105,7 +108,7 @@ const App = () => {
       && !isAjouterResponsable && !isAjouterService && !isMesResponsables 
       && !isMesServices && !isMesUtilisateurs && !isMesExigences && !isConformeE
       && !isPlanActionE  && !isMonitoring && !isStatistiquesV && !isEditerService
-      && !isEditerResponsable &&  <Footer />}
+      && !isEditerResponsable && !isStatistiquesE &&  <Footer />}
     </>
   );
 };

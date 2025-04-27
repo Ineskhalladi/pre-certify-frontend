@@ -97,7 +97,7 @@ const NavBar2 = () => {
               <Link to="/mesexigences">Mes Exigences</Link>
               <Link to="/conformee">Évaluation de Conformité</Link>
               <Link to="/planactione">Mon Plan d'Action</Link>
-              <Link to="/statistiques des exigences">Statistiques des Exigences</Link>
+              <Link to="/statistiquese">Statistiques des Exigences</Link>
             </div>
           )}
         </div>
