@@ -31,6 +31,8 @@ import StatistiquesV from "./pages/StatistiquesV";
 import EditerService from "./pages/EditerService";
 import EditerResponsable from "./pages/EditerResponsable";
 import StatistiquesE from "./pages/StatistiquesE";
+import Textes from "./pages/Textes.js";
+import AjouteTexte from "./pages/AjouteTexte.js";
 
 
 const App = () => {
@@ -60,6 +62,8 @@ const App = () => {
   const isEditerService = location.pathname.startsWith("/editerservice");
   const isEditerResponsable = location.pathname.startsWith("/editerresponsable");
   const isStatistiquesE = location.pathname === "/statistiquese";
+  const isTextes = location.pathname === "/veille";
+  const isAjouteTexte = location.pathname === "/ajoutetexte";
 
   return (
     <>
@@ -68,10 +72,11 @@ const App = () => {
        && !isAjouterResponsable && !isAjouterService && !isMesResponsables 
        && !isMesServices && !isMesUtilisateurs && !isMesExigences && !isConformeE
        && !isPlanActionE && !isMonitoring && !isStatistiquesV && !isEditerService
-      && !isEditerResponsable && !isStatistiquesE && <NavBar />}
+      && !isEditerResponsable && !isStatistiquesE && !isTextes && !isAjouteTexte && <NavBar />}
 
       <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/home" element={<Home />} />
       <Route path="/normes" element={<Normes />} />
       <Route path="/veillereg" element={<VeilleReg />} />
         <Route path="/contact" element={<ContactUs />} />
@@ -100,6 +105,8 @@ const App = () => {
         <Route path="/editerservice/:id" element={<EditerService />} />
         <Route path="/editerresponsable/:id" element={<EditerResponsable />} />
         <Route path="/statistiquese" element={<StatistiquesE />} />
+        <Route path="/veille" element={<Textes />} />
+        <Route path="/ajoutetexte" element={<AjouteTexte />} />
 
       </Routes>
 
@@ -108,7 +115,7 @@ const App = () => {
       && !isAjouterResponsable && !isAjouterService && !isMesResponsables 
       && !isMesServices && !isMesUtilisateurs && !isMesExigences && !isConformeE
       && !isPlanActionE  && !isMonitoring && !isStatistiquesV && !isEditerService
-      && !isEditerResponsable && !isStatistiquesE &&  <Footer />}
+      && !isEditerResponsable && !isStatistiquesE && !isTextes && !isAjouteTexte &&  <Footer />}
     </>
   );
 };

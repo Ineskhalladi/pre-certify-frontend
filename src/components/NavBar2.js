@@ -67,9 +67,8 @@ const NavBar2 = () => {
           onMouseEnter={() => setIsMaVeilleOpen(true)}
           onMouseLeave={() => setIsMaVeilleOpen(false)}
         >
-          <div className={`menu-item3 ${location.pathname === "/veille" ? "active" : ""}`}
-          >
-            <FiLayout className="icon-nav3" /> Ma Veille 
+          <div className={`menu-item3 ${location.pathname === "/veille" ? "active" : ""}`} >
+            <Link to="/veille" className="veille2"> <FiLayout className="icon-nav3" /> Ma Veille </Link>
           </div>
           {isMaVeilleOpen && (
             <div className="dropdown-content3">

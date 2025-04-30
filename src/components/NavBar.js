@@ -49,7 +49,6 @@ const Navbar = () => {
       )}
     </div>
         
-        <Link to="/info" className='na'>Information et actualités</Link>
         <Link to="/veillereg" className='na'>Veille</Link>
         <Link to="/contact" className='na'>Contact</Link>
       </div>
@@ -63,7 +62,7 @@ const Navbar = () => {
           autoFocus={showSearch}
         />
         <button className="access-button">
-          <img src={evolu} className="evolu" />
+          <img src={evolu} className="evolu" alt='evolu'/>
           <Link to="/signin">Accès Veille</Link>
         </button>
       </div>

@@ -48,10 +48,10 @@ const Dashboard = () => {
       <div className="domaines-box">
     <h2 className="domaines-title">Domaine acquis</h2>
     <div className="domaines-list">
-      <div className="domaine-item">Santé et Sécurité au Travail</div>
       <div className="domaine-item">Risques Industriels et autres</div>
-      <div className="domaine-item">Environnement</div>
       <div className="domaine-item">Qualité</div>
+      <div className="domaine-item">Environnement</div>
+      <div className="domaine-item">Santé et Sécurité au Travail</div>
       <div className="domaine-item">Responsabilité Sociétale de Entreprise</div>
     </div>
     <div className="autres-domaines">+ Autres domaines</div>

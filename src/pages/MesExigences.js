@@ -76,7 +76,7 @@ const MesExigences = () => {
       <div className="base-container">
       <div className="search-container">
   <div className="header-top">
-    <h1 className="titre-base">Base générale</h1>
+    <h1 className="titre-base">Mes exigences</h1>
     <div className="icon-actions">
       <span className="icon-base" title="Réduire">─</span>
       <span className="icon-base" title="Rafraîchir"><MdRefresh/></span>

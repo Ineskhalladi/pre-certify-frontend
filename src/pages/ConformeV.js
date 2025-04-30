@@ -127,7 +127,7 @@ const ConformeV = () => {
       <div className="base-container">
       <div className="search-container">
   <div className="header-top">
-    <h1 className="titre-base">Base générale</h1>
+    <h1 className="titre-base">Evaluation de Conformité</h1>
     <div className="icon-actions">
       <span className="icon-base" title="Réduire">─</span>
       <span className="icon-base" title="Rafraîchir"><MdRefresh/></span>
@@ -192,10 +192,7 @@ const ConformeV = () => {
   ))}
 </select>
     </div>
-    <div className="form-group">
-      <label>Année de publication</label>
-      <select><option>--Choisir --</option></select>
-    </div>
+
     <div className="form-group">
       <label>Mot clé</label>
       <input type="text" placeholder="" />
@@ -257,7 +254,6 @@ const ConformeV = () => {
             <th>Thème</th>
             <th>Sous thème</th>
             <th>Référence</th>
-            <th>P/I</th>
             <th>AV/C/NC</th>
             <th>Exigences</th>
             <th>AV/C/NC</th>
@@ -277,7 +273,6 @@ const ConformeV = () => {
                   <div key={idx}>{line}</div>
                 ))}
               </td>
-              <td></td>
               <td>
   <div className="Status-container">
   <div className={`status-label status-${row.statusAvant?.toLowerCase()}`}>

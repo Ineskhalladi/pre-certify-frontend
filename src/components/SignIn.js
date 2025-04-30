@@ -107,7 +107,10 @@ const SignIn = () => {
             <button className="login-button" onClick={handleSignIn} disabled={!!passwordError}>Login</button>
           </div>
         </div>
+     <Link to="/home" className="back-link1">Back to <span className="lien-login1">Home</span></Link>
+        
       </div>
+      
     </div>
   );
 };

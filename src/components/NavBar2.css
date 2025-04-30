@@ -256,4 +256,24 @@ margin-bottom: -5px;
     align-items: center;
     position: relative;
   }
+  .veille2{
   
+    color: rgba(31, 58, 36, 0.92);
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none ;
+    border-bottom: none !important;
+
+  }
+  .veille2:hover {
+    color: rgba(224, 166, 0, 1);
+    font-weight: bold;
+}
+.veille2.active {
+    color: rgba(224, 166, 0, 1);
+    font-weight: bold;
+    text-decoration: underline rgba(224, 166, 0, 1);
+margin-bottom: -5px;
+  }

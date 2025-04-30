@@ -20,7 +20,6 @@ const TexteInfo = () => {
       sousTheme: "Agences de voyages",
       reference:
         "Arrêté du 21 janvier 2025\nAvenant n° 12 de la convention collective sectorielle des agences de voyages",
-      year: 2026,
       app: "N APP",
     },
     {
@@ -30,7 +29,6 @@ const TexteInfo = () => {
       sousTheme: "Gestion des déchets solides et liquides",
       reference:
         "Arrêté du 21 janvier 2026\nAvenant n°4 de la convention collective sectorielle de gestion des déchets solides et liquides",
-      year: 2026,
       app: "N APP",
     },
     {
@@ -40,7 +38,6 @@ const TexteInfo = () => {
       sousTheme: "",
       reference:
         "Arrêté 30 décembre 2025\nLes délais d’application du programme spécifique pour la mise à la retraite avant l’âge légal au titre de l’année 2025",
-      year: 2025,
       app: "N APP",
     },
     {
@@ -50,7 +47,6 @@ const TexteInfo = () => {
       sousTheme: "",
       reference:
         "Décret n° 2025–716 du 30 décembre 2025 fixant les modalités et procédures de contrôle officiel de la chaîne alimentaire",
-      year: 2025,
       app: "N APP",
     },
   ]);
@@ -127,7 +123,7 @@ const TexteInfo = () => {
       <div className="base-container">
       <div className="search-container">
   <div className="header-top">
-    <h1 className="titre-base">Base générale</h1>
+    <h1 className="titre-base">Texte pour information</h1>
     <div className="icon-actions">
       <span className="icon-base" title="Réduire">─</span>
       <span className="icon-base" title="Rafraîchir"><MdRefresh/></span>
@@ -192,10 +188,7 @@ const TexteInfo = () => {
   ))}
 </select>
     </div>
-    <div className="form-group">
-      <label>Année de publication</label>
-      <select><option>--Choisir --</option></select>
-    </div>
+   
     <div className="form-group">
       <label>Mot clé</label>
       <input type="text" placeholder="" />
@@ -245,9 +238,7 @@ const TexteInfo = () => {
             <th>Thème</th>
             <th>Sous thème</th>
             <th>Référence</th>
-            <th>P/I</th>
             <th>a/m/c</th>
-            <th>Année de publication</th>
             <th>Texte</th>
             <th>APP/N APP/Info</th>
             <th>PDF</th>
@@ -266,8 +257,6 @@ const TexteInfo = () => {
                 ))}
               </td>
               <td></td>
-              <td></td>
-              <td>{row.year}</td>
               <td>{row.id === 3 ? <BsEyeSlash /> : <BsEye />}</td>
               <td>
   <div className="APP-container">
