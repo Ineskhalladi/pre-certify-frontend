@@ -6,6 +6,9 @@ import Forget from "./components/Forget";
 import ResetPwd from "./components/ResetPwd";
 import ContactUs from "./pages/ContactUs";
 import NavBar from "./components/NavBar";
+import NavBar2 from "./components/NavBar2.js";
+import NavBar3 from "./components/NavBar3.js";
+
 import Footer from "./components/Footer";
 import Dashboard from "./pages/Dashboard"; 
 import BaseGenerale from "./pages/BaseGenerale";
@@ -33,52 +36,39 @@ import EditerResponsable from "./pages/EditerResponsable";
 import StatistiquesE from "./pages/StatistiquesE";
 import Textes from "./pages/Textes.js";
 import AjouteTexte from "./pages/AjouteTexte.js";
+import EditTexte from "./pages/EditTexte.js";
 
 
 const App = () => {
   const location = useLocation();
-  const isAuthPage = location.pathname === "/signin" 
-  || location.pathname === "/signup" 
-  || location.pathname === "/forget" 
-  || location.pathname === "/resetpwd"
-  || location.pathname.startsWith("/verify");
-  const isDashboard = location.pathname === "/dashboard";
-  const isBaseGenerale = location.pathname === "/basegenerale";
-  const isTexteInfo = location.pathname === "/texteinfo";
-  const isTexteApp = location.pathname === "/texteapp";
-  const isConformeV = location.pathname === "/conformev";
-  const isPlanActionV = location.pathname === "/planactionv";
-  const isMonCompte = location.pathname === "/moncompte";
-  const isAjouterResponsable = location.pathname === "/ajouterresponsable";
-  const isAjouterService = location.pathname === "/ajouterservice";
-  const isMesResponsables = location.pathname === "/mesresponsables";
-  const isMesServices = location.pathname === "/messervices";
-  const isMesUtilisateurs = location.pathname === "/mesutilisateurs";
-  const isMesExigences = location.pathname === "/mesexigences";
-  const isConformeE = location.pathname === "/conformee";
-  const isPlanActionE = location.pathname === "/planactione";
-  const isMonitoring = location.pathname === "/monitoring";
-  const isStatistiquesV = location.pathname === "/statistiquesv";
-  const isEditerService = location.pathname.startsWith("/editerservice");
-  const isEditerResponsable = location.pathname.startsWith("/editerresponsable");
-  const isStatistiquesE = location.pathname === "/statistiquese";
-  const isTextes = location.pathname === "/veille";
-  const isAjouteTexte = location.pathname === "/ajoutetexte";
+  const path = location.pathname;
+
+  // Pages auth
+  const isAuthPage = ["/signin", "/signup", "/forget", "/resetpwd"].includes(path) || path.startsWith("/verify");
+
+  // Pages تظهر فيهم Navbar3 فقط
+  const isNavbar3Page = ["/textes","/", "/ajoutetexte", "/edittexte/:id"].includes(path);
+
+  // Pages يظهر فيهم Navbar + Footer فقط
+  const isNavbarFooterPage = ["/home", "/normes", "/veillereg", "/contact"].includes(path);
+
+  // Pages يظهر فيهم Navbar2 فقط
+  const isNavbar2Page = !isAuthPage && !isNavbar3Page && !isNavbarFooterPage;
 
   return (
     <>
-      {!isAuthPage && !isDashboard && !isBaseGenerale && !isTexteInfo
-       && !isTexteApp && !isConformeV && !isPlanActionV && !isMonCompte
-       && !isAjouterResponsable && !isAjouterService && !isMesResponsables 
-       && !isMesServices && !isMesUtilisateurs && !isMesExigences && !isConformeE
-       && !isPlanActionE && !isMonitoring && !isStatistiquesV && !isEditerService
-      && !isEditerResponsable && !isStatistiquesE && !isTextes && !isAjouteTexte && <NavBar />}
+      {/* Navbar3 */}
+      {isNavbar3Page && <NavBar3 />}
+
+      {/* Navbar + Footer */}
+      {isNavbarFooterPage && <NavBar />}
+      {isNavbar2Page && <NavBar2 />}
 
       <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/home" element={<Home />} />
-      <Route path="/normes" element={<Normes />} />
-      <Route path="/veillereg" element={<VeilleReg />} />
+        {/* Routes ici comme dans ton code */}
+        <Route path="/home" element={<Home />} />
+        <Route path="/normes" element={<Normes />} />
+        <Route path="/veillereg" element={<VeilleReg />} />
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
@@ -86,7 +76,7 @@ const App = () => {
         <Route path="/forget" element={<Forget />} />
         <Route path="/resetpwd" element={<ResetPwd />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/basegenerale" element={<BaseGenerale/>} />
+        <Route path="/basegenerale" element={<BaseGenerale />} />
         <Route path="/texteinfo" element={<TexteInfo />} />
         <Route path="/texteapp" element={<TexteApp />} />
         <Route path="/conformev" element={<ConformeV />} />
@@ -95,9 +85,9 @@ const App = () => {
         <Route path="/ajouterresponsable" element={<AjouterResponsable />} />
         <Route path="/ajouterservice" element={<AjouterService />} />
         <Route path="/mesresponsables" element={<MesResponsables />} />
-        <Route path="/messervices" element={<MesServices/>} />
-        <Route path="/mesutilisateurs" element={<MesUtilisateurs/>} />
-        <Route path="/mesexigences" element={<MesExigences/>} />
+        <Route path="/messervices" element={<MesServices />} />
+        <Route path="/mesutilisateurs" element={<MesUtilisateurs />} />
+        <Route path="/mesexigences" element={<MesExigences />} />
         <Route path="/conformee" element={<ConformeE />} />
         <Route path="/planactione" element={<PlanActionE />} />
         <Route path="/monitoring" element={<Monitoring />} />
@@ -105,17 +95,14 @@ const App = () => {
         <Route path="/editerservice/:id" element={<EditerService />} />
         <Route path="/editerresponsable/:id" element={<EditerResponsable />} />
         <Route path="/statistiquese" element={<StatistiquesE />} />
-        <Route path="/veille" element={<Textes />} />
+        <Route path="/textes" element={<Textes />} />
         <Route path="/ajoutetexte" element={<AjouteTexte />} />
-
+        <Route path="/edittexte/:id" element={<EditTexte />} />
+        <Route path="/" element={<Textes />} />
       </Routes>
 
-      {!isAuthPage && !isDashboard && !isBaseGenerale && !isTexteInfo 
-      && !isTexteApp && !isConformeV && !isPlanActionV && !isMonCompte
-      && !isAjouterResponsable && !isAjouterService && !isMesResponsables 
-      && !isMesServices && !isMesUtilisateurs && !isMesExigences && !isConformeE
-      && !isPlanActionE  && !isMonitoring && !isStatistiquesV && !isEditerService
-      && !isEditerResponsable && !isStatistiquesE && !isTextes && !isAjouteTexte &&  <Footer />}
+      {/* Footer uniquement pour les pages où il y a NavBar classique */}
+      {isNavbarFooterPage && <Footer />}
     </>
   );
 };

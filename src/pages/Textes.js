@@ -2,7 +2,7 @@ import React, { useState, useEffect} from "react";
 import "../pages/Veille.css";
 import { useNavigate } from "react-router-dom";
 import { FaSyncAlt, FaUser, FaSave, FaFolderOpen, FaPlus } from "react-icons/fa";
-import NavBar2 from "../components/NavBar2";
+import NavBar3 from "../components/NavBar3";
 import { MdRefresh } from "react-icons/md";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
@@ -12,14 +12,30 @@ const Textes = () => {
   
     const [searchTerm, setSearchTerm] = useState("");
     const navigate = useNavigate();
-    const [responsables, setResponsables] = useState([]);
-  
-  
+    const [textes, setTextes] = useState([]);
 
+    useEffect(() => {
+      axios.get("http://localhost:5000/api/auth/alltexte")
+        .then((res) => setTextes(res.data))
+        .catch((err) => console.error("Erreur lors du chargement des textes :", err));
+    }, []);
+    
+    const handleDelete = async (id) => {
+      try {
+        const confirmation = window.confirm("Êtes-vous sûr de vouloir supprimer ce texte ?");
+        if (confirmation) {
+          await axios.delete(`http://localhost:5000/api/auth/deletetexte/${id}`);
+          setTextes(textes.filter(texte => texte._id !== id)); // Retirer le texte supprimé de l'état local
+        }
+      } catch (err) {
+        console.error("Erreur lors de la suppression du texte :", err);
+        alert("Une erreur est survenue lors de la suppression.");
+      }
+    };
     
     return (
       <>
-        <NavBar2 />
+      
         <div className="base-container">
           <div className="search-container">
             <div className="header-top">
@@ -58,33 +74,42 @@ const Textes = () => {
    <table className="responsables-table">
            <thead>
            <tr>
-                <th>Domaine</th>
-                <th>Theme</th>
-                <th>Sous theme</th>
-                <th>Nature</th>
-                <th>Réference</th>
-                <th>Action</th>
+           <th>Secteur</th>
+      <th>Domaine</th>
+      <th>Thème</th>
+      <th>Sous-thème</th>
+      <th>Nature</th>
+      <th>Service</th>
+      <th>Texte</th>
+      <th>Référence</th>
+      <th>Type</th>
+      <th>Action</th>
 
               </tr>
            </thead>
            <tbody>
-      
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+    
+      {textes.map((t) => (
+      <tr key={t._id}>
+        <td>{t.secteur}</td>
+        <td>{t.domaine}</td>
+        <td>{t.theme}</td>
+        <td>{t.sousTheme}</td>
+        <td>{t.nature}</td>
+        <td>{t.service}</td>
+        <td>{t.texte}</td>
+        <td>{t.reference}</td>
+        <td>{t.typeTexte}</td>
 
         <td>
           <div className="action-icones">
-            <BiEdit  />
-            <BiTrash  />
+            <BiEdit onClick={() => navigate(`/edittexte/${t._id}`)}  />
+            <BiTrash onClick={() => handleDelete(t._id)}  />
           </div>
         </td>
       </tr>
     
-      
+      ))}
           </tbody>
               
            

@@ -11,12 +11,11 @@ import { LuBell, LuList } from "react-icons/lu";
 import { BiFolder, BiSearch, BiUser } from "react-icons/bi";
 import profile from "../assets/profile.png"
 import { TbUsersGroup } from "react-icons/tb";
-const NavBar2 = () => {
+const NavBar3 = () => {
   const navigate = useNavigate();
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isMaVeilleOpen, setIsMaVeilleOpen] = useState(false);
-  const [isExigencesOpen, setIsExigencesOpen] = useState(false);
+ 
   const location = useLocation();
   const [userName, setUserName] = useState("");
 
@@ -60,55 +59,19 @@ const NavBar2 = () => {
       <nav className="navbar-bottom3">
         <Link to="/dashboard" className={`menu-item3 ${location.pathname === "/dashboard" ? "active" : ""}`}><FiMonitor className="icon-nav3" /> Tableau de Bord</Link>
         <Link to="/basegenerale" className={`menu-item3 ${location.pathname === "/basegenerale" ? "active" : ""}`}
-        ><LuList className="icon-nav3" /> Base Générale</Link>
+        ><LuList className="icon-nav3" /> Liste des demandes</Link>
 
-        <div 
-          className="dropdown3" 
-          onMouseEnter={() => setIsMaVeilleOpen(true)}
-          onMouseLeave={() => setIsMaVeilleOpen(false)}
-        >
-          <div className={`menu-item3 ${location.pathname === "/veille" ? "active" : ""}`} >
-         <FiLayout className="icon-nav3" /> Ma Veille 
-          </div>
-          {isMaVeilleOpen && (
-            <div className="dropdown-content3">
-              <Link to="/texteinfo">Textes pour Information</Link>
-              <Link to="/texteapp">Textes Applicables</Link>
-              <Link to="/conformev">Évaluation de Conformité</Link>
-              <Link to="/planactionv">Mon Plan d'Action</Link>
-              <Link to="/statistiquesv">Mes Statistiques</Link>
-              <Link to="/Suivie">Suivie</Link>
+<Link to="/basegenerale" className={`menu-item3 ${location.pathname === "/basegenerale" ? "active" : ""}`}
+        ><LuList className="icon-nav3" /> Liste de accepter des enreprises </Link>
 
-            </div>
-          )}
-        </div>
+<Link to="/basegenerale" className={`menu-item3 ${location.pathname === "/basegenerale" ? "active" : ""}`}
+        ><LuList className="icon-nav3" /> Liste des auditeurs </Link>
 
-        <div 
-          className="dropdown3" 
-          onMouseEnter={() => setIsExigencesOpen(true)}
-          onMouseLeave={() => setIsExigencesOpen(false)}
-        >
-          <div className={`menu-item3 ${location.pathname === "/mes autres exigences" ? "active" : ""}`}>
-            <FiZap className="icon-nav3" /> Mes Autres Exigences 
-          </div>
-          {isExigencesOpen && (
-            <div className="dropdown-content3">
-              <Link to="/mesexigences">Mes Exigences</Link>
-              <Link to="/conformee">Évaluation de Conformité</Link>
-              <Link to="/planactione">Mon Plan d'Action</Link>
-              <Link to="/statistiquese">Statistiques des Exigences</Link>
-            </div>
-          )}
-        </div>
+   
+<Link to="/textes" className={`menu-item3 ${location.pathname === "/basegenerale" ? "active" : ""}`}
+        ><LuList className="icon-nav3" /> Liste des textes  </Link>
+     
 
-        <Link to="/monitoring" className={`menu-item3 ${location.pathname === "/monitoring" ? "active" : ""}`}>
-        <FiGrid className="icon-nav3" /> Monitoring</Link>
-        <Link to="/mes alertes"  className={`menu-item3 ${location.pathname === "/mes alertes" ? "active" : ""}`}>
-        <LuBell className="icon-nav3" /> Mes Alertes <span className="alert-count">20</span></Link>        
-        <div className="search-container3">
-  <BiSearch className="search-icon3" onClick={() => console.log("Recherche activée")} />
-  <input type="text" placeholder="Rechercher..." className="search-input2" />
-</div>
       </nav>
 
       {isProfileOpen && (
@@ -117,18 +80,7 @@ const NavBar2 = () => {
     <BiUser className="icon-profiles" />
     <Link to="/moncompte" onClick={() => setIsProfileOpen(false)}>Mon compte</Link>
   </div>
-  <div className="dropdown-item3">
-    <TbUsersGroup className="icon-profiles" />
-    <Link to="/mesutilisateurs" onClick={() => setIsProfileOpen(false)}>Mes utilisateurs</Link>
-  </div>
-  <div className="dropdown-item3">
-    <BiFolder className="icon-profiles" />
-    <Link to="/messervices" onClick={() => setIsProfileOpen(false)}>Mes services</Link>
-  </div>
-  <div className="dropdown-item3">
-    <FiUsers className="icon-profiles" />
-    <Link to="/mesresponsables" onClick={() => setIsProfileOpen(false)}>Mes responsables</Link>
-  </div>
+ 
           <div className="dropdown-item3 logout"
            onMouseDown={handleLogout}
            tabIndex="0"
@@ -141,7 +93,7 @@ const NavBar2 = () => {
   );
 };
 
-export default NavBar2;
+export default NavBar3;
 
 
 

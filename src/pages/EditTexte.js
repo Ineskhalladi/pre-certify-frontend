@@ -3,10 +3,10 @@ import "../pages/AjouterResponsable.css";
 import { FaSyncAlt, FaSave, FaUserPlus } from "react-icons/fa";
 import { MdRefresh } from "react-icons/md";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
-const AjouteTexte = () => {
+const EditTexte = () => {
   const navigate = useNavigate();
   const [secteurs, setSecteurs] = useState([]);
   const [secteur, setSecteur] = useState("");
@@ -90,6 +90,25 @@ const AjouteTexte = () => {
       .then(res => setServices(res.data))
       .catch(err => console.error("Erreur chargement services :", err));
   }, []);
+  
+  const { id } = useParams(); // ID النص
+  // جلب بيانات النص القديم
+  useEffect(() => {
+    axios.get(`http://localhost:5000/api/auth/alltexte/${id}`)
+      .then(res => {
+        const data = res.data;
+        setSecteur(data.secteur);
+        setSelectedDomaine(data.domaine);
+        setSelectedTheme(data.theme);
+        setSousTheme(data.sousTheme);
+        setNature(data.nature);
+        setSelectedService(data.service);
+        setTexte(data.texte);
+        setReference(data.reference);
+        setTypeTexte(data.typeTexte);
+      })
+      .catch(err => console.error("Erreur chargement texte:", err));
+  }, [id]);
 
   // ▶ Envoyer le formulaire
   const handleSave = async () => {
@@ -105,13 +124,13 @@ const AjouteTexte = () => {
         reference,
         typeTexte,
       };
-
-      await axios.post("http://localhost:5000/api/auth/ajouttexte", data);
-      alert("Texte ajouté avec succès !");
+  
+      await axios.put(`http://localhost:5000/api/auth/updatetexte/${id}`, data);
+      alert("Texte modifié avec succès !");
       navigate("/textes");
     } catch (err) {
-      console.error("Erreur enregistrement texte :", err);
-      alert("Échec de l'enregistrement !");
+      console.error("Erreur modification texte :", err);
+      alert("Échec de la modification !");
     }
   };
 
@@ -212,4 +231,4 @@ const AjouteTexte = () => {
   );
 };
 
-export default AjouteTexte;
+export default EditTexte;
