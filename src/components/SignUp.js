@@ -12,7 +12,7 @@ const SignUp = () => {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [nif, setNIF] = useState("");
+  const [rnu, setRNU] = useState("");
   const [sector, setSector] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -60,7 +60,7 @@ const SignUp = () => {
     let errors = {};
     if (!name) errors.name = "Le nom est obligatoire.";
     if (!email) errors.email = "L'email est obligatoire.";
-    if (!nif) errors.nif = "Le NIF est obligatoire.";
+    if (!rnu) errors.nif = "Le NIF est obligatoire.";
     if (!sector) errors.sector = "Le secteur est obligatoire.";
     if (!password) errors.password = "Le mot de passe est obligatoire.";
     if (!confirmPassword) errors.confirmPassword = "Veuillez confirmer votre mot de passe.";
@@ -72,12 +72,12 @@ const SignUp = () => {
     setter(e.target.value);
     setFieldErrors((prevErrors) => ({ ...prevErrors, [fieldName]: "" }));
   };
-  const handleNIFChange = (e) => {
-    const value = e.target.value;
-    // Vérifie que ce sont uniquement des chiffres et au max 8 caractères pour un CIN
-    if (/^[0-9]*$/.test(value) && value.length <= 8) {
-      setNIF(value);
-      setFieldErrors((prevErrors) => ({ ...prevErrors, nif: "" }));
+  const handleRNUChange = (e) => {
+    const value = e.target.value.toUpperCase(); // majuscule auto
+    // Vérifie : 7 chiffres suivis d'une lettre majuscule (longueur totale = 8)
+    if (/^[0-9]{0,7}[A-Z]{0,1}$/.test(value) && value.length <= 8) {
+      setRNU(value);
+      setFieldErrors((prevErrors) => ({ ...prevErrors, rnu: "" }));
     }
   };
   
@@ -90,7 +90,7 @@ const SignUp = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/signup", { name, email, nif, sector, password, role: "user_entreprise"  });
+      const response = await axios.post("http://localhost:5000/api/auth/signup", { name, email, rnu, sector, password, role: "user_entreprise"  });
       setSuccessMessage("✅ Compte créé. Veuillez vérifier votre email.");
       console.log("Réponse du serveur:", response.data);
       setTimeout(() => {
@@ -134,16 +134,15 @@ const SignUp = () => {
   <FaIdCard className="icon2" />
   <input
     type="text"
-    placeholder="Votre CIN (8 chiffres)"
+    placeholder="Votre RNU (7 chiffres et 1 caratere)"
     className="input-field2"
-    value={nif}
-    onChange={handleNIFChange}
+    value={rnu}
+    onChange={handleRNUChange}
     required
     maxLength="8"
-    inputMode="numeric"
   />
 </div>
-{fieldErrors.nif && <p className="error-msg2">{fieldErrors.nif}</p>}
+{fieldErrors.rnu && <p className="error-msg2">{fieldErrors.rnu}</p>}
 
 
             <div className="input-group2">

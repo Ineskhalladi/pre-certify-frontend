@@ -77,7 +77,7 @@ const ListeDesDemandes = () => {
             <tr>
               <th>Nom </th>
               <th>Email</th>
-              <th>NIF</th>
+              <th>RNU</th>
               <th>Secteur</th>
               <th>Action</th>
             </tr>
@@ -85,17 +85,19 @@ const ListeDesDemandes = () => {
           <tbody>
           {demandes
  .filter((d) =>
-    (d.nom && d.nom.toLowerCase().includes(searchTerm.toLowerCase())) ||
-    (d.email && d.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
-    (d.nif && d.nif.toString().includes(searchTerm))
+    (d.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (d.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (d.rnu?.toString().includes(searchTerm)) ||
+    (d.sector?.toLowerCase().includes(searchTerm.toLowerCase()))
+
   )
   
   .map((demande) => (
     <tr key={demande._id}>
-      <td>{demande.nom}</td>
+      <td>{demande.name}</td>
       <td>{demande.email}</td>
-      <td>{demande.nif}</td>
-      <td>{demande.secteur}</td>
+      <td>{demande.rnu}</td>
+      <td>{demande.secteur?.nom}</td>
       <td>
         <div className="action-icones">
           <button className="btn-cancel" onClick={() => handleAccept(demande._id)}>Accepter✅</button>

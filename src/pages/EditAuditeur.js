@@ -13,39 +13,36 @@ const EditerAuditeur = () => {
   const [prenom, setPrenom] = useState("");
   const [email, setEmail] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
-  const [selectedEntreprise, setSelectedEntreprise] = useState("");
   const [entreprises, setEntreprises] = useState([]);
+  const [selectedEntreprise, setSelectedEntreprise] = useState(""); 
+  const [auditeurs, setAuditeurs] = useState([]);
+  
 
-  // Charger les données de l'auditeur
   useEffect(() => {
-    const fetchAuditeur = async () => {
-      try {
-        const res = await axios.get(`http://localhost:5000/api/auth/allaudit/${id}`);
-        const data = res.data;
-        setNom(data.nom);
-        setPrenom(data.prenom);
-        setEmail(data.email);
-        setMotDePasse(data.motDePasse);
-        setSelectedEntreprise(data.entrepriseId);
-      } catch (err) {
-        console.error("Erreur lors du chargement de l'auditeur :", err);
-        alert("Impossible de charger les données de l'auditeur.");
-      }
-    };
+    axios
+      .get("http://localhost:5000/api/auth/allaudit") // Remplace cette URL si besoin
+      .then((res) => setAuditeurs(res.data))
+      .catch((err) =>
+        console.error("Erreur lors du chargement des auditeurs :", err)
+      );
+  }, []);
 
+  
+    // Charger les entreprises vérifiées au montage
+  useEffect(() => {
     const fetchEntreprises = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/auth/allentreprises");
-        setEntreprises(res.data);
+        const res = await axios.get("http://localhost:5000/api/auth/entreprises");
+        console.log("✅ entreprises:", res.data); // check if list comes
+
+        setEntreprises(res.data); // supposant que c’est un tableau d'entreprises
       } catch (err) {
-        console.error("Erreur chargement entreprises :", err);
-        alert("Erreur de chargement des entreprises.");
+        console.error("Erreur de chargement des entreprises :", err);
       }
     };
-
-    fetchAuditeur();
+  
     fetchEntreprises();
-  }, [id]);
+  }, []);
 
   // Enregistrement des modifications
   const handleUpdate = async () => {
@@ -101,15 +98,19 @@ const EditerAuditeur = () => {
           <label>Mot de passe</label>
           <input type="password" className="input-compte" value={motDePasse} onChange={(e) => setMotDePasse(e.target.value)} />
 
-          <label>Entreprise</label>
-          <select className="input-compte-select" value={selectedEntreprise} onChange={(e) => setSelectedEntreprise(e.target.value)}>
-            <option value="">-- Sélectionner une entreprise --</option>
-            {entreprises.map((entreprise) => (
-              <option key={entreprise._id} value={entreprise._id}>
-                {entreprise.nom}
-              </option>
-            ))}
-          </select>
+                  <label>Entreprise</label>
+          <select
+  className="input-compte-select"
+  value={selectedEntreprise}
+  onChange={(e) => setSelectedEntreprise(e.target.value)}
+>
+  <option value="">-- Sélectionner une entreprise --</option>
+  {entreprises.map((ent) => (
+    <option key={ent._id} value={ent._id}>
+      {ent.name} - RNU: {ent.rnu}
+    </option>
+  ))}
+</select>
         </div>
 
         <div className="button-group">

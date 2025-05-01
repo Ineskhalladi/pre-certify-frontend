@@ -16,6 +16,7 @@ const ListeEntreprises = () => {
     axios.get("http://localhost:5000/api/auth/entreprises")
       .then((res) => {
         setEntreprises(res.data);
+
       })
       .catch((err) => {
         console.error("Erreur fetch entreprises :", err);
@@ -26,9 +27,19 @@ const ListeEntreprises = () => {
   const filteredEntreprises = entreprises.filter((ent) =>
     ent.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     ent.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    ent.nif?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    ent.rnu?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     ent.sector?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  const handleDelete = (id) => {
+    axios.delete(`http://localhost:5000/api/auth/deleteEntr/${id}`)
+      .then(() => {
+        // Supprimer l'entreprise localement après la suppression dans la base de données
+        setEntreprises(entreprises.filter((ent) => ent._id !== id));
+      })
+      .catch((err) => {
+        console.error("Erreur lors de la suppression de l'entreprise :", err);
+      });
+  };
 
   return (
     <>
@@ -69,7 +80,7 @@ const ListeEntreprises = () => {
             <tr>
               <th>Nom</th>
               <th>Email</th>
-              <th>NIF</th>
+              <th>RNU</th>
               <th>Secteur</th>
               <th>Action</th>
             </tr>
@@ -79,12 +90,11 @@ const ListeEntreprises = () => {
               <tr key={index}>
                 <td>{entreprise.name}</td>
                 <td>{entreprise.email}</td>
-                <td>{entreprise.nif}</td>
-                <td>{entreprise.sector}</td>
+                <td>{entreprise.rnu}</td>
+                <td>{entreprise.sector?.nom}</td>
                 <td>
                   <div className="action-icones">
-                    <BiEdit title="Modifier" />
-                    <BiTrash title="Supprimer" />
+                    <BiTrash  onClick={() => handleDelete(entreprise._id)} />
                   </div>
                 </td>
               </tr>
