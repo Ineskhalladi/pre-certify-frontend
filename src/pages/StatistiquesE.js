@@ -44,7 +44,7 @@ const StatistiquesE = () => {
 
   return (
     <>
-      <NavBar2 />
+     
 
       {/* Base recherche container */}
       <div className="base-container">

@@ -12,7 +12,7 @@ const SignUp = () => {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [cin, setCin] = useState("");
+  const [nif, setNIF] = useState("");
   const [sector, setSector] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -60,6 +60,7 @@ const SignUp = () => {
     let errors = {};
     if (!name) errors.name = "Le nom est obligatoire.";
     if (!email) errors.email = "L'email est obligatoire.";
+    if (!nif) errors.nif = "Le NIF est obligatoire.";
     if (!sector) errors.sector = "Le secteur est obligatoire.";
     if (!password) errors.password = "Le mot de passe est obligatoire.";
     if (!confirmPassword) errors.confirmPassword = "Veuillez confirmer votre mot de passe.";
@@ -71,14 +72,15 @@ const SignUp = () => {
     setter(e.target.value);
     setFieldErrors((prevErrors) => ({ ...prevErrors, [fieldName]: "" }));
   };
-  const handleCinChange = (e) => {
+  const handleNIFChange = (e) => {
     const value = e.target.value;
-    // Vérifie que ce sont uniquement des chiffres et au max 8 caractères
+    // Vérifie que ce sont uniquement des chiffres et au max 8 caractères pour un CIN
     if (/^[0-9]*$/.test(value) && value.length <= 8) {
-      setCin(value);
-      setFieldErrors((prevErrors) => ({ ...prevErrors, cin: "" }));
+      setNIF(value);
+      setFieldErrors((prevErrors) => ({ ...prevErrors, nif: "" }));
     }
   };
+  
   
   
   const handleSignup = async () => {
@@ -88,7 +90,7 @@ const SignUp = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/signup", { name, email, cin, sector, password });
+      const response = await axios.post("http://localhost:5000/api/auth/signup", { name, email, nif, sector, password, role: "user_entreprise"  });
       setSuccessMessage("✅ Compte créé. Veuillez vérifier votre email.");
       console.log("Réponse du serveur:", response.data);
       setTimeout(() => {
@@ -129,11 +131,20 @@ const SignUp = () => {
             {fieldErrors.email && <p className="error-msg2">{fieldErrors.email}</p>}
 
             <div className="input-group2">
-              <FaIdCard className="icon2" />
-              <input type="text" placeholder="Your CIN (8 chiffres)" className="input-field2" value={cin}    onChange={handleCinChange}  required maxLength="8"   inputMode="numeric" />
+  <FaIdCard className="icon2" />
+  <input
+    type="text"
+    placeholder="Votre CIN (8 chiffres)"
+    className="input-field2"
+    value={nif}
+    onChange={handleNIFChange}
+    required
+    maxLength="8"
+    inputMode="numeric"
+  />
+</div>
+{fieldErrors.nif && <p className="error-msg2">{fieldErrors.nif}</p>}
 
-            </div>
-            {fieldErrors.cin && <p className="error-msg2">{fieldErrors.cin}</p>}
 
             <div className="input-group2">
               <FaBriefcase className="icon2" />

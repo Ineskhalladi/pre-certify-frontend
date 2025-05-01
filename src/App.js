@@ -37,6 +37,11 @@ import StatistiquesE from "./pages/StatistiquesE";
 import Textes from "./pages/Textes.js";
 import AjouteTexte from "./pages/AjouteTexte.js";
 import EditTexte from "./pages/EditTexte.js";
+import Auditeur from "./pages/Auditeur.js";
+import AjouteAuditeur from "./pages/AjoutAuditeur.js";
+import EditAuditeur from "./pages/EditAuditeur.js";
+import ListeDesDemandes from "./pages/ListeDesDemandes.js";
+import ListeEntreprises from "./pages/ListeEnreprises.js";
 
 
 const App = () => {
@@ -47,10 +52,11 @@ const App = () => {
   const isAuthPage = ["/signin", "/signup", "/forget", "/resetpwd"].includes(path) || path.startsWith("/verify");
 
   // Pages تظهر فيهم Navbar3 فقط
-  const isNavbar3Page = ["/textes","/", "/ajoutetexte", "/edittexte/:id"].includes(path);
+  const isNavbar3Page = ["/textes",  "/ajoutetexte", "/editetexte/:id","/auditeur"
+  ,"/ajouteauditeur","/editauditeur/:id","/listedesdemandes","/listeentreprises"].includes(path);
 
   // Pages يظهر فيهم Navbar + Footer فقط
-  const isNavbarFooterPage = ["/home", "/normes", "/veillereg", "/contact"].includes(path);
+  const isNavbarFooterPage = ["/home","/normes", "/","/veillereg", "/contact"].includes(path);
 
   // Pages يظهر فيهم Navbar2 فقط
   const isNavbar2Page = !isAuthPage && !isNavbar3Page && !isNavbarFooterPage;
@@ -97,8 +103,14 @@ const App = () => {
         <Route path="/statistiquese" element={<StatistiquesE />} />
         <Route path="/textes" element={<Textes />} />
         <Route path="/ajoutetexte" element={<AjouteTexte />} />
-        <Route path="/edittexte/:id" element={<EditTexte />} />
-        <Route path="/" element={<Textes />} />
+        <Route path="/editetexte/:id" element={<EditTexte />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/auditeur" element={<Auditeur />} />
+        <Route path="/ajouteauditeur" element={<AjouteAuditeur />} />
+        <Route path="/editauditeur/:id" element={<EditAuditeur/>} />
+        <Route path="/listedesdemandes" element={<ListeDesDemandes/>} />
+        <Route path="/listeentreprises" element={<ListeEntreprises/>} />
+
       </Routes>
 
       {/* Footer uniquement pour les pages où il y a NavBar classique */}

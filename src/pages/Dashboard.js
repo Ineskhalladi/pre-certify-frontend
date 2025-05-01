@@ -42,7 +42,6 @@ const Dashboard = () => {
 
   return (
     <>
-      <NavBar2 />
       <div className="dashboard-charts-wrapper">
       <div className="first-line">
       <div className="domaines-box">

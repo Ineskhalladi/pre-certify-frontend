@@ -57,14 +57,13 @@ const NavBar3 = () => {
       </div>
 
       <nav className="navbar-bottom3">
-        <Link to="/dashboard" className={`menu-item3 ${location.pathname === "/dashboard" ? "active" : ""}`}><FiMonitor className="icon-nav3" /> Tableau de Bord</Link>
-        <Link to="/basegenerale" className={`menu-item3 ${location.pathname === "/basegenerale" ? "active" : ""}`}
+        <Link to="/listedesdemandes" className={`menu-item3 ${location.pathname === "/basegenerale" ? "active" : ""}`}
         ><LuList className="icon-nav3" /> Liste des demandes</Link>
 
-<Link to="/basegenerale" className={`menu-item3 ${location.pathname === "/basegenerale" ? "active" : ""}`}
-        ><LuList className="icon-nav3" /> Liste de accepter des enreprises </Link>
+<Link to="/listeentreprises" className={`menu-item3 ${location.pathname === "/basegenerale" ? "active" : ""}`}
+        ><LuList className="icon-nav3" /> Liste de accepter des entreprises </Link>
 
-<Link to="/basegenerale" className={`menu-item3 ${location.pathname === "/basegenerale" ? "active" : ""}`}
+<Link to="/auditeur" className={`menu-item3 ${location.pathname === "/basegenerale" ? "active" : ""}`}
         ><LuList className="icon-nav3" /> Liste des auditeurs </Link>
 
    

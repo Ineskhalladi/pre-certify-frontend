@@ -42,7 +42,7 @@ const MesServices = () => {
   );
   return (
     <>
-      <NavBar2 />
+ 
       <div className="base-container">
         <div className="search-container">
           <div className="header-top">

@@ -50,11 +50,18 @@ const SignIn = () => {
       console.log('Réponse du serveur:', response.data);
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user)); // 🆕
-      navigate("/dashboard");
-    } catch (error) {
-      setError(error.response?.data?.message || "Erreur de connexion au serveur");
+      const userRole = response.data.user.role; // تحقق من الدور
+    if (userRole === 'super_admin') {
+      navigate("/listedesdemandes");  // توجيه الـ Super Admin إلى لوحة التحكم الخاصة به
+    } else if (userRole === 'user_entreprise') {
+      navigate("/dashboard");  // توجيه الـ User Entreprise إلى لوحة التحكم الخاصة به
+    } else {
+      setError("Rôle non autorisé");
     }
-  };
+  } catch (error) {
+    setError(error.response?.data?.message || "Erreur de connexion au serveur");
+  }
+};
 
 
   return (
