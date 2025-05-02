@@ -57,17 +57,19 @@ const NavBar3 = () => {
       </div>
 
       <nav className="navbar-bottom3">
-        <Link to="/listedesdemandes" className={`menu-item3 ${location.pathname === "/basegenerale" ? "active" : ""}`}
+          <Link to="/dashboards" className={`menu-item3 ${location.pathname === "/dashboard" ? "active" : ""}`}><FiMonitor className="icon-nav3" /> Dashboard</Link>
+        
+        <Link to="/listedesdemandes" className={`menu-item3 ${location.pathname === "/listedesdemandes" ? "active" : ""}`}
         ><LuList className="icon-nav3" /> Liste des demandes</Link>
 
-<Link to="/listeentreprises" className={`menu-item3 ${location.pathname === "/basegenerale" ? "active" : ""}`}
+<Link to="/listeentreprises" className={`menu-item3 ${location.pathname === "/listeentreprises" ? "active" : ""}`}
         ><LuList className="icon-nav3" /> Liste de accepter des entreprises </Link>
 
-<Link to="/auditeur" className={`menu-item3 ${location.pathname === "/basegenerale" ? "active" : ""}`}
+<Link to="/auditeur" className={`menu-item3 ${location.pathname === "/auditeur" ? "active" : ""}`}
         ><LuList className="icon-nav3" /> Liste des auditeurs </Link>
 
    
-<Link to="/textes" className={`menu-item3 ${location.pathname === "/basegenerale" ? "active" : ""}`}
+<Link to="/textes" className={`menu-item3 ${location.pathname === "/textes" ? "active" : ""}`}
         ><LuList className="icon-nav3" /> Liste des textes  </Link>
      
 

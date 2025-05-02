@@ -52,7 +52,7 @@ const SignIn = () => {
       localStorage.setItem("user", JSON.stringify(response.data.user)); // 🆕
       const userRole = response.data.user.role; // تحقق من الدور
     if (userRole === 'super_admin') {
-      navigate("/listedesdemandes");  // توجيه الـ Super Admin إلى لوحة التحكم الخاصة به
+      navigate("/dashboards");  // توجيه الـ Super Admin إلى لوحة التحكم الخاصة به
     } else if (userRole === 'user_entreprise') {
       navigate("/dashboard");  // توجيه الـ User Entreprise إلى لوحة التحكم الخاصة به
     } else {

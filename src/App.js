@@ -42,6 +42,7 @@ import AjouteAuditeur from "./pages/AjoutAuditeur.js";
 import EditAuditeur from "./pages/EditAuditeur.js";
 import ListeDesDemandes from "./pages/ListeDesDemandes.js";
 import ListeEntreprises from "./pages/ListeEnreprises.js";
+import DashboardS from "./pages/DashboardS.js"; 
 
 
 const App = () => {
@@ -53,7 +54,8 @@ const App = () => {
 
   // Pages تظهر فيهم Navbar3 فقط
   const isNavbar3Page = ["/textes",  "/ajoutetexte", "/editetexte/:id","/auditeur"
-  ,"/ajouteauditeur","/editauditeur/:id","/listedesdemandes","/listeentreprises"].includes(path);
+  ,"/ajouteauditeur","/editauditeur/:id","/listedesdemandes","/listeentreprises"
+  ,"/dashboards"].includes(path);
 
   // Pages يظهر فيهم Navbar + Footer فقط
   const isNavbarFooterPage = ["/home","/normes", "/","/veillereg", "/contact"].includes(path);
@@ -110,6 +112,7 @@ const App = () => {
         <Route path="/editauditeur/:id" element={<EditAuditeur/>} />
         <Route path="/listedesdemandes" element={<ListeDesDemandes/>} />
         <Route path="/listeentreprises" element={<ListeEntreprises/>} />
+        <Route path="/dashboards" element={<DashboardS />} />
 
       </Routes>
 

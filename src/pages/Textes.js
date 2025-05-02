@@ -103,7 +103,7 @@ const Textes = () => {
 
         <td>
           <div className="action-icones">
-            <BiEdit onClick={() => navigate(`/edittexte/${t._id}`)}  />
+            <BiEdit onClick={() => navigate(`/editetexte/${t._id}`)}  />
             <BiTrash onClick={() => handleDelete(t._id)}  />
           </div>
         </td>

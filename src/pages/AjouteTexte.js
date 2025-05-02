@@ -105,10 +105,13 @@ const AjouteTexte = () => {
         reference,
         typeTexte,
       };
-
+      console.log(data);
       await axios.post("http://localhost:5000/api/auth/ajouttexte", data);
       alert("Texte ajouté avec succès !");
-      navigate("/textes");
+      setTimeout(() => {
+        navigate("/textes");
+      }, 1000);
+     
     } catch (err) {
       console.error("Erreur enregistrement texte :", err);
       alert("Échec de l'enregistrement !");

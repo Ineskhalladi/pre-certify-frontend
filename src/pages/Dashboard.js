@@ -1,6 +1,5 @@
 import React from "react";
 import "../pages/Dashboard.css";
-import NavBar2 from "../components/NavBar2";
 import {
   BarChart,
   Bar,
