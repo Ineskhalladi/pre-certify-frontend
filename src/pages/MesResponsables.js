@@ -86,7 +86,6 @@ const MesResponsables = () => {
               <th>Responsable</th>
               <th>E-mail</th>
               <th>Tel</th>
-              <th>Service</th>
               <th>Actions</th>
             </tr>
          </thead>
@@ -102,11 +101,10 @@ const MesResponsables = () => {
       <td>{resp.prenom} {resp.nom}</td>
       <td>{resp.emailRes}</td>
       <td>{resp.telephone}</td>
-      <td>{resp.service}</td>
       <td>
         <div className="action-icones">
-          <BiEdit onClick={() => handleEdit(resp._id)} />
-          <BiTrash onClick={() => handleDelete(resp._id)} />
+        <BiEdit onClick={() => handleEdit(resp)} />
+        <BiTrash onClick={() => handleDelete(resp._id)} />
         </div>
       </td>
     </tr>

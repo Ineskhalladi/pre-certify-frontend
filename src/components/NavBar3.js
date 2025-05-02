@@ -72,14 +72,15 @@ const NavBar3 = () => {
 <Link to="/textes" className={`menu-item3 ${location.pathname === "/textes" ? "active" : ""}`}
         ><LuList className="icon-nav3" /> Liste des textes  </Link>
      
-
+     <Link to="/alertes"  className={`menu-item3 ${location.pathname === "/alertes" ? "active" : ""}`}>
+     <LuBell className="icon-nav3" /> Mes Alertes <span className="alert-count">20</span></Link>        
       </nav>
 
       {isProfileOpen && (
         <div className="dropdown-menu3">
             <div className="dropdown-item3">
     <BiUser className="icon-profiles" />
-    <Link to="/moncompte" onClick={() => setIsProfileOpen(false)}>Mon compte</Link>
+    <Link to="/compteS" onClick={() => setIsProfileOpen(false)}>Mon compte</Link>
   </div>
  
           <div className="dropdown-item3 logout"

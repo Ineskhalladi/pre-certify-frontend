@@ -11,11 +11,10 @@ const AjouterResponsable = () => {
 const [nom, setNom] = useState("");
 const [emailRes, setEmailRes] = useState("");
 const [telephone, setTelephone] = useState("");
-const [accesModif, setAccesModif] = useState(false);
+const [accesActions, setAccesActions] = useState(false);
 
   const [userEmail, setUserEmail] = useState("");
-  const [services, setServices] = useState([]); // 🔹 Liste des services
-  const [selectedService, setSelectedService] = useState(""); // 🔹 Service sélectionné
+  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,8 +31,7 @@ const [accesModif, setAccesModif] = useState(false);
         nom,
         emailRes,
         telephone,
-        service: selectedService,
-        accesModif,
+        accesActions,
         createdBy: userEmail,
       });
   
@@ -53,18 +51,6 @@ const [accesModif, setAccesModif] = useState(false);
   };
   
   
-  useEffect(() => {
-    fetchServices();
-  }, []);
-
-  const fetchServices = async () => {
-    try {
-      const res = await axios.get("http://localhost:5000/api/auth/allservice");
-      setServices(res.data);
-    } catch (err) {
-      console.error("Erreur fetch services :", err);
-    }
-  };
 
   return (
     <>
@@ -113,24 +99,7 @@ const [accesModif, setAccesModif] = useState(false);
     </div>
   </div>
 
-  <div className="form-row">
-    <div className="form-col-full">
-      <label>Services</label>
-      <select
-                className="input-res-select"
-                
-                value={selectedService}
-                onChange={(e) => setSelectedService(e.target.value)}
-              >
-                <option value="">-- Choisir un service --</option>
-                {services.map((service) => (
-                  <option key={service._id} value={service.nom}>
-                    {service.nom}
-                  </option>
-                ))}
-              </select>
-    </div>
-  </div>
+
 
   <div className="form-row form-row-bottom">
     <div className="form-col">
@@ -146,7 +115,7 @@ const [accesModif, setAccesModif] = useState(false);
     <div className="form-col">
       <label>Donner accès à modifier les actions d'un responsable</label>
       <label className="switch">
-  <input type="checkbox" checked={accesModif} onChange={(e) => setAccesModif(e.target.checked)} />
+  <input type="checkbox" checked={accesActions} onChange={(e) => setAccesActions(e.target.checked)} />
   <span className="slider round"></span>
       </label>
     </div>

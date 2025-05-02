@@ -86,7 +86,7 @@ const Home = () => {
       </section>
 
       <section className="sector-container">
-      <h2>Explorer par secteur</h2>
+      <h2>Explorer nom secteur</h2>
       <div className="sector-grid">
         {sectors.map((sector, index) => (
           <div key={index} className="sector-card" >

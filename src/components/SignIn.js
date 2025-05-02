@@ -54,6 +54,8 @@ const SignIn = () => {
     if (userRole === 'super_admin') {
       navigate("/dashboards");  // توجيه الـ Super Admin إلى لوحة التحكم الخاصة به
     } else if (userRole === 'user_entreprise') {
+      navigate("/mesresponsables");  // توجيه الـ User Entreprise إلى لوحة التحكم الخاصة به
+    } else if (userRole === 'auditeur') {
       navigate("/dashboard");  // توجيه الـ User Entreprise إلى لوحة التحكم الخاصة به
     } else {
       setError("Rôle non autorisé");

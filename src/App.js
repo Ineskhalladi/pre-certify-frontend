@@ -8,6 +8,7 @@ import ContactUs from "./pages/ContactUs";
 import NavBar from "./components/NavBar";
 import NavBar2 from "./components/NavBar2.js";
 import NavBar3 from "./components/NavBar3.js";
+import NavBar4 from "./components/NavBar4.js";
 
 import Footer from "./components/Footer";
 import Dashboard from "./pages/Dashboard"; 
@@ -43,7 +44,7 @@ import EditAuditeur from "./pages/EditAuditeur.js";
 import ListeDesDemandes from "./pages/ListeDesDemandes.js";
 import ListeEntreprises from "./pages/ListeEnreprises.js";
 import DashboardS from "./pages/DashboardS.js"; 
-
+import CocherTexte from "./pages/CocherTexte.js"
 
 const App = () => {
   const location = useLocation();
@@ -57,16 +58,23 @@ const App = () => {
   ,"/ajouteauditeur","/editauditeur/:id","/listedesdemandes","/listeentreprises"
   ,"/dashboards"].includes(path);
 
+ // Pages تظهر فيهم Navbar4 فقط
+ const isNavbar4Page = path.startsWith("/editerresponsable") || 
+ ["/textesE", "/mesresponsables", "/ajouterresponsable","/cochertexte"].includes(path);
+
   // Pages يظهر فيهم Navbar + Footer فقط
   const isNavbarFooterPage = ["/home","/normes", "/","/veillereg", "/contact"].includes(path);
 
   // Pages يظهر فيهم Navbar2 فقط
-  const isNavbar2Page = !isAuthPage && !isNavbar3Page && !isNavbarFooterPage;
+  const isNavbar2Page = !isAuthPage && !isNavbar3Page && !isNavbarFooterPage && !isNavbar4Page ;
 
   return (
     <>
       {/* Navbar3 */}
       {isNavbar3Page && <NavBar3 />}
+
+       {/* Navbar4 */}
+       {isNavbar4Page && <NavBar4 />}
 
       {/* Navbar + Footer */}
       {isNavbarFooterPage && <NavBar />}
@@ -113,6 +121,7 @@ const App = () => {
         <Route path="/listedesdemandes" element={<ListeDesDemandes/>} />
         <Route path="/listeentreprises" element={<ListeEntreprises/>} />
         <Route path="/dashboards" element={<DashboardS />} />
+        <Route path="/cochertexte" element={<CocherTexte />} />
 
       </Routes>
 

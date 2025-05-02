@@ -38,25 +38,8 @@
     font-weight: bold;
   }
   
-  /* Section centrale */
-  .middle-section {
-    display: flex;
-    gap: 30px;
-    margin-bottom: 30px;
-  }
+
   
-  .chart-box,
-  .pie-box {
-    flex: 1;
-    background-color: #ffff;
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 4px 4px 0px rgba(77, 125, 64, 0.88);
-    transition: all 0.3s ease-in-out;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
   
   .chart-title {
     font-weight: bold;
@@ -89,20 +72,9 @@
     color: #000;
   }
   
-  /* Section bas */
-  .bottom-section {
-    display: flex;
-    gap: 30px;
-  }
+  
 
-  .calendar{
-  flex: 1;
-  background-color: #fff;
-  max-width: 30%;
-  border-radius: 16px;
-  padding: 20px;
- box-shadow: 0 4px 4px 0px rgba(77, 125, 64, 0.88);
-  transition: all 0.3s ease-in-out;}
+
 
   .card-S:hover,.chart-box:hover,
   .pie-box:hover,.calendar:hover{
@@ -126,3 +98,63 @@
   color: white !important;  /* Ensure the text is white on active date */
 }
 
+
+.custom-legend1 {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.legend-item1 {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.legend-color1 {
+  width: 14px;
+  height: 14px;
+  border-radius: 50px;
+  margin-right: 8px;
+}
+
+.legend-label1 {
+  font-size: 14px;
+  color: #333;
+}
+
+.calendar{
+  flex: 1;
+  background-color: #fff;
+  max-width: 30%;
+  border-radius: 16px;
+  padding: 20px;
+ box-shadow: 0 4px 4px 0px rgba(77, 125, 64, 0.88);
+  transition: all 0.3s ease-in-out;}
+
+  .chart-box,
+  .pie-box {
+    flex: 1;
+    background-color: #ffff;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 4px 0px rgba(77, 125, 64, 0.88);
+    transition: all 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  /* Section bas */
+  .bottom-section {
+    display: flex;
+    gap: 30px;
+  }
+    /* Section centrale */
+  .middle-section {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+  }
+  

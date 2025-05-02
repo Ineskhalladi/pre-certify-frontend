@@ -1,57 +1,41 @@
 import React, { useEffect, useState } from "react";
 import "../pages/AjouterResponsable.css";
 import { FaSyncAlt, FaSave, FaUserPlus } from "react-icons/fa";
-import NavBar2 from "../components/NavBar2";
 import { MdRefresh } from "react-icons/md";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const EditerResponsable = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const id = location.state?._id;
+
   const [prenom, setPrenom] = useState(location.state?.prenom || "");
   const [nom, setNom] = useState(location.state?.nom || "");
   const [emailRes, setEmailRes] = useState(location.state?.emailRes || "");
   const [telephone, setTelephone] = useState(location.state?.telephone || "");
-  const [accesModif, setAccesModif] = useState(location.state?.accesModif || false);
-  const [userEmail, setUserEmail] = useState(location.state?.userEmail || "");
-  const [services, setServices] = useState(location.state?.services || []); // Services initiaux
-  const [selectedService, setSelectedService] = useState(location.state?.service || ""); // Service sélectionné
-  const navigate = useNavigate();
-  const id = location.state?._id;
-  
+  const [accesActions, setAccesActions] = useState(location.state?.accesActions || false);
+  const [userEmail, setUserEmail] = useState("");
+
   const enregistrerResponsable = async () => {
     try {
-      if (id) {
-        // Si on modifie un responsable existant
-        console.log('Mise à jour de responsable:', { prenom, nom, emailRes, telephone, selectedService, accesModif });
-        const response = await axios.put(`http://localhost:5000/api/auth/updateres/${id}`, {
-          prenom,
-          nom,
-          emailRes,
-          telephone,
-          service: selectedService,
-          accesModif
-        });
-        console.log('Réponse de la mise à jour:', response.data);
-      } else {
-        // Si on ajoute un nouveau responsable
-        const response = await axios.post("http://localhost:5000/api/auth/ajoutres", {
-          prenom,
-          nom,
-          emailRes,
-          telephone,
-          service: selectedService,
-          accesModif
-        });
-        console.log('Réponse de l\'ajout:', response.data);
-      }
-      navigate("/mesresponsables"); // Redirection vers la page MesResponsables
+      if (!id) return; // sécurité
+      console.log("ID à modifier:", id);
+
+      const response = await axios.put(`http://localhost:5000/api/auth/updateres/${id}`, {
+        prenom,
+        nom,
+        emailRes,
+        telephone,
+        accesActions
+      });
+      console.log("Responsable mis à jour :", response.data);
+      navigate("/mesresponsables");
     } catch (error) {
-      console.error("Erreur lors de l'enregistrement :", error);
+      console.error("Erreur lors de la mise à jour :", error);
     }
   };
 
-  
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user && user.email) {
@@ -59,20 +43,7 @@ const EditerResponsable = () => {
     }
   }, []);
 
-
-  useEffect(() => {
-    fetchServices();
-  }, []);
-
-  const fetchServices = async () => {
-    try {
-      const res = await axios.get("http://localhost:5000/api/auth/allservice");
-      setServices(res.data);
-    } catch (err) {
-      console.error("Erreur fetch services :", err);
-    }
-  };
-
+ 
 
   return (
     <>
@@ -140,23 +111,7 @@ const EditerResponsable = () => {
             </div>
           </div>
 
-          <div className="form-row">
-            <div className="form-col-full">
-              <label>Services</label>
-              <select
-                className="input-res-select"
-                value={selectedService}
-                onChange={(e) => setSelectedService(e.target.value)}
-              >
-                <option value="">-- Choisir un service --</option>
-                {services.map((service) => (
-                  <option key={service._id} value={service.nom}>
-                    {service.nom}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+        
 
           <div className="form-row form-row-bottom">
             <div className="form-col">
@@ -172,8 +127,8 @@ const EditerResponsable = () => {
               <label className="switch">
                 <input
                   type="checkbox"
-                  checked={accesModif}
-                  onChange={(e) => setAccesModif(e.target.checked)}
+                  checked={accesActions}
+                  onChange={(e) => setAccesActions(e.target.checked)}
                 />
                 <span className="slider round"></span>
               </label>
@@ -182,10 +137,10 @@ const EditerResponsable = () => {
         </div>
 
         <div className="button-group">
-          <button className="btn-search" onClick={enregistrerResponsable}>
-            <FaSave /> Enregistrer
+        <button className="btn-search" onClick={enregistrerResponsable}>
+        <FaSave /> Enregistrer
           </button>
-          <button className="btn-cancel">
+          <button className="btn-cancel" onClick={() => navigate("/mesresponsables")}>
             <FaSyncAlt /> Annuler
           </button>
         </div>

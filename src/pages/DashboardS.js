@@ -12,8 +12,8 @@ import 'react-calendar/dist/Calendar.css';  // Import the styles for the calenda
 
 
 const barColors = {
-  Entreprise: '#2e4731',
-  Auditeur: '#d9a500',
+  Entreprises: '#2e4731',
+  Auditeurs: '#d9a500',
   Textes: '#56c16f',
 };
 
@@ -31,8 +31,8 @@ function DashboardS() {
  };
 
   const [stats, setStats] = useState({
-    entreprise: 0,
-    auditeur: 0,
+    entreprises: 0,
+    auditeurs: 0,
     textes: 0
   });
 
@@ -77,14 +77,14 @@ function DashboardS() {
   }, []);
   
   const statsData = [
-    { name: 'Entreprise', value: stats.entreprise },
-    { name: 'Auditeur', value: stats.auditeur },
+    { name: 'Entreprises', value: stats.entreprise },
+    { name: 'Auditeurs', value: stats.auditeur },
     { name: 'Textes', value: stats.textes },
   ];
 
   const areaData = [
-    { name: 'Entreprise', entreprise: stats.entreprise, auditeur: 0, textes: 0 },
-    { name: 'Auditeur', entreprise: 0, auditeur: stats.auditeur, textes: 0 },
+    { name: 'Entreprises', entreprise: stats.entreprise, auditeur: 0, textes: 0 },
+    { name: 'Auditeurs', entreprise: 0, auditeur: stats.auditeur, textes: 0 },
     { name: 'Textes', entreprise: 0, auditeur: 0, textes: stats.textes },
   ];
 
@@ -135,25 +135,39 @@ function DashboardS() {
         </div>
 
         <div className="pie-box">
-          <div className="chart-title">Résultat</div>
-          <PieChart width={300} height={250}>
-            <Pie
-              data={statsData}
-              cx="50%"
-              cy="50%"
-              innerRadius={50}
-              outerRadius={80}
-              paddingAngle={5}
-              dataKey="value"
-              label
-            >
-              {statsData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Legend />
-          </PieChart>
-        </div>
+  <div className="chart-title">Résultat</div>
+  <PieChart width={300} height={250}>
+    <Pie
+      data={statsData}
+      cx="50%"
+      cy="50%"
+      innerRadius={50}
+      outerRadius={95}
+      paddingAngle={5}
+      dataKey="value"
+      label
+    >
+      {statsData.map((entry, index) => (
+        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+      ))}
+    </Pie>
+    {/* Legend désactivée */}
+  </PieChart>
+
+  {/* Légende personnalisée */}
+  <div className="custom-legend1">
+    {statsData.map((entry, index) => (
+      <div key={index} className="legend-item1">
+        <div
+          className="legend-color1"
+          style={{ backgroundColor: COLORS[index % COLORS.length] }}
+        ></div>
+        <span className="legend-label1">{entry.name} </span>
+      </div>
+    ))}
+  </div>
+</div>
+
       </div>
 
       <div className="bottom-section">
