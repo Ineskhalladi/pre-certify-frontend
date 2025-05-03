@@ -106,9 +106,12 @@ const EditerAuditeur = () => {
 >
   <option value="">-- Sélectionner une entreprise --</option>
   {entreprises.map((ent) => (
-    <option key={ent._id} value={ent._id}>
-      {ent.name} - RNU: {ent.rnu}
-    </option>
+    <option
+    key={ent.name}
+    value={JSON.stringify({ rnu: ent.rnu, name: ent.name })}
+  >
+    {ent.name} - RNU: {ent.rnu}
+  </option>
   ))}
 </select>
         </div>

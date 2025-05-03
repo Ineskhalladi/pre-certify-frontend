@@ -38,13 +38,13 @@ const AjouteAuditeur = () => {
   const handleSave = async () => {
     if (!nom || !prenom || !email || !motDePasse || !selectedEntreprise) {
       alert("Veuillez remplir tous les champs.");
+
       return;
     }
-
+    console.log("selectedEntreprise",selectedEntreprise.name)
     try {
       const data = {
         nom,
-        prenom,
         email,
         motDePasse,
         entrepriseId: selectedEntreprise,
@@ -116,19 +116,23 @@ const AjouteAuditeur = () => {
             onChange={(e) => setMotDePasse(e.target.value)}
           />
 
-          <label>Entreprise</label>
-          <select
+<label>Entreprise</label>
+<select
   className="input-compte-select"
-  value={selectedEntreprise}
-  onChange={(e) => setSelectedEntreprise(e.target.value)}
+  value={selectedEntreprise ? JSON.stringify(selectedEntreprise) : ""}
+  onChange={(e) => setSelectedEntreprise(JSON.parse(e.target.value))}
 >
   <option value="">-- Sélectionner une entreprise --</option>
   {entreprises.map((ent) => (
-    <option key={ent._id} value={ent._id}>
+    <option
+      key={ent.name}
+      value={JSON.stringify({ rnu: ent.rnu, name: ent.name,identre:ent._id })}
+    >
       {ent.name} - RNU: {ent.rnu}
     </option>
   ))}
 </select>
+
 
         </div>
 

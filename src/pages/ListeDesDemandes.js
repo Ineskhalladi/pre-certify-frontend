@@ -14,7 +14,8 @@ const ListeDesDemandes = () => {
   useEffect(() => {
     axios.get("http://localhost:5000/api/auth/demandes")
       .then((res) => {
-        setDemandes(res.data); // فيها les utilisateurs isVerified = false
+        setDemandes(res.data); 
+        console.log("resresresres",res)
       })
       .catch((err) => {
         console.error(err);
@@ -97,7 +98,7 @@ const ListeDesDemandes = () => {
       <td>{demande.name}</td>
       <td>{demande.email}</td>
       <td>{demande.rnu}</td>
-      <td>{demande.secteur?.nom}</td>
+      <td>{demande.sector?.nom}</td>
       <td>
         <div className="action-icones">
           <button className="btn-cancel" onClick={() => handleAccept(demande._id)}>Accepter✅</button>

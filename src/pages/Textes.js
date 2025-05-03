@@ -9,7 +9,109 @@ import { jwtDecode } from "jwt-decode";
 import { BiEdit, BiTrash } from "react-icons/bi";
 const Textes = () => {
 
+  const [secteurs, setSecteurs] = useState([]);
+
+  useEffect(() => {
+    const fetchSecteurs = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/auth/secteurs");
+        setSecteurs(res.data);
+      } catch (err) {
+        console.error("Erreur lors du chargement des secteurs :", err);
+      }
+    };
   
+    fetchSecteurs();
+  }, []);
+  const Comparesecteur = (id) => {
+    const secteur = secteurs.find((s) => s._id === id);
+    return secteur ? secteur.nom : "Secteur inconnu"; // ✅ return ajouté
+  };
+  
+  
+  
+  
+  const [domainesParSecteur, setDomainesParSecteur] = useState({});
+  const fetchDomainesBySecteur = async (secteurId) => {
+    if (domainesParSecteur[secteurId]) return; // déjà chargés
+  
+    try {
+      const res = await axios.get(`http://localhost:5000/api/auth/domaines/bySecteur/${secteurId}`);
+      setDomainesParSecteur(prev => ({
+        ...prev,
+        [secteurId]: res.data,
+      }));
+    } catch (error) {
+      console.error("Erreur chargement domaines du secteur :", error);
+    }
+  };
+  const Comparedomaine = (domaineId, secteurId) => {
+    const domaines = domainesParSecteur[secteurId];
+  
+    if (!domaines) {
+      // Lancer le chargement si pas encore fait
+      fetchDomainesBySecteur(secteurId);
+      return "Chargement...";
+    }
+  
+    const domaine = domaines.find((d) => d._id === domaineId);
+    return domaine ? domaine.nom : "Domaine inconnu";
+  };
+  /********************************** */
+  const [themesParDomaine, setThemesParDomaine] = useState({});
+  const fetchThemesByDomaine = async (domaineId) => {
+    if (themesParDomaine[domaineId]) return; // déjà chargés
+  
+    try {
+      const res = await axios.get(`http://localhost:5000/api/auth/themes/byDomaine/${domaineId}`);
+      setThemesParDomaine(prev => ({
+        ...prev,
+        [domaineId]: res.data,
+      }));
+    } catch (error) {
+      console.error("Erreur chargement des thèmes :", error);
+    }
+  };
+  const Comparetheme = (themeId, domaineId) => {
+    const themes = themesParDomaine[domaineId];
+  
+    if (!themes) {
+      fetchThemesByDomaine(domaineId); // lancer la requête
+      return "Chargement...";
+    }
+  
+    const theme = themes.find((t) => t._id === themeId);
+    return theme ? theme.nom : "Thème inconnu";
+  };
+  /**************************** */
+  const [sousThemesParTheme, setSousThemesParTheme] = useState({});
+  const fetchSousThemesByTheme = async (themeId) => {
+    if (sousThemesParTheme[themeId]) return; // déjà chargés
+  
+    try {
+      const res = await axios.get(`http://localhost:5000/api/auth/sousthemes/byTheme/${themeId}`);
+      setSousThemesParTheme(prev => ({
+        ...prev,
+        [themeId]: res.data,
+      }));
+    } catch (error) {
+      console.error("Erreur chargement des sous-thèmes :", error);
+    }
+  };
+  const ComparesousTheme = (sousThemeId, themeId) => {
+    const sousThemes = sousThemesParTheme[themeId];
+  
+    if (!sousThemes) {
+      fetchSousThemesByTheme(themeId); // lancer la requête
+      return "Chargement...";
+    }
+  
+    const sousTheme = sousThemes.find((s) => s._id === sousThemeId);
+    return sousTheme ? sousTheme.nom : "Sous-thème inconnu";
+  };
+  
+
+/****************************** */
     const [searchTerm, setSearchTerm] = useState("");
     const navigate = useNavigate();
     const [textes, setTextes] = useState([]);
@@ -91,10 +193,11 @@ const Textes = () => {
     
       {textes.map((t) => (
       <tr key={t._id}>
-        <td>{t.secteur}</td>
-        <td>{t.domaine}</td>
-        <td>{t.theme}</td>
-        <td>{t.sousTheme}</td>
+        <td>{Comparesecteur(t.secteur)}</td>
+        <td>{Comparedomaine(t.domaine,t.secteur)}</td>
+        <td>{Comparetheme(t.theme,t.domaine)}</td>
+        <td>{ComparesousTheme(t.sousTheme,t.theme)}</td>
+
         <td>{t.nature}</td>
         <td>{t.service}</td>
         <td>{t.texte}</td>

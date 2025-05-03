@@ -15,6 +15,7 @@ const ListeEntreprises = () => {
   useEffect(() => {
     axios.get("http://localhost:5000/api/auth/entreprises")
       .then((res) => {
+        console.log("res.data",res.data)
         setEntreprises(res.data);
 
       })

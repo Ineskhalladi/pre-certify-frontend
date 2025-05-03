@@ -14,7 +14,10 @@ const Auditeur = () => {
   useEffect(() => {
     axios
       .get("http://localhost:5000/api/auth/allaudit") // Remplace cette URL si besoin
-      .then((res) => setAuditeurs(res.data))
+      .then((res) => {
+        setAuditeurs(res.data);
+        console.log(res.data);
+      })
       .catch((err) =>
         console.error("Erreur lors du chargement des auditeurs :", err)
       );
@@ -38,7 +41,7 @@ const Auditeur = () => {
       a.nom?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       a.prenom?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       a.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      a.entreprise?.toLowerCase().includes(searchTerm.toLowerCase())
+      a.entreprisesAssignees?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -94,8 +97,8 @@ const Auditeur = () => {
               <tr key={a._id}>
                 <td>{a.nom} {a.prenom}</td>
                 <td>{a.email}</td>
-                <td>{a.password}</td>
-                <td>{a.entreprise}</td>
+                <td>{a.motDePasse}</td>
+                <td>{a.entreprisesAssignees?.[0]?.name}-{a.entreprisesAssignees?.[0]?.rnu}</td>
                 <td>
                   <div className="action-icones">
                     <BiEdit onClick={() => navigate(`/editauditeur/${a._id}`)} />
