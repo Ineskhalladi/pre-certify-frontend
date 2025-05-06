@@ -45,6 +45,7 @@ import ListeDesDemandes from "./pages/ListeDesDemandes.js";
 import ListeEntreprises from "./pages/ListeEnreprises.js";
 import DashboardS from "./pages/DashboardS.js"; 
 import CocherTexte from "./pages/CocherTexte.js"
+import Certificate from "./pages/Certificate.js"
 
 const App = () => {
   const location = useLocation();
@@ -63,7 +64,7 @@ const App = () => {
  ["/textesE", "/mesresponsables", "/ajouterresponsable","/cochertexte"].includes(path);
 
   // Pages يظهر فيهم Navbar + Footer فقط
-  const isNavbarFooterPage = ["/home","/normes", "/","/veillereg", "/contact"].includes(path);
+  const isNavbarFooterPage = ["/home","/normes", "/","/veillereg", "/contact","/certificate"].includes(path);
 
   // Pages يظهر فيهم Navbar2 فقط
   const isNavbar2Page = !isAuthPage && !isNavbar3Page && !isNavbarFooterPage && !isNavbar4Page ;
@@ -122,6 +123,7 @@ const App = () => {
         <Route path="/listeentreprises" element={<ListeEntreprises/>} />
         <Route path="/dashboards" element={<DashboardS />} />
         <Route path="/cochertexte" element={<CocherTexte />} />
+        <Route path="/certificate" element={<Certificate />} />
 
       </Routes>
 

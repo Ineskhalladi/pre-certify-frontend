@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+  font-family: "Poppins", sans-serif;
+}
+/* Conteneur principal */
+.contact-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  
+  }
+
+
+.certification-section {
+    display: flex;
+padding: 20px 50px;
+font-family: "Poppins", sans-serif;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    margin-bottom: 30px;
+  }
+  
+  .content-certification {
+    flex: 1;
+    padding: 0 20px;
+    max-width: 55%;
+    text-align: left;
+  }
+  
+  .content-certification h2 {
+    font-size: 30px;
+    font-weight: bold;
+    color: #E0A600;
+    margin-bottom: 50px;
+  }
+  
+  .p21 {
+    font-size: 23px;
+    color: #1e1e1e;
+    line-height: 1.6;
+  }
+  .p22 {
+    font-size: 19px;
+    color: #1e1e1e;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+  .jaunes {
+    color: rgba(77, 125, 64, 0.88);
+    font-weight: bold;
+  }
+  
+  /* Info box */
+  .info-box {
+    background-color: white;
+    padding: 20px;
+    max-width: 30%;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-top: 170px;
+    font-size: 18px;
+    line-height: 1.7;
+    color: #1e1e1e;
+  }
+  
+  .info-box strong {
+    font-weight: bold;
+    color: #E0A600;
+  }
+  
+  /* Section 2 alignée avec info-box */
+  .certification-flex {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 40px;
+    margin-top: 50px;
+    margin-bottom: 60px;
+  }
+  
+  .certification-flex .content-certification {
+    flex: 1;
+    padding: 0 20px;
+  }
+  
+  .certification-flex .info-box {
+    flex: 1;
+    background-color: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px 0px #E0A600;
+    font-size: 17px;
+    line-height: 1.7;
+    font-weight: 300;
+    color: #1e1e1e;
+  }
+  
+
+
+ 

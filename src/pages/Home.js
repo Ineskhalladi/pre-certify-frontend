@@ -80,7 +80,7 @@ const Home = () => {
           <div className="card2">
             <h3>Vous souhaitez obtenir une certification ?</h3>
             <p>Découvrez comment la conformité à une norme est <br></br>évaluée par les organismes de certification et autres</p>
-            <a href="#">En savoir plus sur la certification</a>
+            <Link to="/certificate">En savoir plus sur la certification</Link>
           </div>
         </div>
       </section>

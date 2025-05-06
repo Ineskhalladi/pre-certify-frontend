@@ -15,8 +15,9 @@ const Auditeur = () => {
     axios
       .get("http://localhost:5000/api/auth/allaudit") // Remplace cette URL si besoin
       .then((res) => {
-        setAuditeurs(res.data);
-        console.log(res.data);
+        const auditeursFiltrés = res.data.filter((user) => user.role === "auditeur");
+        setAuditeurs(auditeursFiltrés);
+        console.log(auditeursFiltrés);
       })
       .catch((err) =>
         console.error("Erreur lors du chargement des auditeurs :", err)
@@ -38,7 +39,7 @@ const Auditeur = () => {
 
   const filteredAuditeurs = auditeurs.filter(
     (a) =>
-      a.nom?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      a.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       a.prenom?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       a.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       a.entreprisesAssignees?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -87,7 +88,6 @@ const Auditeur = () => {
             <tr>
               <th>Nom et Prénom</th>
               <th>Email</th>
-              <th>Mot de passe</th>
               <th>Entreprise</th>
               <th>Action</th>
             </tr>
@@ -95,9 +95,8 @@ const Auditeur = () => {
           <tbody>
             {filteredAuditeurs.map((a) => (
               <tr key={a._id}>
-                <td>{a.nom} {a.prenom}</td>
+                <td>{a.name}</td>
                 <td>{a.email}</td>
-                <td>{a.motDePasse}</td>
                 <td>{a.entreprisesAssignees?.[0]?.name}-{a.entreprisesAssignees?.[0]?.rnu}</td>
                 <td>
                   <div className="action-icones">

@@ -95,7 +95,7 @@ const SignUp = () => {
       console.log("Réponse du serveur:", response.data);
       setTimeout(() => {
         navigate("/signin");
-      }, 20000);
+      }, 2000);
 
     } catch (error) {
       setError(error.response?.data?.message || "Erreur de connexion au serveur");

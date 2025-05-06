@@ -50,7 +50,10 @@ const AjouteAuditeur = () => {
         entrepriseId: selectedEntreprise,
       };
 
-      await axios.post("http://localhost:5000/api/auth/ajoutaudit", data);
+      const resp = await axios.post("http://localhost:5000/api/auth/ajoutaudit", data);
+
+    console.log("hooooooooooooooooo", resp.data);
+    
       alert("Auditeur ajouté avec succès !");
       navigate("/auditeur");
     } catch (err) {
@@ -116,22 +119,27 @@ const AjouteAuditeur = () => {
             onChange={(e) => setMotDePasse(e.target.value)}
           />
 
-<label>Entreprise</label>
-<select
-  className="input-compte-select"
-  value={selectedEntreprise ? JSON.stringify(selectedEntreprise) : ""}
-  onChange={(e) => setSelectedEntreprise(JSON.parse(e.target.value))}
->
-  <option value="">-- Sélectionner une entreprise --</option>
+<label>Entreprises</label>
+<div className="checkbox-list-A">
   {entreprises.map((ent) => (
-    <option
-      key={ent.name}
-      value={JSON.stringify({ rnu: ent.rnu, name: ent.name,identre:ent._id })}
-    >
+    <label key={ent._id} className="checkbox-item-A">
+      <input
+        type="checkbox"
+        className="chex"
+        value={ent._id}
+        checked={selectedEntreprise.includes(ent._id)}
+        onChange={(e) => {
+          if (e.target.checked) {
+            setSelectedEntreprise([...selectedEntreprise, ent._id]);
+          } else {
+            setSelectedEntreprise(selectedEntreprise.filter(id => id !== ent._id));
+          }
+        }}
+      />
       {ent.name} - RNU: {ent.rnu}
-    </option>
+    </label>
   ))}
-</select>
+</div>
 
 
         </div>
