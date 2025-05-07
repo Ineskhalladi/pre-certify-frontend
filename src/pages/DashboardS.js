@@ -53,16 +53,19 @@ function DashboardS() {
   useEffect(() => {
     axios.get("http://localhost:5000/api/auth/allaudit")
       .then((res) => {
-        setAuditeurs(res.data);
+        const auditeursFiltrés = res.data.filter((user) => user.role === "auditeur");
+        setAuditeurs(auditeursFiltrés);
         setStats(prevStats => ({
           ...prevStats,
-          auditeur: res.data.length,
+          auditeur: auditeursFiltrés.length,
         }));
+        console.log("✅ Auditeurs filtrés :", auditeursFiltrés);
       })
       .catch((err) =>
         console.error("Erreur lors du chargement des auditeurs :", err)
       );
   }, []);
+  
   
   useEffect(() => {
     axios.get("http://localhost:5000/api/auth/alltexte")

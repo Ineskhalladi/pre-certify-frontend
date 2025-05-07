@@ -10,11 +10,10 @@ const EditerAuditeur = () => {
   const { id } = useParams();
 
   const [nom, setNom] = useState("");
-  const [prenom, setPrenom] = useState("");
   const [email, setEmail] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
   const [entreprises, setEntreprises] = useState([]);
-  const [selectedEntreprise, setSelectedEntreprise] = useState(""); 
+  const [selectedEntreprise, setSelectedEntreprise] = useState([]); // ✅ PAS ""
   const [auditeurs, setAuditeurs] = useState([]);
   
 
@@ -50,12 +49,11 @@ const EditerAuditeur = () => {
     try {
       const data = {
         nom,
-        prenom,
         email,
         motDePasse,
         entrepriseId: selectedEntreprise,
       };
-
+console.log("hiiiii", data);
       await axios.put(`http://localhost:5000/api/auth/updateaudit/${id}`, data);
       alert("Auditeur modifié avec succès !");
       navigate("/auditeur");
@@ -86,34 +84,42 @@ const EditerAuditeur = () => {
 
         <div className="line-horiz-compte"></div>
         <div className="form-compte">
-          <label>Nom</label>
+          <label>Nom et Prenom</label>
           <input type="text" className="input-compte" value={nom} onChange={(e) => setNom(e.target.value)} />
-
-          <label>Prénom</label>
-          <input type="text" className="input-compte" value={prenom} onChange={(e) => setPrenom(e.target.value)} />
 
           <label>Email</label>
           <input type="email" className="input-compte" value={email} onChange={(e) => setEmail(e.target.value)} />
 
           <label>Mot de passe</label>
           <input type="password" className="input-compte" value={motDePasse} onChange={(e) => setMotDePasse(e.target.value)} />
+          <label>Entreprises</label>
+<div className="checkbox-list-A">
+  {entreprises.map((ent) => {
+    const isChecked = selectedEntreprise.some(e => e._id === ent._id);
 
-                  <label>Entreprise</label>
-          <select
-  className="input-compte-select"
-  value={selectedEntreprise}
-  onChange={(e) => setSelectedEntreprise(e.target.value)}
->
-  <option value="">-- Sélectionner une entreprise --</option>
-  {entreprises.map((ent) => (
-    <option
-    key={ent.name}
-    value={JSON.stringify({ rnu: ent.rnu, name: ent.name })}
-  >
-    {ent.name} - RNU: {ent.rnu}
-  </option>
-  ))}
-</select>
+    return (
+      <label key={ent._id} className="checkbox-item-A">
+        <input
+          type="checkbox"
+          className="chex"
+          checked={isChecked}
+          onChange={(e) => {
+            if (e.target.checked) {
+              setSelectedEntreprise([...selectedEntreprise, {
+                _id: ent._id,
+                name: ent.name,
+                rnu: ent.rnu
+              }]);
+            } else {
+              setSelectedEntreprise(selectedEntreprise.filter(e => e._id !== ent._id));
+            }
+          }}
+        />
+        {ent.name} - RNU: {ent.rnu}
+      </label>
+    );
+  })}
+</div>
         </div>
 
         <div className="button-group">

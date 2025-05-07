@@ -97,8 +97,13 @@ const Auditeur = () => {
               <tr key={a._id}>
                 <td>{a.name}</td>
                 <td>{a.email}</td>
-                <td>{a.entreprisesAssignees?.[0]?.name}-{a.entreprisesAssignees?.[0]?.rnu}</td>
                 <td>
+  {a.entreprisesAssignees?.map((entreprise, index) => (
+    <div key={index}>
+      {entreprise.name} - {entreprise.rnu}
+    </div>
+  ))}
+</td>                <td>
                   <div className="action-icones">
                     <BiEdit onClick={() => navigate(`/editauditeur/${a._id}`)} />
                     <BiTrash onClick={() => handleDelete(a._id)} />

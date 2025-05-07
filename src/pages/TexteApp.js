@@ -16,74 +16,45 @@ const TexteApp = () => {
   const [data, setData] = useState([ ]);
   const [textes, setTextes] = useState([]);
   const [checkedTextes, setCheckedTextes] = useState([]);
-
   useEffect(() => {
     const fetchTextesPourSecteur = async () => {
       try {
-        console.log("Début de la récupération des textes pour le secteur");
+        console.log("📥 Début de la récupération des textes pour le secteur");
   
-        // Récupération du token
         const token = localStorage.getItem("token");
-        console.log("Token récupéré :", token);
-  
-        if (!token) {
-          throw new Error("❌ Aucun token trouvé");
-        }
+        if (!token) throw new Error("❌ Aucun token trouvé");
   
         const decoded = jwtDecode(token);
-        console.log("Token décodé :", decoded);
-  
         const userId = decoded.id;
-        console.log("ID utilisateur récupéré :", userId);
-        const identreprisesRes = await axios.get(`http://localhost:5000/api/auth/identreprise/${decoded.id}`);
-        console.log("Réponse de l'API identreprise :", identreprisesRes.data);  // Log de la réponse de l'API
+        console.log("✅ ID utilisateur :", userId);
   
-        const identre = identreprisesRes.data;
-        // Récupération des entreprises
-        const entreprisesRes = await axios.get("http://localhost:5000/api/auth/entreprises");
-        
-        const entreprises = JSON.stringify(entreprisesRes.data);
-        console.log("entreprises :", JSON.stringify(entreprisesRes.data));
-
-        // Recherche de l'entreprise dont l'ID correspond au `userId`
-        const monEntreprise = entreprises.find((e) => e._id === entreprises);
-        console.log("Entreprise trouvée :", monEntreprise);
-        
-        if (!monEntreprise) {
-          console.error("❌ Aucune entreprise trouvée pour l'utilisateur");
-          return;
+        const entrepriseData = JSON.parse(localStorage.getItem("entrepriseToken"));
+        if (!entrepriseData || !entrepriseData.sector?._id) {
+          throw new Error("❌ Aucune entreprise sélectionnée ou secteur introuvable");
         }
-        
   
-        const secteurId = monEntreprise.sector?._id;
-        console.log("Secteur ID de l'entreprise :", secteurId);
+        const secteurId = entrepriseData.sector._id;
+        console.log("🏢 Secteur de l'entreprise :", secteurId);
   
-        // Récupération des textes
+        // Récupérer tous les textes
         const textesRes = await axios.get("http://localhost:5000/api/auth/alltexte");
-        console.log("Réponse des textes :", textesRes.data);
-  
-        const textes = textesRes.data;
-        const textesFiltres = textes.filter((t) => t.secteur === secteurId);
-        console.log("Textes filtrés pour le secteur :", textesFiltres);
-  
+        const textesFiltres = textesRes.data.filter((t) => t.secteur === secteurId);
         setTextes(textesFiltres);
+        console.log("📝 Textes filtrés :", textesFiltres);
   
-        // Récupérer les textes déjà cochés
+        // Récupérer les textes déjà cochés pour l'utilisateur
         const textesCochesRes = await axios.get(`http://localhost:5000/api/auth/coche/${userId}`);
-        console.log("Textes cochés récupérés :", textesCochesRes.data);
-  
         setCheckedTextes(textesCochesRes.data || []);
-        
+        console.log("☑️ Textes déjà cochés :", textesCochesRes.data);
+  
       } catch (err) {
-        console.error("❌ Erreur lors du chargement des textes :", err);
-        alert("Une erreur s'est produite lors du chargement des textes");
+        console.error("❌ Erreur lors du chargement :", err.message);
+        alert("Une erreur s'est produite lors du chargement des textes.");
       }
     };
   
     fetchTextesPourSecteur();
-  }, []);  // [] signifie que le useEffect se déclenche au montage du composant
-  
-  
+  }, []);
 
   const handleAppChange = (id, newStatus) => {
     setData(prevData =>
@@ -206,43 +177,40 @@ const TexteApp = () => {
           </tr>
         </thead>
         <tbody>
-          {data.map((row) => (
-            <tr key={row.id}>
-              <td>{row.id}</td>
-              <td>{row.domaine}</td>
-              <td>{row.theme}</td>
-              <td>{row.sousTheme}</td>
-              <td>
-                {row.reference.split("\n").map((line, idx) => (
-                  <div key={idx}>{line}</div>
-                ))}
-              </td>
-              <td></td>
-              <td>{row.id === 3 ? <BsEyeSlash /> : <BsEye />}</td>
-              <td>
-  <div className="APP-container">
-    <div className={`app-status ${row.app.toLowerCase().replace(' ', '-')}`}>
-      {row.app}
-    </div>
-    <div className="menu-APP">
-      {["APP", "N APP", "INFO", "AV"].map((option) => (
-        <div
-          key={option}
-          className={`option-APP ${option.toLowerCase().replace(' ', '-')}`}
-          onClick={() => handleAppChange(row.id, option)}
-        >
-          {option}
+        {textes.map((texte, index) => (
+  <tr key={texte._id}>
+    <td>{index + 1}</td>
+    <td>{texte.domaine?.nom || '---'}</td>
+    <td>{texte.theme?.nom || '---'}</td>
+    <td>{texte.sousTheme?.nom || '---'}</td>
+    <td>{texte.reference?.split("\n").map((line, idx) => (
+      <div key={idx}>{line}</div>
+    ))}</td>
+    <td>{texte.type}</td> {/* type peut être "a", "m", "c" */}
+    <td><BsEye /></td>
+    <td>
+      <div className="APP-container">
+        <div className={`app-status ${texte.etat?.toLowerCase().replace(' ', '-')}`}>
+          {texte.etat}
         </div>
-      ))}
-    </div>
-  </div>
-</td>
-<td></td>
-              <td>
-                <ImFilePdf />
-              </td>
-            </tr>
+        <div className="menu-APP">
+          {["APP", "N APP", "INFO", "AV"].map((option) => (
+            <div
+              key={option}
+              className={`option-APP ${option.toLowerCase().replace(' ', '-')}`}
+              onClick={() => handleAppChange(texte._id, option)}
+            >
+              {option}
+            </div>
           ))}
+        </div>
+      </div>
+    </td>
+    <td>{texte.conformite || "---"}</td>
+    <td><ImFilePdf /></td>
+  </tr>
+))}
+
         </tbody>
       </table>
       <div className="pagination-container">

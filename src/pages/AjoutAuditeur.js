@@ -9,11 +9,10 @@ const AjouteAuditeur = () => {
   const navigate = useNavigate();
 
   const [nom, setNom] = useState("");
-  const [prenom, setPrenom] = useState("");
   const [email, setEmail] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
   const [entreprises, setEntreprises] = useState([]);
-  const [selectedEntreprise, setSelectedEntreprise] = useState(""); 
+  const [selectedEntreprise, setSelectedEntreprise] = useState([]); // ✅ PAS ""
 
 
   // Charger les entreprises vérifiées au montage
@@ -36,31 +35,32 @@ const AjouteAuditeur = () => {
 
   // ▶ Enregistrer un auditeur
   const handleSave = async () => {
-    if (!nom || !prenom || !email || !motDePasse || !selectedEntreprise) {
+    if (!nom  || !email || !motDePasse || !selectedEntreprise) {
       alert("Veuillez remplir tous les champs.");
 
       return;
     }
     console.log("selectedEntreprise",selectedEntreprise.name)
     try {
+      
       const data = {
         nom,
         email,
         motDePasse,
         entrepriseId: selectedEntreprise,
       };
-
+      console.log("nourhen hiii", data);
       const resp = await axios.post("http://localhost:5000/api/auth/ajoutaudit", data);
 
-    console.log("hooooooooooooooooo", resp.data);
-    
-      alert("Auditeur ajouté avec succès !");
-      navigate("/auditeur");
-    } catch (err) {
-      console.error("Erreur enregistrement auditeur :", err);
-      alert("Échec de l'enregistrement !");
-    }
-  };
+      console.log("hooooooooooooooooo", resp.data);
+      
+        alert("Auditeur ajouté avec succès !");
+        navigate("/auditeur");
+      } catch (err) {
+        console.error("Erreur enregistrement auditeur :", err);
+        alert("Échec de l'enregistrement !");
+   }
+   };
 
   return (
     <>
@@ -83,22 +83,13 @@ const AjouteAuditeur = () => {
 
         <div className="line-horiz-compte"></div>
         <div className="form-compte">
-          <label>Nom</label>
+          <label>Nom et Prenom</label>
           <input
             type="text"
             className="input-compte"
             placeholder="Ajouter le nom"
             value={nom}
             onChange={(e) => setNom(e.target.value)}
-          />
-
-          <label>Prénom</label>
-          <input
-            type="text"
-            className="input-compte"
-            placeholder="Ajouter le prénom"
-            value={prenom}
-            onChange={(e) => setPrenom(e.target.value)}
           />
 
           <label>Email</label>
@@ -121,25 +112,33 @@ const AjouteAuditeur = () => {
 
 <label>Entreprises</label>
 <div className="checkbox-list-A">
-  {entreprises.map((ent) => (
-    <label key={ent._id} className="checkbox-item-A">
-      <input
-        type="checkbox"
-        className="chex"
-        value={ent._id}
-        checked={selectedEntreprise.includes(ent._id)}
-        onChange={(e) => {
-          if (e.target.checked) {
-            setSelectedEntreprise([...selectedEntreprise, ent._id]);
-          } else {
-            setSelectedEntreprise(selectedEntreprise.filter(id => id !== ent._id));
-          }
-        }}
-      />
-      {ent.name} - RNU: {ent.rnu}
-    </label>
-  ))}
+  {entreprises.map((ent) => {
+    const isChecked = selectedEntreprise.some(e => e._id === ent._id);
+
+    return (
+      <label key={ent._id} className="checkbox-item-A">
+        <input
+          type="checkbox"
+          className="chex"
+          checked={isChecked}
+          onChange={(e) => {
+            if (e.target.checked) {
+              setSelectedEntreprise([...selectedEntreprise, {
+                _id: ent._id,
+                name: ent.name,
+                rnu: ent.rnu
+              }]);
+            } else {
+              setSelectedEntreprise(selectedEntreprise.filter(e => e._id !== ent._id));
+            }
+          }}
+        />
+        {ent.name} - RNU: {ent.rnu}
+      </label>
+    );
+  })}
 </div>
+
 
 
         </div>

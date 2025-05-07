@@ -46,13 +46,15 @@ import ListeEntreprises from "./pages/ListeEnreprises.js";
 import DashboardS from "./pages/DashboardS.js"; 
 import CocherTexte from "./pages/CocherTexte.js"
 import Certificate from "./pages/Certificate.js"
+import ChoixEntr from "./pages/ChoixEntr.js"
+import Sante from "./pages/Sante.js"
 
 const App = () => {
   const location = useLocation();
   const path = location.pathname;
 
   // Pages auth
-  const isAuthPage = ["/signin", "/signup", "/forget", "/resetpwd"].includes(path) || path.startsWith("/verify");
+  const isAuthPage = ["/signin", "/signup", "/forget", "/resetpwd","/choixentr"].includes(path) || path.startsWith("/verify");
 
   // Pages تظهر فيهم Navbar3 فقط
   const isNavbar3Page = ["/textes",  "/ajoutetexte", "/editetexte/:id","/auditeur"
@@ -64,7 +66,7 @@ const App = () => {
  ["/textesE", "/mesresponsables", "/ajouterresponsable","/cochertexte"].includes(path);
 
   // Pages يظهر فيهم Navbar + Footer فقط
-  const isNavbarFooterPage = ["/home","/normes", "/","/veillereg", "/contact","/certificate"].includes(path);
+  const isNavbarFooterPage = ["/home","/normes", "/","/veillereg", "/contact","/certificate","sante"].includes(path);
 
   // Pages يظهر فيهم Navbar2 فقط
   const isNavbar2Page = !isAuthPage && !isNavbar3Page && !isNavbarFooterPage && !isNavbar4Page ;
@@ -124,6 +126,8 @@ const App = () => {
         <Route path="/dashboards" element={<DashboardS />} />
         <Route path="/cochertexte" element={<CocherTexte />} />
         <Route path="/certificate" element={<Certificate />} />
+        <Route path="/choixentr" element={<ChoixEntr />} />
+        <Route path="/sante" element={<Sante />} />
 
       </Routes>
 
