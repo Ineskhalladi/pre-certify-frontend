@@ -15,17 +15,18 @@ const MesResponsables = () => {
 
 
   useEffect(() => {
-    const fetchResponsables = async () => {
-      try {
-        const res = await axios.get("http://localhost:5000/api/auth/allres");
-        setResponsables(res.data);
-      } catch (err) {
-        console.error("Erreur récupération responsables :", err);
-      }
-    };
-  
-    fetchResponsables();
+    axios
+      .get("http://localhost:5000/api/auth/allres") // Remplace cette URL si besoin
+      .then((res) => {
+        const responsablesFiltrés = res.data.filter((user) => user.role === "responsable");
+        setResponsables(responsablesFiltrés);
+        console.log(responsablesFiltrés);
+      })
+      .catch((err) =>
+        console.error("Erreur lors du chargement des responsables :", err)
+      );
   }, []);
+  
 
   const handleDelete = async (id) => {
     if (window.confirm("Voulez-vous vraiment supprimer ce responsable ?")) {
@@ -92,14 +93,15 @@ const MesResponsables = () => {
          <tbody>
          {responsables
   .filter(r =>
-    r.nom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    r.prenom.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    r.emailres.toLowerCase().includes(searchTerm.toLowerCase())
+    r.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    r.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    r.telephone.toLowerCase().includes(searchTerm.toLowerCase())
+
   )
   .map((resp) => (
     <tr key={resp._id}>
-      <td>{resp.prenom} {resp.nom}</td>
-      <td>{resp.emailRes}</td>
+      <td>{resp.name}</td>
+      <td>{resp.email}</td>
       <td>{resp.telephone}</td>
       <td>
         <div className="action-icones">

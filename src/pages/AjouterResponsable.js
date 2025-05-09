@@ -7,12 +7,11 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const AjouterResponsable = () => {
-  const [prenom, setPrenom] = useState("");
 const [nom, setNom] = useState("");
-const [emailRes, setEmailRes] = useState("");
+const [email, setEmail] = useState("");
 const [telephone, setTelephone] = useState("");
 const [accesActions, setAccesActions] = useState(false);
-
+ const [motDePasse, setMotDePasse] = useState("");
   const [userEmail, setUserEmail] = useState("");
   
   const navigate = useNavigate();
@@ -27,15 +26,15 @@ const [accesActions, setAccesActions] = useState(false);
   const handleSave = async () => {
     try {
       const res = await axios.post("http://localhost:5000/api/auth/ajoutres", {
-        prenom,
         nom,
-        emailRes,
+        email,
+        motDePasse,
         telephone,
         accesActions,
         createdBy: userEmail,
       });
   
-      console.log("Responsable ajouté avec succès");
+      alert(" Responsable ajouté avec succès !");
       navigate("/mesresponsables");
   
     } catch (err) {
@@ -75,22 +74,22 @@ const [accesActions, setAccesActions] = useState(false);
   <div className="form-ajout-responsable">
   <div className="form-row">
     <div className="form-col">
-      <label>Prénom</label>
-      <input type="text" className="input-res" placeholder="Entrer le prénom "  value={prenom}
-          onChange={(e) => setPrenom(e.target.value)}/>
+      <label>Nom et Prénom</label>
+      <input type="text" className="input-res" placeholder="Entrer le nom et prenom "  value={nom}
+          onChange={(e) => setNom(e.target.value)}/>
     </div>
     <div className="form-col">
-      <label>Nom</label>
-      <input type="text" className="input-res" placeholder="Entrer le nom"   value={nom}
-          onChange={(e) => setNom(e.target.value)}/>
+      <label>E-mail</label>
+      <input type="email" className="input-res" placeholder="Entrer l'email "  value={email}
+          onChange={(e) => setEmail(e.target.value)}/>
     </div>
   </div>
 
   <div className="form-row">
     <div className="form-col">
-      <label>E-mail</label>
-      <input type="email" className="input-res" placeholder="Entrer l'email "  value={emailRes}
-          onChange={(e) => setEmailRes(e.target.value)}/>
+      <label>Mot de passe</label>
+      <input type="email" className="input-res" placeholder="Entrer password "  value={motDePasse}
+          onChange={(e) => setMotDePasse(e.target.value)}/>
     </div>
     <div className="form-col">
       <label>Téléphone</label>

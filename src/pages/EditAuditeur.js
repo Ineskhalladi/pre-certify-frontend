@@ -3,15 +3,16 @@ import "../pages/AjouterResponsable.css";
 import { FaSave, FaEdit } from "react-icons/fa";
 import { MdRefresh } from "react-icons/md";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams,useLocation  } from "react-router-dom";
 
 const EditerAuditeur = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams();
 
-  const [nom, setNom] = useState("");
-  const [email, setEmail] = useState("");
-  const [motDePasse, setMotDePasse] = useState("");
+ const [nom, setNom] = useState(location.state?.name || "");
+   const [email, setEmail] = useState(location.state?.email || "");
+    const [motDePasse, setMotDePasse]=useState(location.state?.password || "");
   const [entreprises, setEntreprises] = useState([]);
   const [selectedEntreprise, setSelectedEntreprise] = useState([]); // ✅ PAS ""
   const [auditeurs, setAuditeurs] = useState([]);
@@ -85,13 +86,13 @@ console.log("hiiiii", data);
         <div className="line-horiz-compte"></div>
         <div className="form-compte">
           <label>Nom et Prenom</label>
-          <input type="text" className="input-compte" value={nom} onChange={(e) => setNom(e.target.value)} />
+          <input type="text" className="input-compte"  placeholder="Entrer le nom et prenom " value={nom} onChange={(e) => setNom(e.target.value)} />
 
           <label>Email</label>
-          <input type="email" className="input-compte" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input type="email" className="input-compte" placeholder="Entrer l'email " value={email} onChange={(e) => setEmail(e.target.value)} />
 
           <label>Mot de passe</label>
-          <input type="password" className="input-compte" value={motDePasse} onChange={(e) => setMotDePasse(e.target.value)} />
+          <input type="password" className="input-compte" placeholder="Entrer password "  value={motDePasse} onChange={(e) => setMotDePasse(e.target.value)} />
           <label>Entreprises</label>
 <div className="checkbox-list-A">
   {entreprises.map((ent) => {

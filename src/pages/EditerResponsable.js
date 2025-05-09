@@ -10,10 +10,10 @@ const EditerResponsable = () => {
   const navigate = useNavigate();
   const id = location.state?._id;
 
-  const [prenom, setPrenom] = useState(location.state?.prenom || "");
-  const [nom, setNom] = useState(location.state?.nom || "");
-  const [emailRes, setEmailRes] = useState(location.state?.emailRes || "");
+  const [nom, setNom] = useState(location.state?.name || "");
+  const [email, setEmail] = useState(location.state?.email || "");
   const [telephone, setTelephone] = useState(location.state?.telephone || "");
+   const [motDePasse, setMotDePasse]=useState(location.state?.password || "");
   const [accesActions, setAccesActions] = useState(location.state?.accesActions || false);
   const [userEmail, setUserEmail] = useState("");
 
@@ -23,13 +23,15 @@ const EditerResponsable = () => {
       console.log("ID à modifier:", id);
 
       const response = await axios.put(`http://localhost:5000/api/auth/updateres/${id}`, {
-        prenom,
         nom,
-        emailRes,
+        motDePasse,
+        email,
         telephone,
         accesActions
       });
       console.log("Responsable mis à jour :", response.data);
+      alert(" Modifier responsable  avec succès !");
+
       navigate("/mesresponsables");
     } catch (error) {
       console.error("Erreur lors de la mise à jour :", error);
@@ -66,51 +68,30 @@ const EditerResponsable = () => {
         <div className="line-horiz-compte"></div>
         <div className="form-ajout-responsable">
           <div className="form-row">
-            <div className="form-col">
-              <label>Prénom</label>
-              <input
-                type="text"
-                className="input-res"
-                placeholder="Entrer le prénom"
-                value={prenom}
-                onChange={(e) => setPrenom(e.target.value)}
-              />
-            </div>
-            <div className="form-col">
-              <label>Nom</label>
-              <input
-                type="text"
-                className="input-res"
-                placeholder="Entrer le nom"
-                value={nom}
-                onChange={(e) => setNom(e.target.value)}
-              />
-            </div>
-          </div>
+          <div className="form-col">
+      <label>Nom et Prénom</label>
+      <input type="text" className="input-res" placeholder="Entrer le nom et prenom "  value={nom}
+          onChange={(e) => setNom(e.target.value)}/>
+    </div>
+    <div className="form-col">
+      <label>E-mail</label>
+      <input type="email" className="input-res" placeholder="Entrer l'email "  value={email}
+          onChange={(e) => setEmail(e.target.value)}/>
+    </div>
+  </div>
 
-          <div className="form-row">
-            <div className="form-col">
-              <label>E-mail</label>
-              <input
-                type="email"
-                className="input-res"
-                placeholder="Entrer l'email"
-                value={emailRes}
-                onChange={(e) => setEmailRes(e.target.value)}
-              />
-            </div>
-            <div className="form-col">
-              <label>Téléphone</label>
-              <input
-                type="text"
-                className="input-res"
-                placeholder="Entrer le numéro de téléphone"
-                value={telephone}
-                onChange={(e) => setTelephone(e.target.value)}
-              />
-            </div>
-          </div>
-
+  <div className="form-row">
+    <div className="form-col">
+      <label>Mot de passe</label>
+      <input type="email" className="input-res" placeholder="Entrer password "  value={motDePasse}
+          onChange={(e) => setMotDePasse(e.target.value)}/>
+    </div>
+    <div className="form-col">
+      <label>Téléphone</label>
+      <input type="text" className="input-res" placeholder="Entrer le numéro de phone"  value={telephone}
+          onChange={(e) => setTelephone(e.target.value)}/>
+    </div>
+  </div>
         
 
           <div className="form-row form-row-bottom">

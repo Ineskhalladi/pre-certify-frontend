@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import "./NavBar2.css";
-import {  FaChevronDown, FaChevronUp } from "react-icons/fa";
+import {  FaChevronDown, FaChevronUp, FaTools } from "react-icons/fa";
 import logo from "../assets/logo.png";
 import { FiGrid, FiLayout, FiMonitor, FiPower, FiUsers, FiZap } from "react-icons/fi";
 import { LuBell, LuList } from "react-icons/lu";
@@ -12,7 +12,8 @@ import { BiFolder, BiSearch, BiUser } from "react-icons/bi";
 import profile from "../assets/profile.png"
 import { TbUsersGroup } from "react-icons/tb";
 import { BsFileText } from "react-icons/bs";
-const NavBar4 = () => {
+import { RiToolsFill } from "react-icons/ri";
+const NavBar5 = () => {
   const navigate = useNavigate();
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -60,10 +61,9 @@ const NavBar4 = () => {
 
       <nav className="navbar-bottom3">
         <Link to="/dashboard" className={`menu-item3 ${location.pathname === "/dashboard" ? "active" : ""}`}><FiMonitor className="icon-nav3" /> Tableau de Bord</Link>
-        <Link to="/cochertexte" className={`menu-item3 ${location.pathname === "/textesE" ? "active" : ""}`}
-        ><BsFileText className="icon-nav3" /> Les Textes </Link>
-<Link to="/mesresponsables" className={`menu-item3 ${location.pathname === "/textesE" ? "active" : ""}`}
-        ><LuList className="icon-nav3" /> Liste des responsables</Link>
+        <Link to="/messervices" className={`menu-item3 ${location.pathname === "/textesE" ? "active" : ""}`}
+        ><RiToolsFill className="icon-nav3" /> Les Services </Link>
+
 
         <div 
           className="dropdown3" 
@@ -129,7 +129,7 @@ const NavBar4 = () => {
   );
 };
 
-export default NavBar4;
+export default NavBar5;
 
 
 

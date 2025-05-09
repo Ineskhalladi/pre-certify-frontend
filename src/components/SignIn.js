@@ -51,15 +51,17 @@ const SignIn = () => {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user)); // 🆕
       const userRole = response.data.user.role; // تحقق من الدور
-    if (userRole === 'super_admin') {
-      navigate("/dashboards");  // توجيه الـ Super Admin إلى لوحة التحكم الخاصة به
-    } else if (userRole === 'user_entreprise') {
-      navigate("/mesresponsables");  // توجيه الـ User Entreprise إلى لوحة التحكم الخاصة به
-    } else if (userRole === 'auditeur') {
-      navigate("/choixentr");  // توجيه الـ User Entreprise إلى لوحة التحكم الخاصة به
-    } else {
-      setError("Rôle non autorisé");
-    }
+      if (userRole === 'super_admin') {
+        navigate("/dashboards");
+      } else if (userRole === 'user_entreprise') {
+        navigate("/mesresponsables");
+      } else if (userRole === 'auditeur') {
+        navigate("/choixentr");
+      } else if (userRole === 'responsable') {
+        navigate("/messervices");
+      } else {
+        setError("Rôle non autorisé");
+      }
   } catch (error) {
     setError(error.response?.data?.message || "Erreur de connexion au serveur");
   }

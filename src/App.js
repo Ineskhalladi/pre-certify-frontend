@@ -9,6 +9,7 @@ import NavBar from "./components/NavBar";
 import NavBar2 from "./components/NavBar2.js";
 import NavBar3 from "./components/NavBar3.js";
 import NavBar4 from "./components/NavBar4.js";
+import NavBar5 from "./components/NavBar5.js";
 
 import Footer from "./components/Footer";
 import Dashboard from "./pages/Dashboard"; 
@@ -57,7 +58,8 @@ const App = () => {
   const isAuthPage = ["/signin", "/signup", "/forget", "/resetpwd","/choixentr"].includes(path) || path.startsWith("/verify");
 
   // Pages تظهر فيهم Navbar3 فقط
-  const isNavbar3Page = ["/textes",  "/ajoutetexte", "/editetexte/:id","/auditeur"
+  const isNavbar3Page = path.startsWith("/editetexte/") || 
+  ["/textes",  "/ajoutetexte","/auditeur"
   ,"/ajouteauditeur","/editauditeur/:id","/listedesdemandes","/listeentreprises"
   ,"/dashboards"].includes(path);
 
@@ -65,11 +67,15 @@ const App = () => {
  const isNavbar4Page = path.startsWith("/editerresponsable") || 
  ["/textesE", "/mesresponsables", "/ajouterresponsable","/cochertexte"].includes(path);
 
+ // Pages تظهر فيهم Navbar5 فقط
+ const isNavbar5Page = path.startsWith("/editerservice/") || 
+ ["/messervices", "/ajouterservice"].includes(path);
+
   // Pages يظهر فيهم Navbar + Footer فقط
   const isNavbarFooterPage = ["/home","/normes", "/","/veillereg", "/contact","/certificate","sante"].includes(path);
 
   // Pages يظهر فيهم Navbar2 فقط
-  const isNavbar2Page = !isAuthPage && !isNavbar3Page && !isNavbarFooterPage && !isNavbar4Page ;
+  const isNavbar2Page = !isAuthPage && !isNavbar3Page && !isNavbarFooterPage && !isNavbar4Page && !isNavbar5Page ;
 
   return (
     <>
@@ -78,6 +84,9 @@ const App = () => {
 
        {/* Navbar4 */}
        {isNavbar4Page && <NavBar4 />}
+
+       {/* Navbar5 */}
+       {isNavbar5Page && <NavBar5 />}
 
       {/* Navbar + Footer */}
       {isNavbarFooterPage && <NavBar />}

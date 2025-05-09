@@ -49,7 +49,6 @@ const AjouteAuditeur = () => {
         motDePasse,
         entrepriseId: selectedEntreprise,
       };
-      console.log("nourhen hiii", data);
       const resp = await axios.post("http://localhost:5000/api/auth/ajoutaudit", data);
 
       console.log("hooooooooooooooooo", resp.data);
@@ -87,7 +86,7 @@ const AjouteAuditeur = () => {
           <input
             type="text"
             className="input-compte"
-            placeholder="Ajouter le nom"
+            placeholder="Ajouter le nom et prenom"
             value={nom}
             onChange={(e) => setNom(e.target.value)}
           />

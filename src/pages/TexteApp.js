@@ -16,11 +16,13 @@ const TexteApp = () => {
   const [data, setData] = useState([ ]);
   const [textes, setTextes] = useState([]);
   const [checkedTextes, setCheckedTextes] = useState([]);
+
   useEffect(() => {
-    const fetchTextesPourSecteur = async () => {
+    const fetchTextes = async () => {
       try {
-        console.log("📥 Début de la récupération des textes pour le secteur");
+        console.log("📥 Début récupération des textes");
   
+        // 1. Token utilisateur
         const token = localStorage.getItem("token");
         if (!token) throw new Error("❌ Aucun token trouvé");
   
@@ -28,42 +30,124 @@ const TexteApp = () => {
         const userId = decoded.id;
         console.log("✅ ID utilisateur :", userId);
   
+        // 2. ID entreprise
         const entrepriseData = JSON.parse(localStorage.getItem("entrepriseToken"));
-        if (!entrepriseData || !entrepriseData.sector?._id) {
-          throw new Error("❌ Aucune entreprise sélectionnée ou secteur introuvable");
-        }
+        const identre = entrepriseData.identre;
+        console.log("🏢 ID entreprise :", identre);
   
-        const secteurId = entrepriseData.sector._id;
-        console.log("🏢 Secteur de l'entreprise :", secteurId);
-  
-        // Récupérer tous les textes
+        // 3. Récupérer tous les textes
         const textesRes = await axios.get("http://localhost:5000/api/auth/alltexte");
-        const textesFiltres = textesRes.data.filter((t) => t.secteur === secteurId);
-        setTextes(textesFiltres);
-        console.log("📝 Textes filtrés :", textesFiltres);
+        const allTextes = textesRes.data;
+        console.log("📚 Tous les textes :", allTextes);
   
-        // Récupérer les textes déjà cochés pour l'utilisateur
-        const textesCochesRes = await axios.get(`http://localhost:5000/api/auth/coche/${userId}`);
-        setCheckedTextes(textesCochesRes.data || []);
-        console.log("☑️ Textes déjà cochés :", textesCochesRes.data);
+        // 4. Récupérer les textes cochés
+        const textesCochesRes = await axios.get(`http://localhost:5000/api/auth/coche/${identre}`);
+        const texteIDs = textesCochesRes.data.textes || [];
+        console.log("☑️ IDs des textes cochés :", texteIDs);
+  
+        // 5. Filtrer les textes cochés depuis allTextes
+        const textesFiltres = allTextes.filter((texte) => texteIDs.includes(texte._id));
+        console.log("✅ Textes cochés détaillés :", textesFiltres);
+  
+        // 6. Set state
+        setCheckedTextes(textesFiltres);
   
       } catch (err) {
-        console.error("❌ Erreur lors du chargement :", err.message);
-        alert("Une erreur s'est produite lors du chargement des textes.");
+        console.error("❌ Erreur :", err.message);
+        alert("Erreur lors du chargement des textes");
       }
     };
   
-    fetchTextesPourSecteur();
+    fetchTextes();
   }, []);
-
-  const handleAppChange = (id, newStatus) => {
-    setData(prevData =>
-      prevData.map(row =>
-        row.id === id ? { ...row, app: newStatus } : row
-      )
-    );
-  };
   
+
+const handleAppChange = (id, newStatus) => {
+  setTextes(prevTextes =>
+    prevTextes.map(texte =>
+      texte._id === id ? { ...texte, etat: newStatus } : texte
+    )
+  );
+};
+
+  // 1. Pour les domaines
+const [domainesParSecteur, setDomainesParSecteur] = useState({});
+const fetchDomainesBySecteur = async (secteurId) => {
+  if (domainesParSecteur[secteurId]) return;
+  try {
+    const res = await axios.get(`http://localhost:5000/api/auth/domaines/bySecteur/${secteurId}`);
+    setDomainesParSecteur(prev => ({
+      ...prev,
+      [secteurId]: res.data,
+    }));
+  } catch (error) {
+    console.error("Erreur chargement domaines du secteur :", error);
+  }
+};
+const Comparedomaine = (domaineId, secteurId) => {
+  const domaines = domainesParSecteur[secteurId];
+  if (!domaines) {
+    fetchDomainesBySecteur(secteurId);
+    return "Chargement domaine...";
+  }
+  const domaine = domaines.find((d) => d._id === domaineId);
+  return domaine ? domaine.nom : "Domaine inconnu";
+};
+
+
+// 2. Pour les thèmes
+const [themesParDomaine, setThemesParDomaine] = useState({});
+const fetchThemesByDomaine = async (domaineId) => {
+  if (themesParDomaine[domaineId]) return;
+  try {
+    const res = await axios.get(`http://localhost:5000/api/auth/themes/byDomaine/${domaineId}`);
+    setThemesParDomaine(prev => ({
+      ...prev,
+      [domaineId]: res.data,
+    }));
+  } catch (error) {
+    console.error("Erreur chargement des thèmes :", error);
+  }
+};
+
+const Comparetheme = (themeId, domaineId) => {
+  const themes = themesParDomaine[domaineId];
+  console.log("🔍 Comparetheme ID reçu :", themeId, "DomaineID :", domaineId);
+
+  if (!themes) {
+    fetchThemesByDomaine(domaineId);
+    return "Chargement thème...";
+  }
+  const theme = themes.find((t) => t._id === themeId);
+  return theme ? theme.nom : "Thème inconnu";
+};
+
+// 3. Pour les sous-thèmes
+const [sousThemesParTheme, setSousThemesParTheme] = useState({});
+const fetchSousThemesByTheme = async (themeId) => {
+  if (sousThemesParTheme[themeId]) return;
+  try {
+    const res = await axios.get(`http://localhost:5000/api/auth/sousthemes/byTheme/${themeId}`);
+    setSousThemesParTheme(prev => ({
+      ...prev,
+      [themeId]: res.data,
+    }));
+  } catch (error) {
+    console.error("Erreur chargement des sous-thèmes :", error);
+  }
+};
+const ComparesousTheme = (sousThemeId, themeId) => {
+  const sousThemes = sousThemesParTheme[themeId];
+  console.log("🔍 ComparesousTheme ID reçu :", sousThemeId, "ThemeID :", themeId);
+
+  if (!sousThemes) {
+    fetchSousThemesByTheme(themeId);
+    return "Chargement sous-thème...";
+  }
+  const sousTheme = sousThemes.find((s) => s._id === sousThemeId);
+  return sousTheme ? sousTheme.nom : "Sous-thème inconnu";
+};
+
  
   
   return (
@@ -161,58 +245,69 @@ const TexteApp = () => {
   <button className="exp-pdf">Exporter vers PDF <ImFilePdf /></button>
 </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>N°</th>
-            <th>Domaine</th>
-            <th>Thème</th>
-            <th>Sous thème</th>
-            <th>Référence</th>
-            <th>a/m/c</th>
-            <th>Texte</th>
-            <th>APP/N APP/Info</th>
-            <th>AV/C/NC</th>
-            <th>PDF</th>
-          </tr>
-        </thead>
-        <tbody>
-        {textes.map((texte, index) => (
-  <tr key={texte._id}>
-    <td>{index + 1}</td>
-    <td>{texte.domaine?.nom || '---'}</td>
-    <td>{texte.theme?.nom || '---'}</td>
-    <td>{texte.sousTheme?.nom || '---'}</td>
-    <td>{texte.reference?.split("\n").map((line, idx) => (
+<table>
+  <thead>
+    <tr>
+      <th>N°</th>
+      <th>Domaine</th>
+      <th>Thème</th>
+      <th>Sous thème</th>
+      <th>Référence</th>
+      <th>a/m/c</th>
+      <th>Texte</th>
+      <th>APP/N APP/Info</th>
+      <th>AV/C/NC</th>
+      <th>PDF</th>
+    </tr>
+  </thead>
+  <tbody>
+  {Array.isArray(checkedTextes) && checkedTextes.map((texte, index) => (
+    <tr key={texte._id}>
+      <td>{index + 1}</td>
+      <td>{Comparedomaine(texte.domaine, texte.secteur)|| '---'}</td>
+      <td>{Comparetheme(texte.theme, texte.domaine)|| '---'}</td>
+      <td>{ComparesousTheme(texte.sousTheme, texte.theme) || '---'}</td>
+      <td>
+  <div>
+    {texte.nature} : {texte.reference}
+  </div>
+  <div style={{ paddingTop: "5px" }}>
+    {texte.texte?.split("\n").map((line, idx) => (
       <div key={idx}>{line}</div>
-    ))}</td>
-    <td>{texte.type}</td> {/* type peut être "a", "m", "c" */}
-    <td><BsEye /></td>
-    <td>
-      <div className="APP-container">
-        <div className={`app-status ${texte.etat?.toLowerCase().replace(' ', '-')}`}>
-          {texte.etat}
-        </div>
-        <div className="menu-APP">
-          {["APP", "N APP", "INFO", "AV"].map((option) => (
-            <div
-              key={option}
-              className={`option-APP ${option.toLowerCase().replace(' ', '-')}`}
-              onClick={() => handleAppChange(texte._id, option)}
-            >
-              {option}
+    ))}
+  </div>
+</td>
+        <td>{texte.type || '---'}</td>
+        <td>
+          <BsEye />
+        </td>
+        <td>
+          <div className="APP-container">
+            <div className={`app-status ${texte.etat?.toLowerCase().replace(' ', '-')}`}>
+              {texte.etat}
             </div>
-          ))}
-        </div>
-      </div>
-    </td>
-    <td>{texte.conformite || "---"}</td>
-    <td><ImFilePdf /></td>
-  </tr>
-))}
+            <div className="menu-APP">
+              {["APP", "N APP", "INFO", "AV"].map((option) => (
+                <div
+                  key={option}
+                  className={`option-APP ${option.toLowerCase().replace(' ', '-')}`}
+                  onClick={() => handleAppChange(texte._id, option)}
+                >
+                  {option}
+                </div>
+              ))}
+            </div>
+          </div>
+        </td>
+        <td>{texte.conformite || "---"}</td>
+        <td>
+          <ImFilePdf />
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
 
-        </tbody>
-      </table>
       <div className="pagination-container">
   <ul className="pagination">
     <li className="btn-item">Précédent</li>

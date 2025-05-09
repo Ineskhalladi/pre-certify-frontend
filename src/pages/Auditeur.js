@@ -40,7 +40,6 @@ const Auditeur = () => {
   const filteredAuditeurs = auditeurs.filter(
     (a) =>
       a.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      a.prenom?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       a.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       a.entreprisesAssignees?.toLowerCase().includes(searchTerm.toLowerCase())
   );

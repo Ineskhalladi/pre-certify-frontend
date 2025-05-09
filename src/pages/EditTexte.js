@@ -3,26 +3,28 @@ import "../pages/AjouterResponsable.css";
 import { FaSyncAlt, FaSave, FaUserPlus } from "react-icons/fa";
 import { MdRefresh } from "react-icons/md";
 import axios from "axios";
-import { useParams,useNavigate } from "react-router-dom";
+import { useParams,useNavigate,useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
 const EditTexte = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const [secteurs, setSecteurs] = useState([]);
-  const [secteur, setSecteur] = useState("");
+  const [secteur, setSecteur] = useState(location.state?.secteur || "");
   const [domaines, setDomaines] = useState([]);
-  const [selectedDomaine, setSelectedDomaine] = useState("");
+  const [selectedDomaine, setSelectedDomaine] = useState(location.state?.domaine || "");
   const [themes, setThemes] = useState([]);
-  const [selectedTheme, setSelectedTheme] = useState("");
+  const [selectedTheme, setSelectedTheme] = useState(location.state?.themes || "");
   const [sousThemes, setSousThemes] = useState([]);
-  const [sousTheme, setSousTheme] = useState("");
+  const [sousTheme, setSousTheme] = useState(location.state?.sousTheme || "");
   const [natures, setNatures] = useState([]);
-  const [nature, setNature] = useState("");
-  const [typeTexte, setTypeTexte] = useState("");
+  const [nature, setNature] = useState(location.state?.nature || "");
+  const [typeTexte, setTypeTexte] = useState(location.state?.typeTexte || "");
   const [services, setServices] = useState([]);
   const [selectedService, setSelectedService] = useState("");
-  const [reference, setReference] = useState("");
-  const [texte, setTexte] = useState("");
+  const [reference, setReference] = useState(location.state?.reference || "");
+  const [texte, setTexte] = useState(location.state?.texte || "");;
 
   // ▶ Récupérer les secteurs
   useEffect(() => {
@@ -149,7 +151,7 @@ const EditTexte = () => {
 
           <div className="titre-multicritere">
             <FaUserPlus className="icon-res" />
-            <h2>Ajouter Texte</h2>
+            <h2>Editer Texte</h2>
           </div>
         </div>
 

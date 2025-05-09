@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../pages/MesServices.css";
 import {  FaFolderOpen, FaPlus } from "react-icons/fa";
-import NavBar2 from "../components/NavBar2";
 import { MdRefresh } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { BiEdit, BiTrash } from "react-icons/bi";
@@ -42,7 +41,6 @@ const MesServices = () => {
   );
   return (
     <>
- 
       <div className="base-container">
         <div className="search-container">
           <div className="header-top">
