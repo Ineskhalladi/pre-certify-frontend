@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import "../pages/Home.css";
 import { FaArrowUp, FaHeartbeat, FaPlane, FaExchangeAlt, FaLeaf, FaLightbulb, FaAppleAlt, FaGlobe, FaExclamationTriangle } from "react-icons/fa";
 import { MdSecurity, MdSettings } from "react-icons/md";
@@ -12,7 +12,25 @@ import iso21001 from "../assets/iso 21001.png";
 import iso26000 from "../assets/iso 26000.png";
 import { BiPlus } from "react-icons/bi";
 import { Link } from 'react-router-dom'; 
+export const useOnScreen = (threshold = 0.1) => {
+  const ref = useRef();
+  const [isVisible, setVisible] = useState(false);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { threshold }
+    );
+
+    if (ref.current) observer.observe(ref.current);
+
+    return () => {
+      if (ref.current) observer.unobserve(ref.current);
+    };
+  }, [threshold]);
+
+  return [ref, isVisible];
+};
 const sectors = [
     { icon: <GrTechnology />, label: "Informatique et technologies connexes" },
     { icon: <FaHeartbeat />, label: "Santé" },
@@ -29,7 +47,10 @@ const sectors = [
   ];
 const Home = () => {
   const [showButton, setShowButton] = useState(false);
-
+  const [normesRef, normesVisible] = useOnScreen(0.2); // 20% visible
+  const [sectorRef, sectorVisible] = useOnScreen(0.2);
+  const [contrRef, contrVisible] = useOnScreen(0.2);
+  
   useEffect(() => {
     const handleScroll = () => {
       setShowButton(window.scrollY > 200);
@@ -42,7 +63,20 @@ const Home = () => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
- 
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target); // Un observer pour ne l'animer qu'une seule fois
+      }
+    });
+  }, {
+    threshold: 0.2, // Si 20% de l'élément est visible
+  });
+  
+  document.querySelectorAll('.fade-in-section, .card, .card2, .card-normes, .sector-card, .load-more')
+    .forEach(el => observer.observe(el));
+  
   return (
     <div className="home-container">
       <section className="home-section">
@@ -57,7 +91,10 @@ const Home = () => {
         <img src={imghome} className="imghome" alt="Plateforme PreCertify" />
       </section>
 
-      <section className="normes-section">
+      <section   className={`normes-section fade-in-section ${
+          normesVisible ? "is-visible" : ""
+        }`}
+        ref={normesRef} >
         <h2>Que peuvent <span className="partie2-home">faire les normes pour vous</span> ?</h2>
         <p className="normes-description">
           Les normes internationales garantissent que les produits et services que vous utilisez au quotidien sont
@@ -85,7 +122,10 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="sector-container">
+      <section
+  className={`sector-container fade-in-section ${sectorVisible ? "is-visible" : ""}`}
+  ref={sectorRef}
+>
       <h2>Explorer nom secteur</h2>
       <div className="sector-grid">
         {sectors.map((sector, index) => (
@@ -96,7 +136,10 @@ const Home = () => {
         ))}
       </div>
     </section>
-    <section className="contr-normes">
+    <section
+  className={`contr-normes fade-in-section ${contrVisible ? "is-visible" : ""}`}
+  ref={contrRef}
+>
         <h2>Des normes de pointe</h2>
         <div className="grid-normes">
           <div className="normes-row">

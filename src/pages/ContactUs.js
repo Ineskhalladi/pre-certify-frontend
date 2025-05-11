@@ -61,7 +61,7 @@ const ContactUs = () => {
             <button className="btn">Submit Button</button>
         </div>
         </div>
-        <div className="contact-info">
+        <div className="contact-infoc">
         <div className="info-box">
         <FaPhoneAlt className="icones2" />
           <p className="info-text"><a href="tel:+2171900975">71 900 975</a> - <a href="tel:+2171900977">71 900 977</a></p>

@@ -23,7 +23,24 @@ const VeilleReg = () => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-
+ 
+    useEffect(() => {
+      const elements = document.querySelectorAll('.animate-on-scroll');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1 });
+  
+      elements.forEach((el) => observer.observe(el));
+  
+      return () => {
+        elements.forEach((el) => observer.unobserve(el));
+      };
+    }, []);
+  
   return (
     <div className="contact-container">
       <section className="veilleReg-section">
@@ -39,7 +56,7 @@ const VeilleReg = () => {
         <img src={flechet} className="fleche fleche2" alt="Flèche droite" />
       </section>
 
-      <section className="veille-info-section">
+      <section className="veille-info-sectio animate-on-scroll">
         <h2 className="veille-main-title">Veille Réglementaire</h2>
         <div className="veille-info-container">
           <div className="text-container">
@@ -66,7 +83,7 @@ const VeilleReg = () => {
         </div>
       </section>
 
-      <section className="veille-base-section">
+      <section className="veille-base-section animate-on-scroll">
         <div className="veille-base-header">
           <h2>Laquelle de nos formules choisir ?</h2>
           <h3>Veille de base</h3>
@@ -91,7 +108,7 @@ const VeilleReg = () => {
         </div>
       </section>
 
-      <section className="veille-plus-section">
+      <section className="veille-plus-section animate-on-scroll">
         <div className="veille-plus">
           <div className="text-side">
             <h3>Veille Plus:</h3>
@@ -109,7 +126,7 @@ const VeilleReg = () => {
           </div>
         </div>
       </section>
-      <section className="super-veille-section">
+      <section className="super-veille-section animate-on-scroll">
   <div className="super-veille">
     <div className="image-super">
     <div className="super-title">
@@ -134,7 +151,7 @@ const VeilleReg = () => {
   </div>
 </section>
 
-<section className="veille-differences-section">
+<section className="veille-differences-section animate-on-scroll">
   <h2>Veille réglementaire / Veille normative : Quelles différences ?</h2>
   <p>
     Comme son nom l’indique, « la veille normative » est le processus qui aide l’organisme de connaître et de mettre en œuvre les normes applicables à son activité.

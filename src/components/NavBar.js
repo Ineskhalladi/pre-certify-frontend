@@ -23,24 +23,23 @@ const Navbar = () => {
         <div 
           className="dropdown" 
           tabIndex={0} // Permet de gérer l'événement onBlur
-          onBlur={() => setShowSectors(false)} // Masquer les secteurs si l'on clique en dehors
-        >
-          <button className="naa" onClick={() => setShowSectors(!showSectors)}>Secteurs</button>
-          {showSectors && ( // Affichage des secteurs selon showSectors
+          >
+<button className="naa" onMouseDown={() => setShowSectors(true)}>Secteurs</button>
+{showSectors && ( // Affichage des secteurs selon showSectors
             <div className="sectors-dropdown">
               <div className="sectors-grid">
-                <Link to="/sante" className="sector-item">Santé</Link>
-                <Link to="/secteurs/informatique" className="sector-item">Informatique et technologies connexes</Link>
-                <Link to="/secteurs/gestion" className="sector-item">Gestion et services</Link>
-                <Link to="/secteurs/securite" className="sector-item">Sécurité, sûreté et risques</Link>
-                <Link to="/secteurs/transport" className="sector-item">Transport</Link>
-                <Link to="/secteurs/energie" className="sector-item">Énergie</Link>
-                <Link to="/secteurs/diversite" className="sector-item">Diversité et inclusion</Link>
-                <Link to="/secteurs/durabilite" className="sector-item">Durabilité environnementale</Link>
-                <Link to="/secteurs/agriculture" className="sector-item">Alimentation et agriculture</Link>
-                <Link to="/secteurs/materiaux" className="sector-item">Matériaux</Link>
-                <Link to="/secteurs/construction" className="sector-item">Bâtiment et construction</Link>
-                <Link to="/secteurs/ingenierie" className="sector-item">Ingénierie</Link>
+                <Link to="/sante" className="sector-item" onClick={() => setShowSectors(false)}>Santé</Link>
+                <Link to="/secteurs/informatique" className="sector-item" onClick={() => setShowSectors(false)}>Informatique et technologies connexes</Link>
+                <Link to="/secteurs/gestion" className="sector-item" onClick={() => setShowSectors(false)}>Gestion et services</Link>
+                <Link to="/secteurs/securite" className="sector-item" onClick={() => setShowSectors(false)}>Sécurité, sûreté et risques</Link>
+                <Link to="/secteurs/transport" className="sector-item" onClick={() => setShowSectors(false)}>Transport</Link>
+                <Link to="/secteurs/energie" className="sector-item" onClick={() => setShowSectors(false)}>Énergie</Link>
+                <Link to="/secteurs/diversite" className="sector-item" onClick={() => setShowSectors(false)}>Diversité et inclusion</Link>
+                <Link to="/secteurs/durabilite" className="sector-item" onClick={() => setShowSectors(false)}>Durabilité environnementale</Link>
+                <Link to="/secteurs/agriculture" className="sector-item" onClick={() => setShowSectors(false)}>Alimentation et agriculture</Link>
+                <Link to="/secteurs/materiaux" className="sector-item" onClick={() => setShowSectors(false)}>Matériaux</Link>
+                <Link to="/secteurs/construction" className="sector-item" onClick={() => setShowSectors(false)}>Bâtiment et construction</Link>
+                <Link to="/secteurs/ingenierie" className="sector-item" onClick={() => setShowSectors(false)}>Ingénierie</Link>
               </div>
             </div>
           )}

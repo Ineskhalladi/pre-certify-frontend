@@ -50,7 +50,7 @@ const Certificate = () => {
     </p>
   </div>
 
-  <div className="info-box">
+  <div className="info-box_C">
     <p><strong>Certification</strong> – fourniture par un organisme indépendant d’une assurance écrite (un certificat) que le produit, le service ou le système en question répond à des exigences spécifiques.</p>
     <p><strong>Accréditation</strong> – la reconnaissance formelle par un organisme indépendant, généralement connu sous le nom d’organisme d’accréditation, qu’un organisme de certification fonctionne conformément aux normes internationales.</p>
   </div>

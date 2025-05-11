@@ -1,52 +1,32 @@
-#service-page {
-  padding: 20px;
-  background-color: #677791;
-  margin-top: -20px;
-  scroll-behavior: smooth;
-}
-
-.service-intro {
-  text-align: center;
-  margin-bottom: 40px;
-  color: white;
-}
-
-.service-intro h1 {
-  font-size: 32px;
-  margin-bottom: 10px;
-}
-
-.service-intro p {
-  font-size: 18px;
-  color: #ddd;
-}
 
 .services-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 20px;
+  column-gap: 80px;
+  padding: 90px 10px;
+  margin-top: 40px;
 }
 
 .service-card {
-  background-color: #ECEEF0;
+  background-color: #fff;
   border-radius: 8px;
   padding: 20px;
-  width: 280px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 320px;
+  box-shadow: 0 2px 10px #E0A600;
   text-align: center;
   opacity: 0;
   transform: translateX(50px);
   animation: slideInRight 0.8s ease-out forwards;
   margin-bottom: 50px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
 .service-card:hover {
-  transform: scale(1.1);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transform: scale(1.02) !important; /* Agrandir la carte */
+  box-shadow: 0 8px 20px #E0A600;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
 }
+
 
 .service-card h2 {
   font-size: 20px;
@@ -54,57 +34,119 @@
 }
 
 .service-card p {
-  color: #555;
+  color: #000;
 }
 
 .service-card i {
   font-size: 24px;
   margin-right: 10px;
-  color: #677791;
+  color: #E0A600;
+}
+a {
+  text-decoration: none;
+  color: #E0A600; 
+  transition: all 0.005s ease;
+  scroll-behavior: smooth;
 }
 
-#afficheservise {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 30px;
-  background: #f0f2f5;
-  padding: 40px;
-}
 
-#imgg img {
-  width: 400px;
-  height: auto;
-  border-radius: 8px;
-}
 
-.service-detail .titre {
-  font-size: 28px;
-  color: #333;
-}
-
-.circles-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.circle {
-  width: 12px;
-  height: 12px;
-  background-color: #ccc;
-  border-radius: 50%;
-  margin: 5px;
-  transition: background-color 0.3s ease;
-}
-
-.active-circle {
-  background-color: #333;
-}
-
+/* Animation */
 @keyframes slideInRight {
+  from {
+    transform: translateX(50px);
+    opacity: 0;
+  }
   to {
     transform: translateX(0);
     opacity: 1;
   }
+}
+/************************************************ */
+.bgs{
+  background-image: url(../assets/bghome2.png);
+  height: 800px;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  margin-bottom: -40px;
+  margin-top: -50px;
+}
+#afficheservise{
+  width: 98%;
+  height: 500px;
+  display: flex;
+padding: 150px 2px;
+gap: 20px;  
+}
+#afficheservise img {
+   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); 
+  border: 20px solid #ffff;
+  border-radius: 8px; 
+  margin-bottom: 20px;
+  margin-left: 5%;
+  height: 400px;
+}
+#afficheservise #part2 {
+  border: 3px solid #E0A600; /* Bordure gris clair */
+  padding: 15px;
+  border-radius: 8px; /* Coins arrondis */
+  margin-top: 20px; /* Espacement en haut */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre légère */
+  width: 80%;
+  height: 350px;
+  margin-left: 40px;
+  background-color: #fff;
+
+}
+#afficheservise .titre {
+  font-size: 25px; /* Taille du texte */
+  color:#E0A600; /* Couleur du texte */
+  border-left: 4px solid #E0A600; /* Bordure à gauche de 4px de large et couleur #677791 */
+  padding-left: 10px; /* Espace à gauche du texte pour faire ressortir la bordure */
+  margin-bottom: 15px; /* Espacement sous l'élément */
+  text-align: left;
+}
+
+/* Style pour le texte dans #part2 */
+#afficheservise #part2 p {
+  font-size: 16px; /* Taille de la police */
+  line-height: 1.6; /* Interligne */
+  color: #000; /* Couleur du texte */
+  margin-bottom: 10px; 
+/* Espacement entre les paragraphes */
+}
+.parp1{
+  margin-top: -5px;
+}
+/* Si tu veux ajouter une couleur de fond différente pour le texte */
+#afficheservise #part2 p:nth-child(odd) {
+  width: 90%;
+}
+/************************* */
+
+
+.circle {
+  
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin: 0 5px;
+  border-radius: 50%;
+  background-color: #f1d68c;
+}
+.active-circle {
+    width: 30px;
+  height: 15px;
+  margin: 0 5px;
+  border-radius: 50px;
+  background-color: #E0A600;
+}
+.circles-wrapper {
+  
+  display: flex;
+  justify-content: center; /* centrer horizontalement */
+  margin-top:-150px; /* optionnel pour espace en haut */
 }

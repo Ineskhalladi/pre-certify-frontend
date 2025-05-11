@@ -72,7 +72,7 @@ const App = () => {
  ["/messervices", "/ajouterservice"].includes(path);
 
   // Pages يظهر فيهم Navbar + Footer فقط
-  const isNavbarFooterPage = ["/home","/normes", "/","/veillereg", "/contact","/certificate","sante"].includes(path);
+  const isNavbarFooterPage = ["/home","/normes", "/","/veillereg", "/contact","/certificate","/sante"].includes(path);
 
   // Pages يظهر فيهم Navbar2 فقط
   const isNavbar2Page = !isAuthPage && !isNavbar3Page && !isNavbarFooterPage && !isNavbar4Page && !isNavbar5Page ;
