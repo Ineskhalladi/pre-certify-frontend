@@ -9,6 +9,7 @@ import {
   FaDesktop,
   FaBlind,
   FaEllipsisH,
+  FaArrowUp,
 } from "react-icons/fa";
 import equipementImg from '../assets/equipements.jpg';
 import soinsImg from '../assets/servicesoins.png';
@@ -73,7 +74,23 @@ const servicesData = [
 const Sante = () => {
   const [selectedService, setSelectedService] = useState(servicesData[0]);
   const [selectedServiceIndex, setSelectedServiceIndex] = useState(0);
+const [showButton, setShowButton] = useState(false);
 
+    // Vérifier le scroll pour afficher le bouton
+    useEffect(() => {
+      const handleScroll = () => {
+        setShowButton(window.scrollY > 200);
+      };
+  
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+  
+    // Fonction pour remonter en haut
+    const scrollToTop = () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+    
   useEffect(() => {
     const scrollTo = document.getElementById("scrollToService");
     scrollTo.addEventListener("click", (e) => {
@@ -143,6 +160,12 @@ const Sante = () => {
         ))}
       </div>
       </section>
+         {showButton && (
+              <button className="scroll-to-top" onClick={scrollToTop}>
+                <FaArrowUp />
+              </button>
+            )}
+         
     </div>
   );
 };

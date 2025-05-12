@@ -501,10 +501,12 @@ table td svg:hover {
   .droite-phrase:hover, .icon-app:hover{
     color: rgba(31, 58, 36, 0.92);
   }
-  .export-section {
+  .export-section1 {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     margin-bottom: 20px;
+    
   }
   
   .exp-pdf {
@@ -516,9 +518,6 @@ table td svg:hover {
     border-radius: 8px;
     font-size: 15px;
     cursor: pointer;
-    margin-left: 50px;
-    margin-top: -10px;
-    margin-bottom: 10px;
     display: flex;
     align-items: center;
     gap: 8px;

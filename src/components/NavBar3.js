@@ -6,16 +6,18 @@ import { useLocation } from "react-router-dom";
 import "./NavBar2.css";
 import {  FaChevronDown, FaChevronUp } from "react-icons/fa";
 import logo from "../assets/logo.png";
-import { FiGrid, FiLayout, FiMonitor, FiPower, FiUsers, FiZap } from "react-icons/fi";
+import { FiGrid, FiLayout, FiMessageCircle, FiMonitor, FiPower, FiUsers, FiZap } from "react-icons/fi";
 import { LuBell, LuList } from "react-icons/lu";
 import { BiFolder, BiSearch, BiUser } from "react-icons/bi";
 import profile from "../assets/profile.png"
-import { TbUsersGroup } from "react-icons/tb";
+import axios from "axios"; 
+
 const NavBar3 = () => {
   const navigate = useNavigate();
 
   const [isProfileOpen, setIsProfileOpen] = useState(false);
- 
+  const [messageCount, setMessageCount] = useState(0);
+
   const location = useLocation();
   const [userName, setUserName] = useState("");
 
@@ -35,16 +37,25 @@ const NavBar3 = () => {
     }, 300);
   };
   
+  useEffect(() => {
+    const fetchMessageCount = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/auth/countmsg");
+        setMessageCount(res.data.count); // suppose que le backend répond { count: 5 }
+      } catch (err) {
+        console.error("Erreur lors de la récupération des messages :", err);
+      }
+    };
+  
+    fetchMessageCount();
+  
+  }, []);
   
   return (
     <div className="navbar-container3">
       <div className="navbar-top3">
         <img src={logo} alt="PreCertify Logo" className="logo3" />
         <div className="navbar-right3">
-          <div className="user-info3">
-            <span className="user-ref">Ref : <span className="num-date">14016725</span></span>
-            <span className="user-expire">Expire le : <span className="num-date">12/06/2025</span></span>
-          </div>
           <div className="user-profile"  tabIndex={0}  // Permet à l'élément de capter le focus
               onClick={() => setIsProfileOpen(!isProfileOpen)}> 
 <div className="avatar-container">
@@ -72,8 +83,10 @@ const NavBar3 = () => {
 <Link to="/textes" className={`menu-item3 ${location.pathname === "/textes" ? "active" : ""}`}
         ><LuList className="icon-nav3" /> Liste des textes  </Link>
      
-     <Link to="/alertes"  className={`menu-item3 ${location.pathname === "/alertes" ? "active" : ""}`}>
-     <LuBell className="icon-nav3" /> Mes Alertes <span className="alert-count">20</span></Link>        
+     <Link to="/message"  className={`menu-item3 ${location.pathname === "/alertes" ? "active" : ""}`}>
+     <FiMessageCircle className="icon-nav3" /> Mes Messages
+  {messageCount > 0 && <span className="alert-count">{messageCount}</span>}
+</Link>
       </nav>
 
       {isProfileOpen && (

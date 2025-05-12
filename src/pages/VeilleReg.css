@@ -136,6 +136,7 @@
     font-weight:600;
     font-family: "poppins", sans-serif;
     margin-bottom: 10px;
+    margin-top: 80px;
     margin-left: -50px;
   }
   
@@ -200,7 +201,7 @@
   .veille-base-section {
     font-family: "poppins", sans-serif;
     padding: 0px 5%;
-    margin-top: -50px;
+    margin-top: -40px;
 
   }
   
@@ -213,6 +214,7 @@
     color: rgba(31, 58, 36, 0.92);
     margin: 0;
     margin-top: 50px;
+    margin-bottom: 30px;
   }
   
   .veille-base-header h3 {

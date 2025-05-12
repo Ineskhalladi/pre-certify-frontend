@@ -240,6 +240,7 @@ cursor: pointer;
   display: flex;
   justify-content: center;
   gap: 10rem;
+  margin-top: 60px;
 }
 
 .info-box {
@@ -347,9 +348,7 @@ cursor: pointer;
 .inputM { animation-delay: 0.6s; }
 .envoyer { animation-delay: 0.8s; }
 .btn { animation-delay: 0.2s; }
-.input:focus, .inputE:focus, .inputM:focus,.input3:focus  {
-  animation: glowBorder 0.3s ease-in-out forwards;
-}
+
 
 @keyframes glowBorder {
   0% {

@@ -3,10 +3,15 @@ import "../pages/ContactUs.css";
 import flechet from "../assets/iconesfleshet.png";
 import line from "../assets/iconeslineC.png";
 import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt, FaArrowUp } from "react-icons/fa";
-
+import axios from "axios"; 
 
 const ContactUs = () => {
   const [showButton, setShowButton] = useState(false);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   // Vérifier le scroll pour afficher le bouton
   useEffect(() => {
@@ -22,6 +27,30 @@ const ContactUs = () => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
+  const envoyerMessage = async () => {
+    try {
+      const data = { name, phone, email, message };
+      const res = await axios.post("http://localhost:5000/api/auth/message", data);
+  
+      // Afficher le message de succès
+      setSuccessMessage("✔ Message envoyé avec succès !");
+      
+      // Vider les champs
+      setName("");
+      setPhone("");
+      setEmail("");
+      setMessage("");
+  
+    } catch (err) {
+      console.error("Erreur lors de l'envoi :", err);
+      setSuccessMessage("❌ Erreur lors de l'envoi du message.");
+    
+    }
+  };
+  
+  
+
   return (
     <div className="contact-container">
       {/* Section Contact avec le fond */}
@@ -41,15 +70,48 @@ const ContactUs = () => {
 
       {/* Formulaire en dehors de la section avec un fond différent */}
      <div className="cont">
-      <div className="contact-form">
-        <div className="inputat">
-          <input type="text" placeholder="Name" className="input" required />
-          <input type="tel" placeholder="Phone" className="input" required pattern="[0-9]{8}" />
-        </div>
-        <input type="email" placeholder="Email" className="inputE" required />
-        <textarea placeholder="Message" className="inputM"></textarea>
-        <button className="envoyer">Envoyer</button>
-     </div>
+     <div className="contact-form">
+  <div className="inputat">
+    <input
+      type="text"
+      placeholder="Name"
+      className="input"
+      value={name}
+      onChange={(e) => setName(e.target.value)}
+      required
+    />
+    <input
+      type="tel"
+      placeholder="Phone"
+      className="input"
+      pattern="[0-9]{8}"
+      value={phone}
+      onChange={(e) => setPhone(e.target.value)}
+    />
+  </div>
+  <input
+    type="email"
+    placeholder="Email"
+    className="inputE"
+    value={email}
+    onChange={(e) => setEmail(e.target.value)}
+    required
+  />
+  <textarea
+    placeholder="Message"
+    className="inputM"
+    value={message}
+    onChange={(e) => setMessage(e.target.value)}
+    required
+  ></textarea>
+  {successMessage && (
+  <p className="error-msg" > {successMessage}</p>
+)}
+  <button className="envoyer" onClick={envoyerMessage}>
+    Envoyer
+  </button>
+</div>
+
     
          <div className="news">
           <h1>Our Newsletter</h1>

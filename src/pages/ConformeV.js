@@ -65,61 +65,7 @@ const ConformeV = () => {
   };
   
 
-  const [domaines, setDomaines] = useState([]);
-  const [selectedDomaine, setSelectedDomaine] = useState("");
-  const [natures, setNatures] = useState([]);
-  const [themes, setThemes] = useState([]);
-  const [selectedTheme, setSelectedTheme] = useState("");
-  const [sousThemes, setSousThemes] = useState([]);
-  
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-  
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        const userId = decoded.id; // ou decoded._id selon ton backend
-  
-        axios
-          .get(`http://localhost:5000/api/auth/user/${userId}/domaines`)
-          .then((res) => {
-            setDomaines(res.data);
-          })
-          .catch((err) => {
-            console.error("Erreur lors du chargement des domaines :", err);
-          });
-      } catch (error) {
-        console.error("Erreur lors du décodage du token :", error);
-      }
-    } else {
-      console.warn("Token non trouvé dans le localStorage");
-    }
-  }, []);
-  
-  useEffect(() => {
-    if (selectedDomaine) {
-      axios.get(`http://localhost:5000/api/auth/themes/byDomaine/${selectedDomaine}`)
-        .then(res => {
-          setThemes(res.data); // On suppose que res.data est un tableau de thèmes
-        })
-        .catch(err => console.error("Erreur lors du chargement des thèmes :", err));
-    } else {
-      setThemes([]); // Vide si aucun domaine sélectionné
-    }
-  }, [selectedDomaine]);
-  
-  useEffect(() => {
-    if (selectedTheme) {
-      axios.get(`http://localhost:5000/api/auth/sousthemes/byTheme/${selectedTheme}`)
-        .then(res => {
-          setSousThemes(res.data);
-        })
-        .catch(err => console.error("Erreur lors du chargement des sous-thèmes :", err));
-    } else {
-      setSousThemes([]);
-    }
-  }, [selectedTheme]);
   
   return (
     <>
@@ -140,58 +86,36 @@ const ConformeV = () => {
   </div>
 
 <div className="base-rech">
-  <div className="filters">
+<div className="filters">
     <div className="form-group">
       <label>Domaine</label>
-      <select value={selectedDomaine} onChange={(e) => {
-  const selectedId = e.target.value;
-  setSelectedDomaine(selectedId);
-
-  // Trouve le domaine sélectionné
-  const domaineChoisi = domaines.find(d => d._id === selectedId);
-  // Mets à jour la liste des natures
-  setNatures(domaineChoisi ? domaineChoisi.nature : []);
-
-}}>
-  <option value="">--Choisir un domaine--</option>
-  {domaines.map((domaine) => (
-    <option key={domaine._id} value={domaine._id}>
-      {domaine.nom}
-    </option>
-  ))}
+      <select>
+  <option>--Choisir un domaine--</option>
+ 
 </select>
     </div>
     <div className="form-group">
       <label>Thème</label>
-      <select onChange={(e) => setSelectedTheme(e.target.value)}>
-  <option value="">--Choisir un thème--</option>
-  {themes.map((theme, index) => (
-    <option key={index} value={theme._id}>
-      {theme.nom}
-    </option>
-  ))}
+      <select >
+  <option>--Choisir un thème--</option>
+
 </select>
    </div>
     <div className="form-group">
       <label>Sous thème</label>
       <select>
   <option>--Choisir un sous thème --</option>
-  {sousThemes.map((sousTheme, index) => (
-    <option key={index} value={sousTheme._id}>
-      {sousTheme.nom}
-    </option>
-  ))}
-</select>    </div>
+  
+</select> 
+   </div>
     <div className="form-group">
       <label>Nature</label>
       <select>
   <option>--Choisir une nature --</option>
-  {natures.map((nature, idx) => (
-    <option key={idx} value={nature}>{nature}</option>
-  ))}
+
 </select>
     </div>
-
+   
     <div className="form-group">
       <label>Mot clé</label>
       <input type="text" placeholder="" />

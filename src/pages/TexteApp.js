@@ -1,17 +1,18 @@
 import React, { useState, useEffect} from "react";
 import "../pages/BaseGenerale.css";
-import { FaSearch, FaSyncAlt,  FaFolderOpen } from "react-icons/fa";
+import { FaSearch, FaSyncAlt,  FaFolderOpen, FaPlus } from "react-icons/fa";
 import NavBar2 from "../components/NavBar2";
 import { MdRefresh } from "react-icons/md";
 import { BsEye, BsEyeSlash, BsInfoCircle } from "react-icons/bs";
 import { ImFilePdf } from "react-icons/im";
 import "../pages/TexteApp.css"
 import { FiArrowRight } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
-const TexteApp = () => {
 
+const TexteApp = () => {
+  const navigate = useNavigate();
   const [isAbreviationOpen, setIsAbreviationOpen] = useState(false);
   const [data, setData] = useState([ ]);
   const [textes, setTextes] = useState([]);
@@ -43,14 +44,33 @@ const TexteApp = () => {
         // 4. Récupérer les textes cochés
         const textesCochesRes = await axios.get(`http://localhost:5000/api/auth/coche/${identre}`);
         const texteIDs = textesCochesRes.data.textes || [];
+        
         console.log("☑️ IDs des textes cochés :", texteIDs);
-  
+
+
+        // 🔄 6. Récupérer les états des textes (APP, NAPP, INFO)
+const textesApplicableRes = await axios.get(`http://localhost:5000/api/auth/etat/${identre}`);
+const textesApplicable = textesApplicableRes.data || [];
+console.log("📄 États des textes applicables :", textesApplicable);
+
+
         // 5. Filtrer les textes cochés depuis allTextes
         const textesFiltres = allTextes.filter((texte) => texteIDs.includes(texte._id));
         console.log("✅ Textes cochés détaillés :", textesFiltres);
+        
+// 🧠 7. Fusionner les états avec les textes cochés détaillés
+const textesAvecEtat = textesFiltres.map((texte) => {
+  const match = textesApplicable.find((t) => t.texteId === texte._id);
+  return {
+    ...texte,
+    etat: match?.etat || ""  // vide si pas encore défini
+  };
+});
+
   
-        // 6. Set state
-        setCheckedTextes(textesFiltres);
+      // ✅ Mise à jour du state final avec les états inclus
+setCheckedTextes(textesAvecEtat);
+
   
       } catch (err) {
         console.error("❌ Erreur :", err.message);
@@ -62,13 +82,6 @@ const TexteApp = () => {
   }, []);
   
 
-const handleAppChange = (id, newStatus) => {
-  setTextes(prevTextes =>
-    prevTextes.map(texte =>
-      texte._id === id ? { ...texte, etat: newStatus } : texte
-    )
-  );
-};
 
   // 1. Pour les domaines
 const [domainesParSecteur, setDomainesParSecteur] = useState({});
@@ -148,7 +161,38 @@ const ComparesousTheme = (sousThemeId, themeId) => {
   return sousTheme ? sousTheme.nom : "Sous-thème inconnu";
 };
 
- 
+// Fonction pour mettre à jour l'état d'un texte dans le backend
+const updateTexteEtat = async (texteId, etat) => {
+  try {
+    const entrepriseData = JSON.parse(localStorage.getItem("entrepriseToken"));
+    const identre = entrepriseData.identre;
+
+    // Envoi de la requête pour mettre à jour l'état du texte
+    await axios.post("http://localhost:5000/api/auth/appl", {
+      identre,
+      texteId,
+      etat,
+    });
+
+    console.log("✅ Texte mis à jour avec succès !");
+  } catch (err) {
+    console.error("❌ Erreur lors de la mise à jour :", err.message);
+  }
+};
+
+// Fonction de gestion du changement d'état dans l'interface utilisateur
+const handleAppChange = (id, newStatus) => {
+  // 🔁 Mise à jour du bon state : checkedTextes
+  setCheckedTextes(prev =>
+    prev.map(texte =>
+      texte._id === id ? { ...texte, etat: newStatus } : texte
+    )
+  );
+
+  // 📤 Mise à jour backend
+  updateTexteEtat(id, newStatus);
+};
+
   
   return (
     <>
@@ -170,19 +214,28 @@ const ComparesousTheme = (sousThemeId, themeId) => {
   </div>
 
 <div className="base-rech">
-  <div className="filters">
+<div className="filters">
     <div className="form-group">
       <label>Domaine</label>
+      <select>
+  <option>--Choisir un domaine--</option>
+ 
+</select>
+    </div>
+    <div className="form-group">
+      <label>Thème</label>
+      <select >
+  <option>--Choisir un thème--</option>
 
-  
-
+</select>
    </div>
     <div className="form-group">
       <label>Sous thème</label>
       <select>
-
- 
-</select>    </div>
+  <option>--Choisir un sous thème --</option>
+  
+</select> 
+   </div>
     <div className="form-group">
       <label>Nature</label>
       <select>
@@ -241,8 +294,9 @@ const ComparesousTheme = (sousThemeId, themeId) => {
 </div>
 
 {/* NOUVEAU BOUTON PDF EN DESSOUS */}
-<div className="export-section">
+<div className="export-section1">
   <button className="exp-pdf">Exporter vers PDF <ImFilePdf /></button>
+  
 </div>
 
 <table>
@@ -284,7 +338,7 @@ const ComparesousTheme = (sousThemeId, themeId) => {
         <td>
           <div className="APP-container">
             <div className={`app-status ${texte.etat?.toLowerCase().replace(' ', '-')}`}>
-              {texte.etat}
+              {texte.etat || "mich mawjoud"}
             </div>
             <div className="menu-APP">
               {["APP", "N APP", "INFO", "AV"].map((option) => (

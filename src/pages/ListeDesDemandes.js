@@ -59,20 +59,6 @@ const ListeDesDemandes = () => {
 
         <div className="line-horiz-compte"></div>
 
-        <div className="content-res">
-          <div className="search-label-group">
-            <label htmlFor="searchInput" className="label-recherche">Recherche :</label>
-            <input
-              type="text"
-              id="searchInput"
-              className="search-res"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-
-        </div>
-
         <table className="responsables-table">
           <thead>
             <tr>

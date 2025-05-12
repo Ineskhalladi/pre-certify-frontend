@@ -29,9 +29,9 @@ const Navbar = () => {
             <div className="sectors-dropdown">
               <div className="sectors-grid">
                 <Link to="/sante" className="sector-item" onClick={() => setShowSectors(false)}>Santé</Link>
-                <Link to="/secteurs/informatique" className="sector-item" onClick={() => setShowSectors(false)}>Informatique et technologies connexes</Link>
-                <Link to="/secteurs/gestion" className="sector-item" onClick={() => setShowSectors(false)}>Gestion et services</Link>
-                <Link to="/secteurs/securite" className="sector-item" onClick={() => setShowSectors(false)}>Sécurité, sûreté et risques</Link>
+                <Link to="/infor"className="sector-item" onClick={() => setShowSectors(false)}>Informatique et technologies connexes</Link>
+                <Link to="/gestion" className="sector-item" onClick={() => setShowSectors(false)}>Gestion et services</Link>
+                <Link to="/securite" className="sector-item" onClick={() => setShowSectors(false)}>Sécurité, sûreté et risques</Link>
                 <Link to="/secteurs/transport" className="sector-item" onClick={() => setShowSectors(false)}>Transport</Link>
                 <Link to="/secteurs/energie" className="sector-item" onClick={() => setShowSectors(false)}>Énergie</Link>
                 <Link to="/secteurs/diversite" className="sector-item" onClick={() => setShowSectors(false)}>Diversité et inclusion</Link>
@@ -58,10 +58,11 @@ const Navbar = () => {
           className={`search-input ${showSearch ? "show" : ""}`}
           autoFocus={showSearch}
         />
-        <button className="access-button">
+          <Link to="/signin" className="access-button">
           <img src={evolu} className="evolu" alt='evolu'/>
-          <Link to="/signin">Accès Veille</Link>
-        </button>
+        Accès Veille
+        </Link>
+    
       </div>
     </nav>
   );

@@ -49,6 +49,10 @@ import CocherTexte from "./pages/CocherTexte.js"
 import Certificate from "./pages/Certificate.js"
 import ChoixEntr from "./pages/ChoixEntr.js"
 import Sante from "./pages/Sante.js"
+import Infor from "./pages/Infor.js"
+import Gestion from "./pages/Gestion.js";
+import Securité from "./pages/Securité.js";
+import Message from "./pages/Message.js";
 
 const App = () => {
   const location = useLocation();
@@ -61,7 +65,7 @@ const App = () => {
   const isNavbar3Page = path.startsWith("/editetexte/") || 
   ["/textes",  "/ajoutetexte","/auditeur"
   ,"/ajouteauditeur","/editauditeur/:id","/listedesdemandes","/listeentreprises"
-  ,"/dashboards"].includes(path);
+  ,"/dashboards","/message"].includes(path);
 
  // Pages تظهر فيهم Navbar4 فقط
  const isNavbar4Page = path.startsWith("/editerresponsable") || 
@@ -72,7 +76,8 @@ const App = () => {
  ["/messervices", "/ajouterservice"].includes(path);
 
   // Pages يظهر فيهم Navbar + Footer فقط
-  const isNavbarFooterPage = ["/home","/normes", "/","/veillereg", "/contact","/certificate","/sante"].includes(path);
+  const isNavbarFooterPage = ["/home","/normes", "/","/veillereg", "/contact","/certificate","/sante"
+    ,"/infor","/gestion","/securite"].includes(path);
 
   // Pages يظهر فيهم Navbar2 فقط
   const isNavbar2Page = !isAuthPage && !isNavbar3Page && !isNavbarFooterPage && !isNavbar4Page && !isNavbar5Page ;
@@ -133,10 +138,14 @@ const App = () => {
         <Route path="/listedesdemandes" element={<ListeDesDemandes/>} />
         <Route path="/listeentreprises" element={<ListeEntreprises/>} />
         <Route path="/dashboards" element={<DashboardS />} />
+        <Route path="/message" element={<Message />} />
         <Route path="/cochertexte" element={<CocherTexte />} />
         <Route path="/certificate" element={<Certificate />} />
         <Route path="/choixentr" element={<ChoixEntr />} />
         <Route path="/sante" element={<Sante />} />
+        <Route path="/infor" element={<Infor />} />
+        <Route path="/gestion" element={<Gestion />} />
+        <Route path="/securite" element={<Securité />} />
 
       </Routes>
 
