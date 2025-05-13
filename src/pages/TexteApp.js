@@ -17,13 +17,13 @@ const TexteApp = () => {
   const [data, setData] = useState([ ]);
   const [textes, setTextes] = useState([]);
   const [checkedTextes, setCheckedTextes] = useState([]);
+  const [textesNormaux, setTextesNormaux] = useState([]);
 
   useEffect(() => {
     const fetchTextes = async () => {
       try {
         console.log("📥 Début récupération des textes");
   
-        // 1. Token utilisateur
         const token = localStorage.getItem("token");
         if (!token) throw new Error("❌ Aucun token trouvé");
   
@@ -31,46 +31,46 @@ const TexteApp = () => {
         const userId = decoded.id;
         console.log("✅ ID utilisateur :", userId);
   
-        // 2. ID entreprise
         const entrepriseData = JSON.parse(localStorage.getItem("entrepriseToken"));
         const identre = entrepriseData.identre;
         console.log("🏢 ID entreprise :", identre);
   
-        // 3. Récupérer tous les textes
         const textesRes = await axios.get("http://localhost:5000/api/auth/alltexte");
         const allTextes = textesRes.data;
         console.log("📚 Tous les textes :", allTextes);
   
-        // 4. Récupérer les textes cochés
+        // 📌 Tous les textes type normal (même s'ils ne sont pas cochés)
+        const textesNormaux = allTextes.filter((t) => t.typeTexte?.toLowerCase() === "normal");
+        console.log("📄 Tous les textes normaux :", textesNormaux);
+        setTextesNormaux(textesNormaux);
+  
+        // ✅ Récupérer les textes cochés
         const textesCochesRes = await axios.get(`http://localhost:5000/api/auth/coche/${identre}`);
         const texteIDs = textesCochesRes.data.textes || [];
-        
         console.log("☑️ IDs des textes cochés :", texteIDs);
-
-
-        // 🔄 6. Récupérer les états des textes (APP, NAPP, INFO)
-const textesApplicableRes = await axios.get(`http://localhost:5000/api/auth/etat/${identre}`);
-const textesApplicable = textesApplicableRes.data || [];
-console.log("📄 États des textes applicables :", textesApplicable);
-
-
-        // 5. Filtrer les textes cochés depuis allTextes
-        const textesFiltres = allTextes.filter((texte) => texteIDs.includes(texte._id));
-        console.log("✅ Textes cochés détaillés :", textesFiltres);
-        
-// 🧠 7. Fusionner les états avec les textes cochés détaillés
-const textesAvecEtat = textesFiltres.map((texte) => {
-  const match = textesApplicable.find((t) => t.texteId === texte._id);
-  return {
-    ...texte,
-    etat: match?.etat || ""  // vide si pas encore défini
-  };
-});
-
   
-      // ✅ Mise à jour du state final avec les états inclus
-setCheckedTextes(textesAvecEtat);
-
+        // ✅ Récupérer les états des textes
+        const textesApplicableRes = await axios.get(`http://localhost:5000/api/auth/etat/${identre}`);
+        const textesApplicable = textesApplicableRes.data || [];
+        console.log("📄 États des textes applicables :", textesApplicable);
+  
+        // ✅ Filtrer les textes cochés avec type normal
+        const textesFiltres = allTextes.filter(
+          (texte) => texteIDs.includes(texte._id) && texte.typeTexte?.toLowerCase() === "normal"
+        );
+        console.log("✅ Textes cochés détaillés :", textesFiltres);
+  
+        // ✅ Fusionner avec état
+        const textesAvecEtat = textesFiltres.map((texte) => {
+          const match = textesApplicable.find((t) => t.texteId === texte._id);
+          return {
+            ...texte,
+            etat: match?.etat || ""
+          };
+        });
+  
+        // ✅ State final
+        setCheckedTextes(textesAvecEtat);
   
       } catch (err) {
         console.error("❌ Erreur :", err.message);

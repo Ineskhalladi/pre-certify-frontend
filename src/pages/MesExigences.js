@@ -137,121 +137,13 @@ const MesExigences = () => {
 </div>
  
 
-        <div className="text-list-container">
-        <div className="text-list-header">
-    <h3 className="text-base"><FaFolderOpen /> Ajouter référence</h3>
-
-  </div>
-<div className="line-horiz"></div>
-<div className="content-res">
-       <div className="search-label-group">
-         <label htmlFor="searchInput" className="label-recherche">Recherche :</label>
-         <input
-           type="text"
-           id="searchInput"
-            className="search-res"
-           value={searchTerm}
-           onChange={(e) => setSearchTerm(e.target.value)}
-         />
-       </div>
-       <button className="add-res">
-       <FaPlus />
-     </button>
-     </div>
-<div className="button-group">
-    <button className="btn-search"><FaSave /> Enregistrer</button>
-    <button className="btn-cancel"><FaSyncAlt /> Annuler</button>
-  </div>
-<table>
-         <thead>
-         <tr>
-              <th>Domaine</th>
-              <th>Nature</th>
-              <th>Référence</th>
-              <th>App/N APP/AV</th>
-              <th>Av/C/NC</th>
-              <th>PDF</th>
-              <th>Action</th>
-
-
-            </tr>
-         </thead>
-         <tbody>
-            <tr>
-           <td>
-            <select>
-                <option>--Choisir un domaine--</option>
-            </select>
-            <br></br>
-            <input type="text" placeholder="Nouveau domaine"/>
-           </td>
-           <td>
-           <select>
-                <option>--Choisir un nature--</option>
-            </select>
-            <br></br>
-            <input type="text" placeholder="Nouveau nature"/>
-           </td>
-           <td>
-           <input type="text" placeholder="Nouveau référence"/>
-           </td>
-           <td>
-           <select>
-                <option>Applicable</option>
-                <option>Non applicable</option>
-                <option>A vérifier</option>
-
-            </select>
-           </td>
-           <td>
-           <select>
-                <option>A vérifier</option>
-                <option>Conforme</option>
-                <option>Non conforme</option>
-            </select>
-           </td>
-           <td>
-           <input type="file" />
-
-           </td>
-           <td></td>
-           </tr>
-         </tbody>
-       </table>
-
-      <div className="pagination-container">
-  <ul className="pagination">
-    <li className="btn-item">Précédent</li>
-    <li className="btn-item active">1</li>
-    <li className="btn-item">Suivant</li>
-    <li className="btn-item">Fin</li>
-  </ul>
-</div>
-
-    </div>
-    
     <div className="text-list-container">
         <div className="text-list-header">
     <h3 className="text-base"><FaFolderOpen /> Liste mes autres exigences</h3>
 
   </div>
 <div className="line-horiz"></div>
-<div className="content-res">
-       <div className="search-label-group">
-         <label htmlFor="searchInput" className="label-recherche">Recherche :</label>
-         <input
-           type="text"
-           id="searchInput"
-            className="search-res"
-           value={searchTerm}
-           onChange={(e) => setSearchTerm(e.target.value)}
-         />
-       </div>
-     </div>
-<div className="button-group">
-    <button className="btn-search"><FaSave /> Enregistrer</button>
-    <button className="btn-cancel"><FaSyncAlt /> Annuler</button>
-  </div>
+
 <table>
          <thead>
          <tr>

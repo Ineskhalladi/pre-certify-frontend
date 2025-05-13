@@ -400,25 +400,25 @@ table td svg:hover {
     background-color: #e9ba39;
 
   }
-  .content-res {
+  .content-resM {
     display: flex;
     justify-content: space-between;
     margin: 20px 0;
   }
-  .search-label-group {
+  .search-label-groupM {
     display: flex;
     align-items: center;
     margin-left: 20px;
   }
   
-  .label-recherche {
+  .label-rechercheM {
     font-size: 14px;
     color: rgba(31, 58, 36, 0.92);
     font-weight: 500;
     margin-bottom: 2px;
   }
   
-  .search-res {
+  .search-resM {
     width: 150px;
     padding: 5px;
     border-radius: 20px;
@@ -427,7 +427,7 @@ table td svg:hover {
     border: 1px solid #E0A600;
 
   }
-  .search-res:hover {
+  .search-resM:hover {
     border: 1px solid #E0A600;
     box-shadow:1px 1px 1px 1px rgba(224, 166, 0, 0.47);
   }
