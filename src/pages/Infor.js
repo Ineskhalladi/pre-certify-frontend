@@ -82,7 +82,7 @@ const servicesData = [
       text2: "Il englobe les systèmes de capture (caméras, micros), de postproduction (montage, effets visuels), de transmission (réseaux IP, satellites) et de gestion des droits numériques. L’intégration des technologies immersives (VR/AR) ouvre de nouvelles possibilités.",
     },
     {
-      title: "Autres technologies",
+      title: "Autres",
       description: "Innovations émergentes et domaines transversaux dans les TIC.",
       icon: <FaEllipsisH />,
       img: autresTechImg,

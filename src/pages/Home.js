@@ -32,19 +32,19 @@ export const useOnScreen = (threshold = 0.1) => {
   return [ref, isVisible];
 };
 const sectors = [
-    { icon: <GrTechnology />, label: "Informatique et technologies connexes" },
-    { icon: <FaHeartbeat />, label: "Santé" },
-    { icon: <FaPlane />, label: "Transport" },
-    { icon: <FaExchangeAlt />, label: "Gestion et services" },
-    { icon: <FaLeaf />, label: "Durabilité environnementale" },
-    { icon: <FaLightbulb />, label: "Énergie" },
-    { icon: <FaExclamationTriangle/>, label: "Sécurité, sûreté et risques" },
-    { icon: <TbBuildingSkyscraper />, label: "Bâtiment et construction" },
-    { icon: <MdSecurity  />, label: "Matériels" },
-    { icon: <FaAppleAlt />, label: "Alimentation et agriculture" },
-    { icon: <MdSettings />, label: "Ingénierie" },
-    { icon: <FaGlobe />, label: "Diversité et inclusion" }
-  ];
+  { path: "/infor", icon: <GrTechnology />, label: "Informatique et technologies connexes" },
+  { path: "/sante", icon: <FaHeartbeat />, label: "Santé" },
+  { path: "/transport", icon: <FaPlane />, label: "Transport" },
+  { path: "/gestion", icon: <FaExchangeAlt />, label: "Gestion et services" },
+  { path: "/durabilite", icon: <FaLeaf />, label: "Durabilité environnementale" },
+  { path: "/energie", icon: <FaLightbulb />, label: "Énergie" },
+  { path: "/securite", icon: <FaExclamationTriangle />, label: "Sécurité, sûreté et risques" },
+  { path: "/batiment", icon: <TbBuildingSkyscraper />, label: "Bâtiment et construction" },
+  { path: "/materiaux", icon: <MdSecurity />, label: "Matériels" },
+  { path: "/alimentation", icon: <FaAppleAlt />, label: "Alimentation et agriculture" },
+  { path: "/ingenierie", icon: <MdSettings />, label: "Ingénierie" },
+  { path: "/diversite", icon: <FaGlobe />, label: "Diversité et inclusion" }
+];
 const Home = () => {
   const [showButton, setShowButton] = useState(false);
   const [normesRef, normesVisible] = useOnScreen(0.2); // 20% visible
@@ -122,20 +122,20 @@ const Home = () => {
         </div>
       </section>
 
-      <section
-  className={`sector-container fade-in-section ${sectorVisible ? "is-visible" : ""}`}
-  ref={sectorRef}
->
-      <h2>Explorer nom secteur</h2>
-      <div className="sector-grid">
-        {sectors.map((sector, index) => (
-          <div key={index} className="sector-card" >
-            <div className={`icones-explore icon-${sector.label.toLowerCase().replace(/ /g, '-')}`}>{sector.icon}</div>
-            <p>{sector.label}</p>
-          </div>
-        ))}
-      </div>
-    </section>
+      <section className={`sector-container fade-in-section ${sectorVisible ? "is-visible" : ""}`} ref={sectorRef}>
+  <h2>Explorer nom secteur</h2>
+  <div className="sector-grid">
+    {sectors.map((sector, index) => (
+      <Link to={sector.path} key={index} className="sector-card">
+        <div className={`icones-explore icon-${sector.label.toLowerCase().replace(/ /g, '-')}`}>
+          {sector.icon}
+        </div>
+        <p>{sector.label}</p>
+      </Link>
+    ))}
+  </div>
+</section>
+
     <section
   className={`contr-normes fade-in-section ${contrVisible ? "is-visible" : ""}`}
   ref={contrRef}

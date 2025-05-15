@@ -1,7 +1,6 @@
 import React, { useState, useEffect} from "react";
 import "../pages/BaseGenerale.css";
 import { FaSearch, FaSyncAlt,  FaFolderOpen, FaPlus } from "react-icons/fa";
-import NavBar2 from "../components/NavBar2";
 import { MdRefresh } from "react-icons/md";
 import { BsEye, BsEyeSlash, BsInfoCircle } from "react-icons/bs";
 import { ImFilePdf } from "react-icons/im";
@@ -341,7 +340,7 @@ const handleAppChange = (id, newStatus) => {
               {texte.etat || "mich mawjoud"}
             </div>
             <div className="menu-APP">
-              {["APP", "N APP", "INFO", "AV"].map((option) => (
+              {["APP", "N APP", "AV"].map((option) => (
                 <div
                   key={option}
                   className={`option-APP ${option.toLowerCase().replace(' ', '-')}`}

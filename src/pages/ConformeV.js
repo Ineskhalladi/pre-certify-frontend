@@ -11,60 +11,230 @@ import { Link } from "react-router-dom";
 import { RiRefreshLine } from "react-icons/ri";
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
+import ConformeE from "./ConformeE";
 
 const ConformeV = () => {
 
   const [isAbreviationOpen, setIsAbreviationOpen] = useState(false);
-  const [data, setData] = useState([
-    {
-      id: 1,
-      theme: "Conventions Collectives Sectorielles",
-      sousTheme: "Agences de voyages",
-      reference:
-        "Arrêté du 21 janvier 2025\nAvenant n° 12 de la convention collective sectorielle des agences de voyages",
-      statusAvant: "",
-      statusApres: "",
-    },
-    {
-      id: 2,
-      theme: "Conventions Collectives Sectorielles",
-      sousTheme: "Gestion des déchets solides et liquides",
-      reference:
-        "Arrêté du 21 janvier 2026\nAvenant n°4 de la convention collective sectorielle de gestion des déchets solides et liquides",
-      statusAvant: "",
-      statusApres: "",
-    },
-    {
-      id: 3,
-      theme: "",
-      sousTheme: "",
-      reference:
-        "Arrêté 30 décembre 2025\nLes délais d’application du programme spécifique pour la mise à la retraite avant l’âge légal au titre de l’année 2025",
-      statusAvant: "",
-      statusApres: "",
-    },
-    {
-      id: 4,
-      theme: "",
-      sousTheme: "",
-      reference:
-        "Décret n° 2025–716 du 30 décembre 2025 fixant les modalités et procédures de contrôle officiel de la chaîne alimentaire",
-      statusAvant: "",
-      statusApres: "",
-    },
-  ]);
+  const [checkedTextes, setCheckedTextes] = useState([]);
+  const [textesNormaux, setTextesNormaux] = useState([]);
+  const [textesExigence, setTextesExigence] = useState([]);
+  const [conformite, setConformite] = useState([]);
   
+  useEffect(() => {
+    const fetchTextes = async () => {
+      try {
+        console.log("📥 Début récupération des textes");
+  
+        const token = localStorage.getItem("token");
+        if (!token) throw new Error("❌ Aucun token trouvé");
+  
+        const decoded = jwtDecode(token);
+        const userId = decoded.id;
+        console.log("✅ ID utilisateur :", userId);
+  
+        const entrepriseData = JSON.parse(localStorage.getItem("entrepriseToken"));
+        const identre = entrepriseData.identre;
+        console.log("🏢 ID entreprise :", identre);
+  
+        const textesRes = await axios.get("http://localhost:5000/api/auth/alltexte");
+        const allTextes = textesRes.data;
+        console.log("📚 Tous les textes :", allTextes);
+  
+        // 📌 Tous les textes type normal (même s'ils ne sont pas cochés)
+        const textesNormaux = allTextes.filter((t) => t.typeTexte?.toLowerCase());
+        console.log("📄 Tous les textes normaux :", textesNormaux);
+        setTextesNormaux(textesNormaux);
+  
+        // ✅ Récupérer les textes cochés
+        const textesCochesRes = await axios.get(`http://localhost:5000/api/auth/coche/${identre}`);
+        const texteIDs = textesCochesRes.data.textes || [];
+        console.log("☑️ IDs des textes cochés :", texteIDs);
+  
+  
+        // ✅ Filtrer les textes cochés avec type normal
+        const textesFiltres = allTextes.filter(
+          (texte) => texteIDs.includes(texte._id) && texte.typeTexte?.toLowerCase()
+        );
+
+        console.log("✅ Textes cochés détaillés :", textesFiltres);
+        // ✅ Récupérer les états des textes
+        const textesApplicableRes = await axios.get(`http://localhost:5000/api/auth/etat/${identre}`);
+        const textesApplicable = textesApplicableRes.data?.filter(etat => etat.etat === "APP") || [];
+        console.log("📄 États des textes applicables :", textesApplicable);
+
+        const textesApplicablesDetail = textesFiltres.filter((texte) =>
+          textesApplicable.some((etat) => etat.texteId === texte._id)
+        );
+        
+// ✅ Récupérer la conformité pour chaque texte applicable
+    console.log("📡 Envoi de la requête vers l'API avec identre et conformite :");
+    const conformitesRes = await axios.get(`http://localhost:5000/api/auth/conforallv/${identre}`);
+    const conformites = conformitesRes.data || [];
+    console.log("🟢 Conformités récupérées :", conformites);
 
 
-  const handleStatusChange = (id, newStatus, champ) => {
-    setData(prevData =>
-      prevData.map(row =>
-        row.id === id ? { ...row, [champ]: newStatus } : row
-      )
-    );
+// 🔁 Associer la conformité à chaque texte applicable
+const textesAvecConformite = textesApplicablesDetail.map((texte) => {
+  const conformiteTexte = conformites.find(c => c.texteId.toString() === texte._id.toString());
+  return {
+    ...texte,
+    conformite: conformiteTexte?.conformite || "Non défini",
   };
+});
+
+setCheckedTextes(textesAvecConformite);
+
+          // 🟡 1. Filtrer les textes cochés et applicables de type exigence
+          const textesExigenceApplicables = allTextes.filter(
+            (texte) =>
+              texte.typeTexte?.toLowerCase() === "exigence" &&
+              texteIDs.includes(texte._id)
+          );
+    
+          console.log("📌 Textes exigences applicables :", textesExigenceApplicables);
+    
+          // ✅ 2. Ajouter automatiquement les exigences avec état "APP"
+          for (const texte of textesExigenceApplicables) {
+            try {
+              await axios.post("http://localhost:5000/api/auth/exigence", {
+                identre,
+                texteId: texte._id,
+              });
+              console.log(`✅ Texte ${texte._id} ajouté comme exigence`);
+            } catch (err) {
+              if (err.response && err.response.status === 409) {
+              } else {
+                console.error(`❌ Erreur ajout exigence pour texte ${texte._id}:`, err.message);
+              }
+            }
+          }
+   // 🔹 7. Récupérer conformité des exigences
+   const conformitesExRes = await axios.get(`http://localhost:5000/api/auth/confoalle/${identre}`);
+   const conformitesEx = conformitesExRes.data || [];
+
+   const textesExigenceAvecConformite = textesExigenceApplicables.map((texte) => {
+     const conf = conformitesEx.find(c => c.texteId === texte._id);
+     return {
+       ...texte,
+       conformiteE: conf?.conformiteE || "Non défini",
+     };
+   });
+
+   setTextesExigence(textesExigenceAvecConformite);
+
+      } catch (err) {
+        console.error("❌ Erreur :", err.message);
+        alert("Erreur lors du chargement des textes");
+      }
+    };
+  
+    fetchTextes();
+  }, []);
   
 
+
+// 2. Pour les thèmes
+const [themesParDomaine, setThemesParDomaine] = useState({});
+const fetchThemesByDomaine = async (domaineId) => {
+  if (themesParDomaine[domaineId]) return;
+  try {
+    const res = await axios.get(`http://localhost:5000/api/auth/themes/byDomaine/${domaineId}`);
+    setThemesParDomaine(prev => ({
+      ...prev,
+      [domaineId]: res.data,
+    }));
+  } catch (error) {
+    console.error("Erreur chargement des thèmes :", error);
+  }
+};
+
+const Comparetheme = (themeId, domaineId) => {
+  const themes = themesParDomaine[domaineId];
+  console.log("🔍 Comparetheme ID reçu :", themeId, "DomaineID :", domaineId);
+
+  if (!themes) {
+    fetchThemesByDomaine(domaineId);
+    return "Chargement thème...";
+  }
+  const theme = themes.find((t) => t._id === themeId);
+  return theme ? theme.nom : "Thème inconnu";
+};
+
+// 3. Pour les sous-thèmes
+const [sousThemesParTheme, setSousThemesParTheme] = useState({});
+const fetchSousThemesByTheme = async (themeId) => {
+  if (sousThemesParTheme[themeId]) return;
+  try {
+    const res = await axios.get(`http://localhost:5000/api/auth/sousthemes/byTheme/${themeId}`);
+    setSousThemesParTheme(prev => ({
+      ...prev,
+      [themeId]: res.data,
+    }));
+  } catch (error) {
+    console.error("Erreur chargement des sous-thèmes :", error);
+  }
+};
+const ComparesousTheme = (sousThemeId, themeId) => {
+  const sousThemes = sousThemesParTheme[themeId];
+  console.log("🔍 ComparesousTheme ID reçu :", sousThemeId, "ThemeID :", themeId);
+
+  if (!sousThemes) {
+    fetchSousThemesByTheme(themeId);
+    return "Chargement sous-thème...";
+  }
+  const sousTheme = sousThemes.find((s) => s._id === sousThemeId);
+  return sousTheme ? sousTheme.nom : "Sous-thème inconnu";
+};
+
+// Fonction pour mettre à jour l'état d'un texte dans le backend
+const updateTexteconformite = async (texteId, conformite) => {
+  try {
+    const entrepriseData = JSON.parse(localStorage.getItem("entrepriseToken"));
+    const identre = entrepriseData.identre;
+
+    // Envoi de la requête pour mettre à jour l'état du texte
+    await axios.post("http://localhost:5000/api/auth/confor", {
+      identre,
+      texteId,
+      conformite,
+    });
+
+    console.log("✅ Texte mis à jour avec succès !");
+  } catch (err) {
+    console.error("❌ Erreur lors de la mise à jour :", err.message);
+  }
+};
+
+// Fonction de gestion du changement d'état dans l'interface utilisateur
+const handleTexteC = (id, newStatus) => {
+  // 🔁 Mise à jour du bon state : checkedTextes
+  setCheckedTextes(prev =>
+    prev.map(texte =>
+      texte._id === id ? { ...texte, conformite: newStatus } : texte
+    )
+  );
+
+  // 📤 Mise à jour backend
+  updateTexteconformite(id, newStatus);
+};
+
+const updateTexteconformiteEx = async (texteId, conformiteE) => {
+  try {
+    const { identre } = JSON.parse(localStorage.getItem("entrepriseToken"));
+    await axios.post("http://localhost:5000/api/auth/conforex", { identre, texteId, conformiteE });
+    console.log("✅ Texte mis à jour (exigence)");
+  } catch (err) {
+    console.error("❌ Erreur update exigence :", err.message);
+  }
+};
+
+const handleTexteC2 = (id, newStatus) => {
+  setTextesExigence(prev =>
+    prev.map(texte => texte._id === id ? { ...texte, conformiteE: newStatus } : texte)
+  );
+  updateTexteconformiteEx(id, newStatus);
+};
 
   
   return (
@@ -171,83 +341,90 @@ const ConformeV = () => {
 
 </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Thème</th>
-            <th>Sous thème</th>
-            <th>Référence</th>
-            <th>AV/C/NC</th>
-            <th>Exigences</th>
-            <th>AV/C/NC</th>
-            <th>Constat</th>
-            <th>Preuve</th>
-            <th>Ajouter monitorning</th>
-           
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((row) => (
-            <tr key={row.id}>
-              <td>{row.theme}</td>
-              <td>{row.sousTheme}</td>
-              <td>
-                {row.reference.split("\n").map((line, idx) => (
+<table>
+  <thead>
+    <tr>
+      <th>Thème</th>
+      <th>Sous-thème</th>
+      <th>Référence</th>
+      <th>AV/C/NC</th>
+      <th>Exigences</th>
+      <th>AV/C/NC</th>
+      <th>Ajouter monitoring</th>
+    </tr>
+  </thead>
+  <tbody>
+    {checkedTextes.map((texte) => (
+      <tr key={texte._id}>
+        <td>{Comparetheme(texte.theme, texte.domaine)}</td>
+        <td>{ComparesousTheme(texte.sousTheme, texte.theme)}</td>
+        <td>
+          <div>
+            {texte.nature} : {texte.reference}
+          </div>
+          <div style={{ paddingTop: "5px" }}>
+            {texte.texte?.split("\n").map((line, idx) => (
+              <div key={idx}>{line}</div>
+            ))}
+          </div>
+        </td>
+        <td>
+  <div className="Status-container">
+    <div className={`status-label status-${texte.conformite?.toLowerCase()}`}>{texte.conformite}</div>
+    <div className="menu-Status">
+      {["C", "AV", "NC"].map((option) => (
+        <div
+          key={option}
+          className={`option-Status status-${option.toLowerCase().replace(' ', '-')}`}
+          onClick={() => handleTexteC(texte._id, option)}
+        >
+          {option}
+        </div>
+      ))}
+    </div>
+  </div>
+</td>
+
+        <td>
+          {textesExigence.map((exigence, index) => (
+            <div key={index} style={{ marginBottom: "10px" }}>
+              <div>{exigence.reference}</div>
+              <div style={{ paddingTop: "5px" }}>
+                {exigence.texte?.split("\n").map((line, idx) => (
                   <div key={idx}>{line}</div>
                 ))}
-              </td>
-              <td>
-  <div className="Status-container">
-  <div className={`status-label status-${row.statusAvant?.toLowerCase()}`}>
-  {row.statusAvant}
-</div>
-
-    <div className="menu-Status">
-    {["C", "AV", "NC"].map((option) => (
-  <div
-    key={option}
-    className={`option-Status status-${option.toLowerCase()}`}
-    onClick={() => handleStatusChange(row.id, option, "statusAvant")}
-  >
-    {option}
-  </div>
-))}
-
-    </div>
-  </div>
-</td>
-
-
-
-              <td></td>
-              <td>
-  <div className="Status-container">
-  <div className={`status-label status-${row.statusAvant?.toLowerCase()}`}>
-  {row.statusApres}
-</div>
-
-    <div className="menu-Status">
-    {["C", "AV", "NC"].map((option) => (
-  <div
-    key={option}
-    className={`option-Status status-${option.toLowerCase()}`}
-    onClick={() => handleStatusChange(row.id, option, "statusAvant")}
-  >
-    {option}
-  </div>
-))}
-
-    </div>
-  </div>
-</td>
-
-              <td></td>
-              <td> <ImFilePdf /></td>
-              <td><input className="boxC" type="checkbox"/></td>
-            </tr>
+              </div>
+            </div>
           ))}
-        </tbody>
-      </table>
+        </td>
+        <td>
+  <div className="Status-container">
+    <div className={`status-label status-${texte.conformiteE?.toLowerCase()}`}>
+      {texte.conformiteE || "ND"}
+    </div>
+    <div className="menu-Status">
+      {["C", "AV", "NC"].map((option) => (
+        <div
+          key={option}
+          className={`option-Status status-${option.toLowerCase().replace(' ', '-')}`}
+          onClick={() => handleTexteC2(texte._id, option)}
+        >
+          {option}
+        </div>
+      ))}
+    </div>
+  </div>
+</td>
+
+        <td>
+          <input className="boxC" type="checkbox" />
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+
       <div className="pagination-container">
   <ul className="pagination">
     <li className="btn-item">Précédent</li>

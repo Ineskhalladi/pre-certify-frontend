@@ -53,6 +53,14 @@ import Infor from "./pages/Infor.js"
 import Gestion from "./pages/Gestion.js";
 import Securité from "./pages/Securité.js";
 import Message from "./pages/Message.js";
+import Transport from "./pages/Transport.js";
+import Energie from "./pages/Energie.js";
+import Diversite from "./pages/Diversite.js";
+import Durabilite from "./pages/Durabilite.js";
+import Alimentation from "./pages/Alimentation.js";
+import Materiaux from "./pages/Materiaux.js";
+import Batiment from "./pages/Batiment.js";
+import Ingenierie from "./pages/Ingenierie.js";
 
 const App = () => {
   const location = useLocation();
@@ -77,7 +85,8 @@ const App = () => {
 
   // Pages يظهر فيهم Navbar + Footer فقط
   const isNavbarFooterPage = ["/home","/normes", "/","/veillereg", "/contact","/certificate","/sante"
-    ,"/infor","/gestion","/securite"].includes(path);
+    ,"/infor","/gestion","/securite","/transport","/energie","/diversite","/durabilite","/alimentation",
+"/materiaux","/batiment","/ingenierie"].includes(path);
 
   // Pages يظهر فيهم Navbar2 فقط
   const isNavbar2Page = !isAuthPage && !isNavbar3Page && !isNavbarFooterPage && !isNavbar4Page && !isNavbar5Page ;
@@ -146,6 +155,14 @@ const App = () => {
         <Route path="/infor" element={<Infor />} />
         <Route path="/gestion" element={<Gestion />} />
         <Route path="/securite" element={<Securité />} />
+        <Route path="/transport" element={<Transport/>} />
+        <Route path="/energie" element={<Energie/>} />
+        <Route path="/diversite" element={<Diversite/>} />
+        <Route path="/durabilite" element={<Durabilite/>} />
+        <Route path="/alimentation" element={<Alimentation/>} />
+        <Route path="/materiaux" element={<Materiaux/>} />
+        <Route path="/batiment" element={<Batiment/>} />
+        <Route path="/ingenierie" element={<Ingenierie/>} />
 
       </Routes>
 

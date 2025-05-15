@@ -81,7 +81,7 @@ import {
       text2: "Les plans d’urgence, les exercices de simulation, la coordination des secours et les technologies d’alerte rapide sont essentiels.",
     },
     {
-      title: "Autres domaines de sécurité",
+      title: "Autres",
       description: "Sujets émergents ou transversaux liés à la sûreté et la résilience.",
       icon: <FaEllipsisH />,
       img: autreSecuImg,
