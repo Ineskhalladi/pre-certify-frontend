@@ -10,7 +10,7 @@ import { Link,useNavigate } from "react-router-dom";
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
 
-const TexteApp = () => {
+const TexteAppEn = () => {
   const navigate = useNavigate();
   const [isAbreviationOpen, setIsAbreviationOpen] = useState(false);
   const [data, setData] = useState([ ]);
@@ -30,9 +30,6 @@ const TexteApp = () => {
         const userId = decoded.id;
         console.log("✅ ID utilisateur :", userId);
   
-        const entrepriseData = JSON.parse(localStorage.getItem("entrepriseToken"));
-        const identre = entrepriseData.identre;
-        console.log("🏢 ID entreprise :", identre);
   
         const textesRes = await axios.get("http://localhost:5000/api/auth/alltexte");
         const allTextes = textesRes.data;
@@ -44,12 +41,12 @@ const TexteApp = () => {
         setTextesNormaux(textesNormaux);
   
         // ✅ Récupérer les textes cochés
-        const textesCochesRes = await axios.get(`http://localhost:5000/api/auth/coche/${identre}`);
+        const textesCochesRes = await axios.get(`http://localhost:5000/api/auth/coche/${userId}`);
         const texteIDs = textesCochesRes.data.textes || [];
         console.log("☑️ IDs des textes cochés :", texteIDs);
   
         // ✅ Récupérer les états des textes
-        const textesApplicableRes = await axios.get(`http://localhost:5000/api/auth/etat/${identre}`);
+        const textesApplicableRes = await axios.get(`http://localhost:5000/api/auth/etat/${userId}`);
         const textesApplicable = textesApplicableRes.data || [];
         console.log("📄 États des textes applicables :", textesApplicable);
   
@@ -68,6 +65,7 @@ const TexteApp = () => {
           };
         });
   
+  
         // ✅ State final
         setCheckedTextes(textesAvecEtat);
   
@@ -78,88 +76,117 @@ const TexteApp = () => {
     };
   
     fetchTextes();
-  }, []);
+    
+  }, [] );
   
+ // 1. Pour les domaines
+ const [domainesParSecteur, setDomainesParSecteur] = useState({});
+ const fetchDomainesBySecteur = async (secteurId) => {
+   if (domainesParSecteur[secteurId]) return;
+   try {
+     const res = await axios.get(`http://localhost:5000/api/auth/domaines/bySecteur/${secteurId}`);
+     setDomainesParSecteur(prev => ({
+       ...prev,
+       [secteurId]: res.data,
+     }));
+   } catch (error) {
+     console.error("Erreur chargement domaines du secteur :", error);
+   }
+ };
+ const Comparedomaine = (domaineId, secteurId) => {
+   const domaines = domainesParSecteur[secteurId];
+   if (!domaines) {
+     fetchDomainesBySecteur(secteurId);
+     return "Chargement domaine...";
+   }
+   const domaine = domaines.find((d) => d._id === domaineId);
+   return domaine ? domaine.nom : "Domaine inconnu";
+ };
+ 
+ 
+ // 2. Pour les thèmes
+ const [themesParDomaine, setThemesParDomaine] = useState({});
+ const fetchThemesByDomaine = async (domaineId) => {
+   if (themesParDomaine[domaineId]) return;
+   try {
+     const res = await axios.get(`http://localhost:5000/api/auth/themes/byDomaine/${domaineId}`);
+     setThemesParDomaine(prev => ({
+       ...prev,
+       [domaineId]: res.data,
+     }));
+   } catch (error) {
+     console.error("Erreur chargement des thèmes :", error);
+   }
+ };
+ 
+ const Comparetheme = (themeId, domaineId) => {
+   const themes = themesParDomaine[domaineId];
+   console.log("🔍 Comparetheme ID reçu :", themeId, "DomaineID :", domaineId);
+ 
+   if (!themes) {
+     fetchThemesByDomaine(domaineId);
+     return "Chargement thème...";
+   }
+   const theme = themes.find((t) => t._id === themeId);
+   return theme ? theme.nom : "Thème inconnu";
+ };
+ 
+ // 3. Pour les sous-thèmes
+ const [sousThemesParTheme, setSousThemesParTheme] = useState({});
+ const fetchSousThemesByTheme = async (themeId) => {
+   if (sousThemesParTheme[themeId]) return;
+   try {
+     const res = await axios.get(`http://localhost:5000/api/auth/sousthemes/byTheme/${themeId}`);
+     setSousThemesParTheme(prev => ({
+       ...prev,
+       [themeId]: res.data,
+     }));
+   } catch (error) {
+     console.error("Erreur chargement des sous-thèmes :", error);
+   }
+ };
+ const ComparesousTheme = (sousThemeId, themeId) => {
+   const sousThemes = sousThemesParTheme[themeId];
+   console.log("🔍 ComparesousTheme ID reçu :", sousThemeId, "ThemeID :", themeId);
+ 
+   if (!sousThemes) {
+     fetchSousThemesByTheme(themeId);
+     return "Chargement sous-thème...";
+   }
+   const sousTheme = sousThemes.find((s) => s._id === sousThemeId);
+   return sousTheme ? sousTheme.nom : "Sous-thème inconnu";
+ };
 
+ 
 
-  // 1. Pour les domaines
-const [domainesParSecteur, setDomainesParSecteur] = useState({});
-const fetchDomainesBySecteur = async (secteurId) => {
-  if (domainesParSecteur[secteurId]) return;
+// Fonction pour mettre à jour l'état d'un texte dans le backend
+const updateTexteEtat = async (texteId, etat) => {
   try {
-    const res = await axios.get(`http://localhost:5000/api/auth/domaines/bySecteur/${secteurId}`);
-    setDomainesParSecteur(prev => ({
-      ...prev,
-      [secteurId]: res.data,
-    }));
-  } catch (error) {
-    console.error("Erreur chargement domaines du secteur :", error);
+    console.log("➡️ texteId :", texteId);
+    console.log("➡️ Nouvel état :", etat);
+
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("❌ Aucun token trouvé");
+    const decoded = jwtDecode(token);
+        const userId = decoded.id;
+        console.log("✅ ID utilisateur :", userId);
+        console.log("userId extracted:", userId);
+
+        const payload = {
+          userId,
+          texteId,
+          etat,
+        };
+    // Envoi de la requête pour mettre à jour l'état du texte
+    const response = await axios.post("http://localhost:5000/api/auth/appl",payload); 
+    console.log("Payload being sent:", payload);
+
+    console.log("✅ Texte mis à jour avec succès !");
+    console.log("📥 Réponse du serveur :", response.data);
+  } catch (err) {
+    console.error("❌ Erreur lors de la mise à jour :", err.message);
   }
 };
-const Comparedomaine = (domaineId, secteurId) => {
-  const domaines = domainesParSecteur[secteurId];
-  if (!domaines) {
-    fetchDomainesBySecteur(secteurId);
-    return "Chargement domaine...";
-  }
-  const domaine = domaines.find((d) => d._id === domaineId);
-  return domaine ? domaine.nom : "Domaine inconnu";
-};
-
-
-// 2. Pour les thèmes
-const [themesParDomaine, setThemesParDomaine] = useState({});
-const fetchThemesByDomaine = async (domaineId) => {
-  if (themesParDomaine[domaineId]) return;
-  try {
-    const res = await axios.get(`http://localhost:5000/api/auth/themes/byDomaine/${domaineId}`);
-    setThemesParDomaine(prev => ({
-      ...prev,
-      [domaineId]: res.data,
-    }));
-  } catch (error) {
-    console.error("Erreur chargement des thèmes :", error);
-  }
-};
-
-const Comparetheme = (themeId, domaineId) => {
-  const themes = themesParDomaine[domaineId];
-  console.log("🔍 Comparetheme ID reçu :", themeId, "DomaineID :", domaineId);
-
-  if (!themes) {
-    fetchThemesByDomaine(domaineId);
-    return "Chargement thème...";
-  }
-  const theme = themes.find((t) => t._id === themeId);
-  return theme ? theme.nom : "Thème inconnu";
-};
-
-// 3. Pour les sous-thèmes
-const [sousThemesParTheme, setSousThemesParTheme] = useState({});
-const fetchSousThemesByTheme = async (themeId) => {
-  if (sousThemesParTheme[themeId]) return;
-  try {
-    const res = await axios.get(`http://localhost:5000/api/auth/sousthemes/byTheme/${themeId}`);
-    setSousThemesParTheme(prev => ({
-      ...prev,
-      [themeId]: res.data,
-    }));
-  } catch (error) {
-    console.error("Erreur chargement des sous-thèmes :", error);
-  }
-};
-const ComparesousTheme = (sousThemeId, themeId) => {
-  const sousThemes = sousThemesParTheme[themeId];
-  console.log("🔍 ComparesousTheme ID reçu :", sousThemeId, "ThemeID :", themeId);
-
-  if (!sousThemes) {
-    fetchSousThemesByTheme(themeId);
-    return "Chargement sous-thème...";
-  }
-  const sousTheme = sousThemes.find((s) => s._id === sousThemeId);
-  return sousTheme ? sousTheme.nom : "Sous-thème inconnu";
-};
-
 
 // Fonction de gestion du changement d'état dans l'interface utilisateur
 const handleAppChange = (id, newStatus) => {
@@ -170,6 +197,8 @@ const handleAppChange = (id, newStatus) => {
     )
   );
 
+  // 📤 Mise à jour backend
+  updateTexteEtat(id, newStatus);
 };
 
   
@@ -359,4 +388,4 @@ const handleAppChange = (id, newStatus) => {
   );
 };
 
-export default TexteApp;
+export default TexteAppEn;

@@ -59,13 +59,10 @@ const NavBar4 = () => {
       </div>
 
       <nav className="navbar-bottom3">
-        <Link to="/dashboard" className={`menu-item3 ${location.pathname === "/dashboard" ? "active" : ""}`}><FiMonitor className="icon-nav3" /> Tableau de Bord</Link>
+        <Link to="/dashboarde" className={`menu-item3 ${location.pathname === "/dashboard" ? "active" : ""}`}><FiMonitor className="icon-nav3" /> Tableau de Bord</Link>
         <Link to="/cochertexte" className={`menu-item3 ${location.pathname === "/textesE" ? "active" : ""}`}
         ><BsFileText className="icon-nav3" /> Les Textes </Link>
-<Link to="/mesresponsables" className={`menu-item3 ${location.pathname === "/textesE" ? "active" : ""}`}
-        ><LuList className="icon-nav3" /> Liste des responsables</Link>
-
-        <div 
+         <div 
           className="dropdown3" 
           onMouseEnter={() => setIsMaVeilleOpen(true)}
           onMouseLeave={() => setIsMaVeilleOpen(false)}
@@ -75,33 +72,16 @@ const NavBar4 = () => {
           </div>
           {isMaVeilleOpen && (
             <div className="dropdown-content3">
-              <Link to="/texteinfo">Textes pour Information</Link>
-              <Link to="/texteapp">Textes Applicables</Link>
-              <Link to="/conformev">Évaluation de Conformité</Link>
-              <Link to="/planactionv">Mon Plan d'Action</Link>
-              <Link to="/statistiquesv">Mes Statistiques</Link>
+              <Link to="/texteappEn">Textes Applicables</Link>
+              <Link to="/conformeEn">Évaluation de Conformité</Link>
+              <Link to="/planactionEn">Mon Plan d'Action</Link>
+              <Link to="/statistiquesEn">Mes Statistiques</Link>
 
             </div>
           )}
         </div>
-
-        <div 
-          className="dropdown3" 
-          onMouseEnter={() => setIsExigencesOpen(true)}
-          onMouseLeave={() => setIsExigencesOpen(false)}
-        >
-          <div className={`menu-item3 ${location.pathname === "/mes autres exigences" ? "active" : ""}`}>
-            <FiZap className="icon-nav3" /> Mes Autres Exigences 
-          </div>
-          {isExigencesOpen && (
-            <div className="dropdown-content3">
-              <Link to="/mesexigences">Mes Exigences</Link>
-              <Link to="/conformee">Évaluation de Conformité</Link>
-              <Link to="/planactione">Mon Plan d'Action</Link>
-              <Link to="/statistiquese">Statistiques des Exigences</Link>
-            </div>
-          )}
-        </div>
+<Link to="/mesresponsables" className={`menu-item3 ${location.pathname === "/textesE" ? "active" : ""}`}
+        ><LuList className="icon-nav3" /> Liste des responsables</Link>
 
         <Link to="/monitoring" className={`menu-item3 ${location.pathname === "/monitoring" ? "active" : ""}`}>
         <FiGrid className="icon-nav3" /> Monitoring</Link>

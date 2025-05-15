@@ -72,12 +72,10 @@ const NavBar2 = () => {
           </div>
           {isMaVeilleOpen && (
             <div className="dropdown-content3">
-              <Link to="/texteinfo">Textes pour Information</Link>
               <Link to="/texteapp">Textes Applicables</Link>
               <Link to="/conformev">Évaluation de Conformité</Link>
               <Link to="/planactionv">Mon Plan d'Action</Link>
               <Link to="/statistiquesv">Mes Statistiques</Link>
-              <Link to="/Suivie">Suivie</Link>
 
             </div>
           )}

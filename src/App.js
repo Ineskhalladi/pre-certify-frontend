@@ -61,6 +61,11 @@ import Alimentation from "./pages/Alimentation.js";
 import Materiaux from "./pages/Materiaux.js";
 import Batiment from "./pages/Batiment.js";
 import Ingenierie from "./pages/Ingenierie.js";
+import DashboardE from "./pages/DashboardE.js";
+import TexteAppEn from "./pages/TexteAppEn.js";
+import ConformeEn from "./pages/ConformeEn.js";
+import PlanActionEn from "./pages/PlanActionEn.js";
+import StatistiquesEn from "./pages/StatistiquesEn.js";
 
 const App = () => {
   const location = useLocation();
@@ -77,7 +82,8 @@ const App = () => {
 
  // Pages تظهر فيهم Navbar4 فقط
  const isNavbar4Page = path.startsWith("/editerresponsable") || 
- ["/textesE", "/mesresponsables", "/ajouterresponsable","/cochertexte"].includes(path);
+ ["/textesE", "/mesresponsables", "/ajouterresponsable","/cochertexte",
+  "/dashboarde","/texteappEn","/conformeEn","/planactionEn","/statistiquesEn"].includes(path);
 
  // Pages تظهر فيهم Navbar5 فقط
  const isNavbar5Page = path.startsWith("/editerservice/") || 
@@ -163,7 +169,13 @@ const App = () => {
         <Route path="/materiaux" element={<Materiaux/>} />
         <Route path="/batiment" element={<Batiment/>} />
         <Route path="/ingenierie" element={<Ingenierie/>} />
+        <Route path="/dashboarde" element={<DashboardE />} />
+        <Route path="/texteappEn" element={<TexteAppEn />} />
+        <Route path="/conformeEn" element={<ConformeEn />} />
+        <Route path="/planactionEn" element={<PlanActionEn />} />
+        <Route path="/statistiquesEn" element={<StatistiquesEn />} />
 
+    
       </Routes>
 
       {/* Footer uniquement pour les pages où il y a NavBar classique */}

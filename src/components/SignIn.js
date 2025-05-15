@@ -54,7 +54,7 @@ const SignIn = () => {
       if (userRole === 'super_admin') {
         navigate("/dashboards");
       } else if (userRole === 'user_entreprise') {
-        navigate("/mesresponsables");
+        navigate("/dashboarde");
       } else if (userRole === 'auditeur') {
         navigate("/choixentr");
       } else if (userRole === 'responsable') {
