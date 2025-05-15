@@ -221,8 +221,9 @@ const handleTexteC = (id, newStatus) => {
 
 const updateTexteconformiteEx = async (texteId, conformiteE) => {
   try {
-    const { identre } = JSON.parse(localStorage.getItem("entrepriseToken"));
-    await axios.post("http://localhost:5000/api/auth/conforex", { identre, texteId, conformiteE });
+    const entrepriseData = JSON.parse(localStorage.getItem("entrepriseToken"));
+    const identre = entrepriseData.identre;
+     await axios.post("http://localhost:5000/api/auth/conforex", { identre, texteId, conformiteE });
     console.log("✅ Texte mis à jour (exigence)");
   } catch (err) {
     console.error("❌ Erreur update exigence :", err.message);
