@@ -76,14 +76,17 @@ const ConformeV = () => {
 
 // 🔁 Associer la conformité à chaque texte applicable
 const textesAvecConformite = textesApplicablesDetail.map((texte) => {
-  const conformiteTexte = conformites.find(c => c.texteId.toString() === texte._id.toString());
+  const conformiteTexte = conformites.find(c => c.texteId._id?.toString() === texte._id?.toString());
+  console.log("🔗 Conformité trouvée :", conformiteTexte);
   return {
     ...texte,
     conformite: conformiteTexte?.conformite || "Non défini",
   };
 });
 
+console.log("✅ Textes avec conformité associée :", textesAvecConformite);
 setCheckedTextes(textesAvecConformite);
+
 
           // 🟡 1. Filtrer les textes cochés et applicables de type exigence
           const textesExigenceApplicables = allTextes.filter(
@@ -223,8 +226,11 @@ const updateTexteconformiteEx = async (texteId, conformiteE) => {
   try {
     const entrepriseData = JSON.parse(localStorage.getItem("entrepriseToken"));
     const identre = entrepriseData.identre;
-     await axios.post("http://localhost:5000/api/auth/conforex", { identre, texteId, conformiteE });
+
+     await axios.post("http://localhost:5000/api/auth/exconforme",
+       { identre, texteId, conformiteE });
     console.log("✅ Texte mis à jour (exigence)");
+
   } catch (err) {
     console.error("❌ Erreur update exigence :", err.message);
   }
@@ -338,7 +344,6 @@ const handleTexteC2 = (id, newStatus) => {
 {/* NOUVEAU BOUTON PDF EN DESSOUS */}
 <div className="export-section">
   <button className="exp-pdf">Exporter vers PDF <ImFilePdf /></button>
-  <button className="exp-pdf">Sauvegarder dans historique<RiRefreshLine /></button>
 
 </div>
 
@@ -430,8 +435,6 @@ const handleTexteC2 = (id, newStatus) => {
   <ul className="pagination">
     <li className="btn-item">Précédent</li>
     <li className="btn-item active">1</li>
-    <li className="btn-item">2</li>
-    <li className="btn-item">3</li>
     <li className="btn-item">Suivant</li>
     <li className="btn-item">Fin</li>
   </ul>

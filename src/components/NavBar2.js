@@ -20,6 +20,7 @@ const NavBar2 = () => {
   const location = useLocation();
   const [userName, setUserName] = useState("");
 
+  
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user && user.name) {
@@ -36,6 +37,10 @@ const NavBar2 = () => {
     }, 300);
   };
   
+  const entrepriseData = JSON.parse(localStorage.getItem("entrepriseToken"));
+const nomEntreprise = entrepriseData?.name || "Nom indisponible";
+const rnuEntreprise = entrepriseData?.rnu || "RNU indisponible";
+
   
   return (
     <div className="navbar-container3">
@@ -43,8 +48,8 @@ const NavBar2 = () => {
         <img src={logo} alt="PreCertify Logo" className="logo3" />
         <div className="navbar-right3">
           <div className="user-info3">
-            <span className="user-ref">Ref : <span className="num-date">14016725</span></span>
-            <span className="user-expire">Expire le : <span className="num-date">12/06/2025</span></span>
+            <span className="user-ref">Raison sociale : <span className="num-date">{nomEntreprise}</span></span>
+            <span className="user-expire">RNU : <span className="num-date">{rnuEntreprise}</span></span>
           </div>
           <div className="user-profile"  tabIndex={0}  // Permet à l'élément de capter le focus
               onClick={() => setIsProfileOpen(!isProfileOpen)}> 
@@ -119,14 +124,7 @@ const NavBar2 = () => {
     <TbUsersGroup className="icon-profiles" />
     <Link to="/mesutilisateurs" onClick={() => setIsProfileOpen(false)}>Mes utilisateurs</Link>
   </div>
-  <div className="dropdown-item3">
-    <BiFolder className="icon-profiles" />
-    <Link to="/messervices" onClick={() => setIsProfileOpen(false)}>Mes services</Link>
-  </div>
-  <div className="dropdown-item3">
-    <FiUsers className="icon-profiles" />
-    <Link to="/mesresponsables" onClick={() => setIsProfileOpen(false)}>Mes responsables</Link>
-  </div>
+ 
           <div className="dropdown-item3 logout"
            onMouseDown={handleLogout}
            tabIndex="0"

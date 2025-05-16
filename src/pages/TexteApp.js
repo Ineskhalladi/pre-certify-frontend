@@ -67,9 +67,29 @@ const TexteApp = () => {
             etat: match?.etat || ""
           };
         });
+        // ✅ Garder seulement les textes avec etat === "APP"
+const textesAPP = textesAvecEtat.filter((texte) => texte.etat === "APP");
+console.log("✅ Textes avec état APP uniquement :", textesAPP);
   
-        // ✅ State final
-        setCheckedTextes(textesAvecEtat);
+       // ✅ Récupérer la conformité pour chaque texte applicable
+    console.log("📡 Envoi de la requête vers l'API avec identre et conformite :");
+    const conformitesRes = await axios.get(`http://localhost:5000/api/auth/conforallv/${identre}`);
+    const conformites = conformitesRes.data || [];
+    console.log("🟢 Conformités récupérées :", conformites);
+
+
+// 🔁 Associer la conformité à chaque texte applicable
+const textesAvecConformite = textesAPP.map((texte) => {
+  const conformiteTexte = conformites.find(c => c.texteId._id?.toString() === texte._id?.toString());
+  console.log("🔗 Conformité trouvée :", conformiteTexte);
+  return {
+    ...texte,
+    conformite: conformiteTexte?.conformite || "Non défini",
+  };
+});
+
+console.log("✅ Textes avec conformité associée :", textesAvecConformite);
+setCheckedTextes(textesAvecConformite);
   
       } catch (err) {
         console.error("❌ Erreur :", err.message);
@@ -172,6 +192,16 @@ const handleAppChange = (id, newStatus) => {
 
 };
 
+// Fonction de gestion du changement d'état dans l'interface utilisateur
+const handleTexteC = (id, newStatus) => {
+  // 🔁 Mise à jour du bon state : checkedTextes
+  setCheckedTextes(prev =>
+    prev.map(texte =>
+      texte._id === id ? { ...texte, conformite: newStatus } : texte
+    )
+  );
+
+  };
   
   return (
     <>
@@ -286,7 +316,6 @@ const handleAppChange = (id, newStatus) => {
       <th>Thème</th>
       <th>Sous thème</th>
       <th>Référence</th>
-      <th>a/m/c</th>
       <th>Texte</th>
       <th>APP/N APP/Info</th>
       <th>AV/C/NC</th>
@@ -310,7 +339,6 @@ const handleAppChange = (id, newStatus) => {
     ))}
   </div>
 </td>
-        <td>{texte.type || '---'}</td>
         <td>
           <BsEye />
         </td>
@@ -332,7 +360,22 @@ const handleAppChange = (id, newStatus) => {
             </div>
           </div>
         </td>
-        <td>{texte.conformite || "---"}</td>
+        <td>
+  <div className="Status-container">
+    <div className={`status-label status-${texte.conformite?.toLowerCase()}`}>{texte.conformite}</div>
+    <div className="menu-Status">
+      {["C", "AV", "NC"].map((option) => (
+        <div
+          key={option}
+          className={`option-Status status-${option.toLowerCase().replace(' ', '-')}`}
+          onClick={() => handleTexteC(texte._id, option)}
+        >
+          {option}
+        </div>
+      ))}
+    </div>
+  </div>
+</td>
         <td>
           <ImFilePdf />
         </td>

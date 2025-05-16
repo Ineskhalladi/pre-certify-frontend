@@ -14,7 +14,6 @@ import {jwtDecode} from "jwt-decode";
 import ConformeE from "./ConformeE";
 
 const ConformeEn = () => {
-
   const [isAbreviationOpen, setIsAbreviationOpen] = useState(false);
   const [checkedTextes, setCheckedTextes] = useState([]);
   const [textesNormaux, setTextesNormaux] = useState([]);
@@ -76,14 +75,17 @@ const ConformeEn = () => {
 
 // 🔁 Associer la conformité à chaque texte applicable
 const textesAvecConformite = textesApplicablesDetail.map((texte) => {
-  const conformiteTexte = conformites.find(c => c.texteId.toString() === texte._id.toString());
+  const conformiteTexte = conformites.find(c => c.texteId._id?.toString() === texte._id?.toString());
+  console.log("🔗 Conformité trouvée :", conformiteTexte);
   return {
     ...texte,
     conformite: conformiteTexte?.conformite || "Non défini",
   };
 });
 
+console.log("✅ Textes avec conformité associée :", textesAvecConformite);
 setCheckedTextes(textesAvecConformite);
+
 
           // 🟡 1. Filtrer les textes cochés et applicables de type exigence
           const textesExigenceApplicables = allTextes.filter(
@@ -187,24 +189,8 @@ const ComparesousTheme = (sousThemeId, themeId) => {
   return sousTheme ? sousTheme.nom : "Sous-thème inconnu";
 };
 
-// Fonction pour mettre à jour l'état d'un texte dans le backend
-const updateTexteconformite = async (texteId, conformite) => {
-  try {
-    const entrepriseData = JSON.parse(localStorage.getItem("entrepriseToken"));
-    const identre = entrepriseData.identre;
 
-    // Envoi de la requête pour mettre à jour l'état du texte
-    await axios.post("http://localhost:5000/api/auth/confor", {
-      identre,
-      texteId,
-      conformite,
-    });
 
-    console.log("✅ Texte mis à jour avec succès !");
-  } catch (err) {
-    console.error("❌ Erreur lors de la mise à jour :", err.message);
-  }
-};
 
 // Fonction de gestion du changement d'état dans l'interface utilisateur
 const handleTexteC = (id, newStatus) => {
@@ -215,26 +201,13 @@ const handleTexteC = (id, newStatus) => {
     )
   );
 
-  // 📤 Mise à jour backend
-  updateTexteconformite(id, newStatus);
 };
 
-const updateTexteconformiteEx = async (texteId, conformiteE) => {
-  try {
-    const entrepriseData = JSON.parse(localStorage.getItem("entrepriseToken"));
-    const identre = entrepriseData.identre;
-     await axios.post("http://localhost:5000/api/auth/conforex", { identre, texteId, conformiteE });
-    console.log("✅ Texte mis à jour (exigence)");
-  } catch (err) {
-    console.error("❌ Erreur update exigence :", err.message);
-  }
-};
 
 const handleTexteC2 = (id, newStatus) => {
   setTextesExigence(prev =>
     prev.map(texte => texte._id === id ? { ...texte, conformiteE: newStatus } : texte)
   );
-  updateTexteconformiteEx(id, newStatus);
 };
 
   
@@ -338,8 +311,6 @@ const handleTexteC2 = (id, newStatus) => {
 {/* NOUVEAU BOUTON PDF EN DESSOUS */}
 <div className="export-section">
   <button className="exp-pdf">Exporter vers PDF <ImFilePdf /></button>
-  <button className="exp-pdf">Sauvegarder dans historique<RiRefreshLine /></button>
-
 </div>
 
 <table>
@@ -430,8 +401,6 @@ const handleTexteC2 = (id, newStatus) => {
   <ul className="pagination">
     <li className="btn-item">Précédent</li>
     <li className="btn-item active">1</li>
-    <li className="btn-item">2</li>
-    <li className="btn-item">3</li>
     <li className="btn-item">Suivant</li>
     <li className="btn-item">Fin</li>
   </ul>

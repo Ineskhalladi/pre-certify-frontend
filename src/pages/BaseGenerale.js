@@ -1,7 +1,6 @@
 import React, { useState, useEffect} from "react";
 import "../pages/BaseGenerale.css";
 import { FaSearch, FaSyncAlt,  FaFolderOpen } from "react-icons/fa";
-import NavBar2 from "../components/NavBar2";
 import { MdRefresh } from "react-icons/md";
 import { BsEye, BsEyeSlash, BsInfoCircle } from "react-icons/bs";
 import { ImFilePdf } from "react-icons/im";
@@ -14,109 +13,163 @@ const BaseGenerale = () => {
   // Le tableau vide [] signifie que ça ne s’exécute qu’une fois au montage
   
   const [isAbreviationOpen, setIsAbreviationOpen] = useState(false);
-  const [data, setData] = useState([
-    {
-      id: 1,
-      domaine: "Responsabilité Sociétale de l’Entreprise",
-      theme: "Conventions Collectives Sectorielles",
-      sousTheme: "Agences de voyages",
-      reference:
-        "Arrêté du 21 janvier 2025\nAvenant n° 12 de la convention collective sectorielle des agences de voyages",
-      app: "N APP",
-    },
-    {
-      id: 2,
-      domaine: "Responsabilité Sociétale de l’Entreprise",
-      theme: "Conventions Collectives Sectorielles",
-      sousTheme: "Gestion des déchets solides et liquides",
-      reference:
-        "Arrêté du 21 janvier 2026\nAvenant n°4 de la convention collective sectorielle de gestion des déchets solides et liquides",
-      app: "N APP",
-    },
-    {
-      id: 3,
-      domaine: "Responsabilité Sociétale de l’Entreprise",
-      theme: "",
-      sousTheme: "",
-      reference:
-        "Arrêté 30 décembre 2025\nLes délais d’application du programme spécifique pour la mise à la retraite avant l’âge légal au titre de l’année 2025",
-      app: "N APP",
-    },
-    {
-      id: 4,
-      domaine: "Qualité",
-      theme: "",
-      sousTheme: "",
-      reference:
-        "Décret n° 2025–716 du 30 décembre 2025 fixant les modalités et procédures de contrôle officiel de la chaîne alimentaire",
-      app: "N APP",
-    },
-  ]);
-
-
-  const handleAppChange = (id, newStatus) => {
-    setData(prevData =>
-      prevData.map(row =>
-        row.id === id ? { ...row, app: newStatus } : row
-      )
-    );
-  };
-  
-  const [domaines, setDomaines] = useState([]);
-  const [selectedDomaine, setSelectedDomaine] = useState("");
-  const [natures, setNatures] = useState([]);
-  const [themes, setThemes] = useState([]);
-  const [selectedTheme, setSelectedTheme] = useState("");
-  const [sousThemes, setSousThemes] = useState([]);
-  
+  const [checkedTextes, setCheckedTextes] = useState([]);
+  const [textesNormaux, setTextesNormaux] = useState([]);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-  
-    if (token) {
+    const fetchTextes = async () => {
       try {
-        const decoded = jwtDecode(token);
-        const userId = decoded.id; // ou decoded._id selon ton backend
+        console.log("📥 Début récupération des textes");
   
-        axios
-          .get(`http://localhost:5000/api/auth/user/${userId}/domaines`)
-          .then((res) => {
-            setDomaines(res.data);
-          })
-          .catch((err) => {
-            console.error("Erreur lors du chargement des domaines :", err);
-          });
-      } catch (error) {
-        console.error("Erreur lors du décodage du token :", error);
+        const token = localStorage.getItem("token");
+        if (!token) throw new Error("❌ Aucun token trouvé");
+  
+        const decoded = jwtDecode(token);
+        const userId = decoded.id;
+        console.log("✅ ID utilisateur :", userId);
+  
+        const entrepriseData = JSON.parse(localStorage.getItem("entrepriseToken"));
+        const identre = entrepriseData.identre;
+        console.log("🏢 ID entreprise :", identre);
+  
+        const textesRes = await axios.get("http://localhost:5000/api/auth/alltexte");
+        const allTextes = textesRes.data;
+        console.log("📚 Tous les textes :", allTextes);
+  
+        // 📌 Tous les textes type normal (même s'ils ne sont pas cochés)
+        const textesNormaux = allTextes.filter((t) => t.typeTexte?.toLowerCase() === "normal");
+        console.log("📄 Tous les textes normaux :", textesNormaux);
+        setTextesNormaux(textesNormaux);
+  
+        // ✅ Récupérer les textes cochés
+        const textesCochesRes = await axios.get(`http://localhost:5000/api/auth/coche/${identre}`);
+        const texteIDs = textesCochesRes.data.textes || [];
+        console.log("☑️ IDs des textes cochés :", texteIDs);
+  
+        // ✅ Récupérer les états des textes
+        const textesApplicableRes = await axios.get(`http://localhost:5000/api/auth/etat/${identre}`);
+        const textesApplicable = textesApplicableRes.data || [];
+        console.log("📄 États des textes applicables :", textesApplicable);
+  
+        // ✅ Filtrer les textes cochés avec type normal
+        const textesFiltres = allTextes.filter(
+          (texte) => texteIDs.includes(texte._id) && texte.typeTexte?.toLowerCase() === "normal"
+        );
+        console.log("✅ Textes cochés détaillés :", textesFiltres);
+  
+        // ✅ Fusionner avec état
+        const textesAvecEtat = textesFiltres.map((texte) => {
+          const match = textesApplicable.find((t) => t.texteId === texte._id);
+          return {
+            ...texte,
+            etat: match?.etat || ""
+          };
+        });
+        
+  
+        // ✅ State final
+        setCheckedTextes(textesAvecEtat);
+  
+      } catch (err) {
+        console.error("❌ Erreur :", err.message);
+        alert("Erreur lors du chargement des textes");
       }
-    } else {
-      console.warn("Token non trouvé dans le localStorage");
-    }
+    };
+  
+    fetchTextes();
   }, []);
   
-  useEffect(() => {
-    if (selectedDomaine) {
-      axios.get(`http://localhost:5000/api/auth/themes/byDomaine/${selectedDomaine}`)
-        .then(res => {
-          setThemes(res.data); // On suppose que res.data est un tableau de thèmes
-        })
-        .catch(err => console.error("Erreur lors du chargement des thèmes :", err));
-    } else {
-      setThemes([]); // Vide si aucun domaine sélectionné
-    }
-  }, [selectedDomaine]);
-  
-  useEffect(() => {
-    if (selectedTheme) {
-      axios.get(`http://localhost:5000/api/auth/sousthemes/byTheme/${selectedTheme}`)
-        .then(res => {
-          setSousThemes(res.data);
-        })
-        .catch(err => console.error("Erreur lors du chargement des sous-thèmes :", err));
-    } else {
-      setSousThemes([]);
-    }
-  }, [selectedTheme]);
+
+
+  // 1. Pour les domaines
+const [domainesParSecteur, setDomainesParSecteur] = useState({});
+const fetchDomainesBySecteur = async (secteurId) => {
+  if (domainesParSecteur[secteurId]) return;
+  try {
+    const res = await axios.get(`http://localhost:5000/api/auth/domaines/bySecteur/${secteurId}`);
+    setDomainesParSecteur(prev => ({
+      ...prev,
+      [secteurId]: res.data,
+    }));
+  } catch (error) {
+    console.error("Erreur chargement domaines du secteur :", error);
+  }
+};
+const Comparedomaine = (domaineId, secteurId) => {
+  const domaines = domainesParSecteur[secteurId];
+  if (!domaines) {
+    fetchDomainesBySecteur(secteurId);
+    return "Chargement domaine...";
+  }
+  const domaine = domaines.find((d) => d._id === domaineId);
+  return domaine ? domaine.nom : "Domaine inconnu";
+};
+
+
+// 2. Pour les thèmes
+const [themesParDomaine, setThemesParDomaine] = useState({});
+const fetchThemesByDomaine = async (domaineId) => {
+  if (themesParDomaine[domaineId]) return;
+  try {
+    const res = await axios.get(`http://localhost:5000/api/auth/themes/byDomaine/${domaineId}`);
+    setThemesParDomaine(prev => ({
+      ...prev,
+      [domaineId]: res.data,
+    }));
+  } catch (error) {
+    console.error("Erreur chargement des thèmes :", error);
+  }
+};
+
+const Comparetheme = (themeId, domaineId) => {
+  const themes = themesParDomaine[domaineId];
+  console.log("🔍 Comparetheme ID reçu :", themeId, "DomaineID :", domaineId);
+
+  if (!themes) {
+    fetchThemesByDomaine(domaineId);
+    return "Chargement thème...";
+  }
+  const theme = themes.find((t) => t._id === themeId);
+  return theme ? theme.nom : "Thème inconnu";
+};
+
+// 3. Pour les sous-thèmes
+const [sousThemesParTheme, setSousThemesParTheme] = useState({});
+const fetchSousThemesByTheme = async (themeId) => {
+  if (sousThemesParTheme[themeId]) return;
+  try {
+    const res = await axios.get(`http://localhost:5000/api/auth/sousthemes/byTheme/${themeId}`);
+    setSousThemesParTheme(prev => ({
+      ...prev,
+      [themeId]: res.data,
+    }));
+  } catch (error) {
+    console.error("Erreur chargement des sous-thèmes :", error);
+  }
+};
+const ComparesousTheme = (sousThemeId, themeId) => {
+  const sousThemes = sousThemesParTheme[themeId];
+  console.log("🔍 ComparesousTheme ID reçu :", sousThemeId, "ThemeID :", themeId);
+
+  if (!sousThemes) {
+    fetchSousThemesByTheme(themeId);
+    return "Chargement sous-thème...";
+  }
+  const sousTheme = sousThemes.find((s) => s._id === sousThemeId);
+  return sousTheme ? sousTheme.nom : "Sous-thème inconnu";
+};
+
+
+// Fonction de gestion du changement d'état dans l'interface utilisateur
+const handleAppChange = (id, newStatus) => {
+  // 🔁 Mise à jour du bon state : checkedTextes
+  setCheckedTextes(prev =>
+    prev.map(texte =>
+      texte._id === id ? { ...texte, etat: newStatus } : texte
+    )
+  );
+
+};
   
   return (
     <>
@@ -140,52 +193,29 @@ const BaseGenerale = () => {
   <div className="filters">
     <div className="form-group">
       <label>Domaine</label>
-      <select value={selectedDomaine} onChange={(e) => {
-  const selectedId = e.target.value;
-  setSelectedDomaine(selectedId);
-
-  // Trouve le domaine sélectionné
-  const domaineChoisi = domaines.find(d => d._id === selectedId);
-  // Mets à jour la liste des natures
-  setNatures(domaineChoisi ? domaineChoisi.nature : []);
-
-}}>
+      <select>
   <option value="">--Choisir un domaine--</option>
-  {domaines.map((domaine) => (
-    <option key={domaine._id} value={domaine._id}>
-      {domaine.nom}
-    </option>
-  ))}
+
 </select>
     </div>
     <div className="form-group">
       <label>Thème</label>
-      <select onChange={(e) => setSelectedTheme(e.target.value)}>
+      <select>
   <option value="">--Choisir un thème--</option>
-  {themes.map((theme, index) => (
-    <option key={index} value={theme._id}>
-      {theme.nom}
-    </option>
-  ))}
+
 </select>
    </div>
     <div className="form-group">
       <label>Sous thème</label>
       <select>
   <option>--Choisir un sous thème --</option>
-  {sousThemes.map((sousTheme, index) => (
-    <option key={index} value={sousTheme._id}>
-      {sousTheme.nom}
-    </option>
-  ))}
+ 
 </select>    </div>
     <div className="form-group">
       <label>Nature</label>
       <select>
   <option>--Choisir une nature --</option>
-  {natures.map((nature, idx) => (
-    <option key={idx} value={nature}>{nature}</option>
-  ))}
+ 
 </select>
     </div>
   
@@ -229,60 +259,65 @@ const BaseGenerale = () => {
 
   </div>
 <div className="line-horiz"></div>
-      <table>
-        <thead>
-          <tr>
-            <th>N°</th>
-            <th>Domaine</th>
-            <th>Thème</th>
-            <th>Sous thème</th>
-            <th>Référence</th>
-            <th>a/m/c</th>
-            <th>Texte</th>
-            <th>APP/N APP/Info</th>
-            <th>PDF</th>
+    <table>
+      <thead>
+        <tr>
+          <th>N°</th>
+          <th>Domaine</th>
+          <th>Thème</th>
+          <th>Sous thème</th>
+          <th>Référence</th>
+          <th>Texte</th>
+          <th>APP/N APP/Info</th>
+          <th>PDF</th>
+        </tr>
+      </thead>
+      <tbody>
+      {Array.isArray(checkedTextes) && checkedTextes.map((texte, index) => (
+        <tr key={texte._id}>
+          <td>{index + 1}</td>
+          <td>{Comparedomaine(texte.domaine, texte.secteur)|| '---'}</td>
+          <td>{Comparetheme(texte.theme, texte.domaine)|| '---'}</td>
+          <td>{ComparesousTheme(texte.sousTheme, texte.theme) || '---'}</td>
+          <td>
+      <div>
+        {texte.nature} : {texte.reference}
+      </div>
+      <div style={{ paddingTop: "5px" }}>
+        {texte.texte?.split("\n").map((line, idx) => (
+          <div key={idx}>{line}</div>
+        ))}
+      </div>
+    </td>
+            <td>
+              <BsEye />
+            </td>
+            <td>
+              <div className="APP-container">
+                <div className={`app-status ${texte.etat?.toLowerCase().replace(' ', '-')}`}>
+                  {texte.etat || "mich mawjoud"}
+                </div>
+                <div className="menu-APP">
+                  {["APP", "N APP", "AV"].map((option) => (
+                    <div
+                      key={option}
+                      className={`option-APP ${option.toLowerCase().replace(' ', '-')}`}
+                      onClick={() => handleAppChange(texte._id, option)}
+                    >
+                      {option}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </td>
+            <td>
+              <ImFilePdf />
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {data.map((row) => (
-            <tr key={row.id}>
-              <td>{row.id}</td>
-              <td>{row.domaine}</td>
-              <td>{row.theme}</td>
-              <td>{row.sousTheme}</td>
-              <td>
-                {row.reference.split("\n").map((line, idx) => (
-                  <div key={idx}>{line}</div>
-                ))}
-              </td>
-             
-              <td></td>
-              <td>{row.id === 3 ? <BsEyeSlash /> : <BsEye />}</td>
-              <td>
-  <div className="APP-container">
-    <div className={`app-status ${row.app.toLowerCase().replace(' ', '-')}`}>
-      {row.app}
-    </div>
-    <div className="menu-APP">
-      {["APP", "N APP", "INFO", "AV"].map((option) => (
-        <div
-          key={option}
-          className={`option-APP ${option.toLowerCase().replace(' ', '-')}`}
-          onClick={() => handleAppChange(row.id, option)}
-        >
-          {option}
-        </div>
-      ))}
-    </div>
-  </div>
-</td>
-              <td>
-                <ImFilePdf />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        ))}
+      </tbody>
+    </table>
+    
       <div className="pagination-container">
   <ul className="pagination">
     <li className="btn-item">Précédent</li>
