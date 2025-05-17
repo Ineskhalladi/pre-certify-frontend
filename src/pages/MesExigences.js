@@ -10,6 +10,7 @@ const MesExigences = () => {
 
   const [checkedTextes, setCheckedTextes] = useState([]);
   const [textesNormaux, setTextesNormaux] = useState([]);
+  const [textesExigence, setTextesExigence] = useState([]);
 
   useEffect(() => {
     const fetchTextes = async () => {
@@ -45,22 +46,84 @@ setTextesNormaux(textesNormaux);
 // ✅ Filtrer uniquement les textes cochés avec type "exigence"
 const textesFiltres = textesNormaux.filter((texte) => texteIDs.includes(texte._id));
 
+for (const texte of textesFiltres) {
+  try {
+    await axios.post("http://localhost:5000/api/auth/autreex", {
+      identre,
+      texteId: texte._id,
+    });
+    console.log(`✅ Exigence ajoutée pour texte ID: ${texte._id}`);
+  } catch (error) {
+    if (error.response && error.response.status === 409) {
+      console.log(`ℹ️ Texte déjà existant (pas grave): ${texte._id}`);
+    } else {
+      console.error(`❌ Erreur lors de l'ajout de texte ID ${texte._id}`, error);
+    }
+  }
+}
+
+
 // ✅ Récupérer les états des textes
-const textesApplicableRes = await axios.get(`http://localhost:5000/api/auth/exall/${identre}`);
+const textesApplicableRes = await axios.get(`http://localhost:5000/api/auth/autreexall/${identre}`);
 const textesApplicable = textesApplicableRes.data || [];
 console.log("📄 États des textes exigences :", textesApplicable);
 
-        // ✅ Fusionner avec état
-        const textesAvecEtat = textesFiltres.map((texte) => {
-          const match = textesApplicable.exigences.find((t) => t.texteId === texte._id);
+             // ✅ Fusionner avec état
+             const textesAvecEtat = textesFiltres.map((texte) => {
+              const match = textesApplicable.exigences.find((t) => t.texteId === texte._id);
+              return {
+                ...texte,
+                etat: match?.etat || "APP"
+              };
+            });
+            
+            // ✅ Récupérer la conformité pour chaque texte applicable
+            console.log("📡 Envoi de la requête vers l'API avec identre et conformite :");
+            const conformitesRes = await axios.get(`http://localhost:5000/api/auth/autreconfoexalle/${identre}`);
+            const conformites = conformitesRes.data || [];
+            console.log("🟢 Conformités récupérées :", conformites);
+        
+        
+        // 🔁 Associer la conformité à chaque texte applicable
+        const textesAvecConformite = textesAvecEtat.map((texte) => {
+          const conformiteTexte = conformites.find(c => c.texteId?.toString() === texte._id?.toString());
+          console.log("🔗 Conformité trouvée :", conformiteTexte);
           return {
             ...texte,
-            etat: match?.etat || "APP"
+            conformiteAEX: conformiteTexte?.conformiteAEX || "Non défini",
           };
         });
-  
-        // ✅ State final
-        setCheckedTextes(textesAvecEtat);
+        
+        console.log("✅ Textes avec conformité associée :", textesAvecConformite);
+        setCheckedTextes(textesAvecConformite);
+    
+        
+       // 🟡 1. Filtrer les textes cochés et applicables de type exigence
+       const textesExigenceApplicables = allTextes.filter(
+        (texte) =>
+         texte.typeTexte?.toLowerCase() === "exigence" &&
+          texteIDs.includes(texte._id)
+        );
+             
+       
+       console.log("📌 Textes exigences applicables :", textesExigenceApplicables);
+       
+         
+      // 🔹 7. Récupérer conformité des exigences
+      const conformitesExRes = await axios.get(`http://localhost:5000/api/auth/confoalle/${identre}`);
+      const conformitesEx = conformitesExRes.data || [];
+    
+    const textesExigenceAvecConformite = textesExigenceApplicables.map((texte) => {
+     const conf = conformitesEx.find(c => c.texteId?.toString() === texte._id?.toString());
+    
+     return {
+       ...texte,
+       conformiteE: conf?.conformiteE || "Non défini",
+     };
+    });
+    console.log("🔍 Textes avec conformitéExigences : ", textesExigenceAvecConformite);
+    
+      setTextesExigence(textesExigenceAvecConformite);
   
       } catch (err) {
         console.error("❌ Erreur :", err.message);
@@ -98,9 +161,6 @@ const Comparedomaine = (domaineId, secteurId) => {
 };
 
 
-
-
-
 // Fonction de gestion du changement d'état dans l'interface utilisateur
 const handleAppChange = (id, newStatus) => {
   // 🔁 Mise à jour du bon state : checkedTextes
@@ -112,6 +172,26 @@ const handleAppChange = (id, newStatus) => {
 
   };
  
+
+// Fonction de gestion du changement d'état dans l'interface utilisateur
+const handleTexteC = (id, newStatus) => {
+  // 🔁 Mise à jour du bon state : checkedTextes
+  setCheckedTextes(prev =>
+    prev.map(texte =>
+      texte._id === id ? { ...texte, conformiteAEX: newStatus } : texte
+    )
+  );
+
+};
+  
+  const handleTexteC2 = (id, newStatus) => {
+    setTextesExigence(prev =>
+      prev.map(texte => texte._id === id ? { ...texte, conformiteE: newStatus } : texte
+  
+      )
+    );
+  };
+
   
   return (
     <>
@@ -183,52 +263,99 @@ const handleAppChange = (id, newStatus) => {
               <th>PDF</th>
               <th>Exigences</th>
               <th>Av/C/NC</th>
-              <th>Action</th>
 
 
             </tr>
          </thead>
          <tbody>
-         {Array.isArray(checkedTextes) && checkedTextes.map((texte, index) => (
-            <tr key={texte._id}>
-              <td>{Comparedomaine(texte.domaine, texte.secteur)|| '---'}</td>
-              <td> {texte.nature} </td>
-              <td>
-          <div>
-           {texte.reference}
-          </div>
-          <div style={{ paddingTop: "5px" }}>
-            {texte.texte?.split("\n").map((line, idx) => (
-              <div key={idx}>{line}</div>
-            ))}
-          </div>
-        </td>
-        <td>
-          <div className="APP-container">
-            <div className={`app-status ${texte.etat?.toLowerCase().replace(' ', '-')}`}>
-              {texte.etat || "mich mawjoud"}
-            </div>
-            <div className="menu-APP">
-              {["APP", "N APP", "AV"].map((option) => (
-                <div
-                  key={option}
-                  className={`option-APP ${option.toLowerCase().replace(' ', '-')}`}
-                  onClick={() => handleAppChange(texte._id, option)}
-                >
-                  {option}
-                </div>
-              ))}
-            </div>
-          </div>
-        </td>
-           <td> </td>
-           <td> <ImFilePdf /></td>
-        
-     <td> </td>
-     <td></td>
-
-           </tr>
-         ))}
+          {Array.isArray(checkedTextes) && checkedTextes.map((texte, index) => {
+           const exigence = textesExigence[index]; // 🟨 exigence correspondante
+           return (
+             <tr key={texte._id}>
+               <td>{Comparedomaine(texte.domaine, texte.secteur) || '---'}</td>
+         
+               <td>{texte.nature}</td>
+         
+               <td>
+                 <div>{texte.reference}</div>
+                 <div style={{ paddingTop: "5px" }}>
+                   {texte.texte?.split("\n").map((line, idx) => (
+                     <div key={idx}>{line}</div>
+                   ))}
+                 </div>
+               </td>
+         
+               <td>
+                 <div className="Status-container">
+                   <div className={`status-label status-${texte.conformiteAEX?.toLowerCase()}`}>
+                     {texte.conformiteAEX}
+                   </div>
+                   <div className="menu-Status">
+                     {["C", "AV", "NC"].map((option) => (
+                       <div
+                         key={option}
+                         className={`option-Status status-${option.toLowerCase()}`}
+                         onClick={() => handleTexteC(texte._id, option)}
+                       >
+                         {option}
+                       </div>
+                     ))}
+                   </div>
+                 </div>
+               </td>
+         
+               <td>
+                 <div className="APP-container">
+                   <div className={`app-status ${texte.etat?.toLowerCase().replace(' ', '-')}`}>
+                     {texte.etat || "mich mawjoud"}
+                   </div>
+                   <div className="menu-APP">
+                     {["APP", "N APP", "AV"].map((option) => (
+                       <div
+                         key={option}
+                         className={`option-APP ${option.toLowerCase().replace(' ', '-')}`}
+                         onClick={() => handleAppChange(texte._id, option)}
+                       >
+                         {option}
+                       </div>
+                     ))}
+                   </div>
+                 </div>
+               </td>
+         
+               <td><ImFilePdf /></td>
+         
+               <td>
+                 <div>{exigence?.reference}</div>
+                 <div style={{ paddingTop: "5px" }}>
+                   {exigence?.texte?.split("\n").map((line, idx) => (
+                     <div key={idx}>{line}</div>
+                   ))}
+                 </div>
+               </td>
+         
+               <td>
+                 <div className="Status-container">
+                   <div className={`status-label status-${exigence?.conformiteE?.toLowerCase()}`}>
+                     {exigence?.conformiteE || "ND"}
+                   </div>
+                   <div className="menu-Status">
+                     {["C", "AV", "NC"].map((option) => (
+                       <div
+                         key={option}
+                         className={`option-Status status-${option.toLowerCase()}`}
+                         onClick={() => handleTexteC2(exigence._id, option)}
+                       >
+                         {option}
+                       </div>
+                     ))}
+                   </div>
+                 </div>
+               </td>
+         
+             </tr>
+           );
+         })}
          </tbody>
        </table>
 

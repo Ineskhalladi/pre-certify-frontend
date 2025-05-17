@@ -96,34 +96,22 @@ setCheckedTextes(textesAvecConformite);
     
           console.log("📌 Textes exigences applicables :", textesExigenceApplicables);
     
-          // ✅ 2. Ajouter automatiquement les exigences avec état "APP"
-          for (const texte of textesExigenceApplicables) {
-            try {
-              await axios.post("http://localhost:5000/api/auth/exigence", {
-                identre,
-                texteId: texte._id,
-              });
-              console.log(`✅ Texte ${texte._id} ajouté comme exigence`);
-            } catch (err) {
-              if (err.response && err.response.status === 409) {
-              } else {
-                console.error(`❌ Erreur ajout exigence pour texte ${texte._id}:`, err.message);
-              }
-            }
-          }
-   // 🔹 7. Récupérer conformité des exigences
-   const conformitesExRes = await axios.get(`http://localhost:5000/api/auth/confoalle/${identre}`);
-   const conformitesEx = conformitesExRes.data || [];
-
+         
+     // 🔹 7. Récupérer conformité des exigences
+     const conformitesExRes = await axios.get(`http://localhost:5000/api/auth/confoalle/${identre}`);
+     const conformitesEx = conformitesExRes.data || [];
+  
    const textesExigenceAvecConformite = textesExigenceApplicables.map((texte) => {
-     const conf = conformitesEx.find(c => c.texteId === texte._id);
-     return {
-       ...texte,
-       conformiteE: conf?.conformiteE || "Non défini",
-     };
-   });
-
-   setTextesExigence(textesExigenceAvecConformite);
+    const conf = conformitesEx.find(c => c.texteId?.toString() === texte._id?.toString());
+  
+    return {
+      ...texte,
+      conformiteE: conf?.conformiteE || "Non défini",
+    };
+  });
+  console.log("🔍 Textes avec conformitéExigences : ", textesExigenceAvecConformite);
+  
+     setTextesExigence(textesExigenceAvecConformite);
 
       } catch (err) {
         console.error("❌ Erreur :", err.message);
@@ -326,8 +314,12 @@ const handleTexteC2 = (id, newStatus) => {
     </tr>
   </thead>
   <tbody>
-    {checkedTextes.map((texte) => (
+  {checkedTextes.map((texte, index) => {
+    const exigence = textesExigence[index]; // 🟨 exigence correspondante
+
+    return (
       <tr key={texte._id}>
+        {/* --- Partie du Texte Normal --- */}
         <td>{Comparetheme(texte.theme, texte.domaine)}</td>
         <td>{ComparesousTheme(texte.sousTheme, texte.theme)}</td>
         <td>
@@ -341,59 +333,57 @@ const handleTexteC2 = (id, newStatus) => {
           </div>
         </td>
         <td>
-  <div className="Status-container">
-    <div className={`status-label status-${texte.conformite?.toLowerCase()}`}>{texte.conformite}</div>
-    <div className="menu-Status">
-      {["C", "AV", "NC"].map((option) => (
-        <div
-          key={option}
-          className={`option-Status status-${option.toLowerCase().replace(' ', '-')}`}
-          onClick={() => handleTexteC(texte._id, option)}
-        >
-          {option}
-        </div>
-      ))}
-    </div>
-  </div>
-</td>
+          <div className="Status-container">
+            <div className={`status-label status-${texte.conformite?.toLowerCase()}`}>
+              {texte.conformite}
+            </div>
+            <div className="menu-Status">
+              {["C", "AV", "NC"].map((option) => (
+                <div
+                  key={option}
+                  className={`option-Status status-${option.toLowerCase()}`}
+                  onClick={() => handleTexteC(texte._id, option)}
+                >
+                  {option}
+                </div>
+              ))}
+            </div>
+          </div>
+        </td>
+
+        <td> <div>{exigence?.reference}</div>
+          <div style={{ paddingTop: "5px" }}>
+            {exigence?.texte?.split("\n").map((line, idx) => (
+              <div key={idx}>{line}</div>
+            ))}
+          </div></td>
 
         <td>
-          {textesExigence.map((exigence, index) => (
-            <div key={index} style={{ marginBottom: "10px" }}>
-              <div>{exigence.reference}</div>
-              <div style={{ paddingTop: "5px" }}>
-                {exigence.texte?.split("\n").map((line, idx) => (
-                  <div key={idx}>{line}</div>
-                ))}
-              </div>
+        <div className="Status-container">
+            <div className={`status-label status-${exigence?.conformiteE?.toLowerCase()}`}>
+              {exigence?.conformiteE || "ND"}
             </div>
-          ))}
+            <div className="menu-Status">
+              {["C", "AV", "NC"].map((option) => (
+                <div
+                  key={option}
+                  className={`option-Status status-${option.toLowerCase()}`}
+                  onClick={() => handleTexteC2(exigence._id, option)}
+                >
+                  {option}
+                </div>
+              ))}
+            </div>
+          </div>
         </td>
-        <td>
-  <div className="Status-container">
-    <div className={`status-label status-${texte.conformiteE?.toLowerCase()}`}>
-      {texte.conformiteE || "ND"}
-    </div>
-    <div className="menu-Status">
-      {["C", "AV", "NC"].map((option) => (
-        <div
-          key={option}
-          className={`option-Status status-${option.toLowerCase().replace(' ', '-')}`}
-          onClick={() => handleTexteC2(texte._id, option)}
-        >
-          {option}
-        </div>
-      ))}
-    </div>
-  </div>
-</td>
 
         <td>
           <input className="boxC" type="checkbox" />
         </td>
       </tr>
-    ))}
-  </tbody>
+    );
+  })}
+</tbody>
 </table>
 
 

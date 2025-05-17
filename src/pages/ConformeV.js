@@ -19,7 +19,6 @@ const ConformeV = () => {
   const [checkedTextes, setCheckedTextes] = useState([]);
   const [textesNormaux, setTextesNormaux] = useState([]);
   const [textesExigence, setTextesExigence] = useState([]);
-  const [conformite, setConformite] = useState([]);
   
   useEffect(() => {
     const fetchTextes = async () => {
@@ -42,7 +41,7 @@ const ConformeV = () => {
         console.log("📚 Tous les textes :", allTextes);
   
         // 📌 Tous les textes type normal (même s'ils ne sont pas cochés)
-        const textesNormaux = allTextes.filter((t) => t.typeTexte?.toLowerCase());
+        const textesNormaux = allTextes.filter((t) => t.typeTexte?.toLowerCase() === "normal");
         console.log("📄 Tous les textes normaux :", textesNormaux);
         setTextesNormaux(textesNormaux);
   
@@ -54,8 +53,11 @@ const ConformeV = () => {
   
         // ✅ Filtrer les textes cochés avec type normal
         const textesFiltres = allTextes.filter(
-          (texte) => texteIDs.includes(texte._id) && texte.typeTexte?.toLowerCase()
+          (texte) => 
+            texte.typeTexte?.toLowerCase() === "normal" &&
+            texteIDs.includes(texte._id)
         );
+        
 
         console.log("✅ Textes cochés détaillés :", textesFiltres);
         // ✅ Récupérer les états des textes
@@ -88,41 +90,30 @@ console.log("✅ Textes avec conformité associée :", textesAvecConformite);
 setCheckedTextes(textesAvecConformite);
 
 
-          // 🟡 1. Filtrer les textes cochés et applicables de type exigence
-          const textesExigenceApplicables = allTextes.filter(
-            (texte) =>
-              texte.typeTexte?.toLowerCase() === "exigence" &&
-              texteIDs.includes(texte._id)
-          );
+   // 🟡 1. Filtrer les textes cochés et applicables de type exigence
+    const textesExigenceApplicables = allTextes.filter(
+     (texte) =>
+      texte.typeTexte?.toLowerCase() === "exigence" &&
+       texteIDs.includes(texte._id)
+     );
+          
     
-          console.log("📌 Textes exigences applicables :", textesExigenceApplicables);
+    console.log("📌 Textes exigences applicables :", textesExigenceApplicables);
     
-          // ✅ 2. Ajouter automatiquement les exigences avec état "APP"
-          for (const texte of textesExigenceApplicables) {
-            try {
-              await axios.post("http://localhost:5000/api/auth/exigence", {
-                identre,
-                texteId: texte._id,
-              });
-              console.log(`✅ Texte ${texte._id} ajouté comme exigence`);
-            } catch (err) {
-              if (err.response && err.response.status === 409) {
-              } else {
-                console.error(`❌ Erreur ajout exigence pour texte ${texte._id}:`, err.message);
-              }
-            }
-          }
+      
    // 🔹 7. Récupérer conformité des exigences
    const conformitesExRes = await axios.get(`http://localhost:5000/api/auth/confoalle/${identre}`);
    const conformitesEx = conformitesExRes.data || [];
 
-   const textesExigenceAvecConformite = textesExigenceApplicables.map((texte) => {
-     const conf = conformitesEx.find(c => c.texteId === texte._id);
-     return {
-       ...texte,
-       conformiteE: conf?.conformiteE || "Non défini",
-     };
-   });
+ const textesExigenceAvecConformite = textesExigenceApplicables.map((texte) => {
+  const conf = conformitesEx.find(c => c.texteId?.toString() === texte._id?.toString());
+
+  return {
+    ...texte,
+    conformiteE: conf?.conformiteE || "Non défini",
+  };
+});
+console.log("🔍 Textes avec conformitéExigences : ", textesExigenceAvecConformite);
 
    setTextesExigence(textesExigenceAvecConformite);
 
@@ -226,7 +217,7 @@ const updateTexteconformiteEx = async (texteId, conformiteE) => {
   try {
     const entrepriseData = JSON.parse(localStorage.getItem("entrepriseToken"));
     const identre = entrepriseData.identre;
-
+   
      await axios.post("http://localhost:5000/api/auth/exconforme",
        { identre, texteId, conformiteE });
     console.log("✅ Texte mis à jour (exigence)");
@@ -238,7 +229,9 @@ const updateTexteconformiteEx = async (texteId, conformiteE) => {
 
 const handleTexteC2 = (id, newStatus) => {
   setTextesExigence(prev =>
-    prev.map(texte => texte._id === id ? { ...texte, conformiteE: newStatus } : texte)
+    prev.map(texte => texte._id === id ? { ...texte, conformiteE: newStatus } : texte
+
+    )
   );
   updateTexteconformiteEx(id, newStatus);
 };
@@ -360,8 +353,12 @@ const handleTexteC2 = (id, newStatus) => {
     </tr>
   </thead>
   <tbody>
-    {checkedTextes.map((texte) => (
+  {checkedTextes.map((texte, index) => {
+    const exigence = textesExigence[index]; // 🟨 exigence correspondante
+
+    return (
       <tr key={texte._id}>
+        {/* --- Partie du Texte Normal --- */}
         <td>{Comparetheme(texte.theme, texte.domaine)}</td>
         <td>{ComparesousTheme(texte.sousTheme, texte.theme)}</td>
         <td>
@@ -375,59 +372,59 @@ const handleTexteC2 = (id, newStatus) => {
           </div>
         </td>
         <td>
-  <div className="Status-container">
-    <div className={`status-label status-${texte.conformite?.toLowerCase()}`}>{texte.conformite}</div>
-    <div className="menu-Status">
-      {["C", "AV", "NC"].map((option) => (
-        <div
-          key={option}
-          className={`option-Status status-${option.toLowerCase().replace(' ', '-')}`}
-          onClick={() => handleTexteC(texte._id, option)}
-        >
-          {option}
-        </div>
-      ))}
-    </div>
-  </div>
-</td>
+          <div className="Status-container">
+            <div className={`status-label status-${texte.conformite?.toLowerCase()}`}>
+              {texte.conformite}
+            </div>
+            <div className="menu-Status">
+              {["C", "AV", "NC"].map((option) => (
+                <div
+                  key={option}
+                  className={`option-Status status-${option.toLowerCase()}`}
+                  onClick={() => handleTexteC(texte._id, option)}
+                >
+                  {option}
+                </div>
+              ))}
+            </div>
+          </div>
+        </td>
+
+        <td> <div>{exigence?.reference}</div>
+          <div style={{ paddingTop: "5px" }}>
+            {exigence?.texte?.split("\n").map((line, idx) => (
+              <div key={idx}>{line}</div>
+            ))}
+          </div></td>
 
         <td>
-          {textesExigence.map((exigence, index) => (
-            <div key={index} style={{ marginBottom: "10px" }}>
-              <div>{exigence.reference}</div>
-              <div style={{ paddingTop: "5px" }}>
-                {exigence.texte?.split("\n").map((line, idx) => (
-                  <div key={idx}>{line}</div>
-                ))}
-              </div>
+        <div className="Status-container">
+            <div className={`status-label status-${exigence?.conformiteE?.toLowerCase()}`}>
+              {exigence?.conformiteE || "ND"}
             </div>
-          ))}
+            <div className="menu-Status">
+              {["C", "AV", "NC"].map((option) => (
+                <div
+                  key={option}
+                  className={`option-Status status-${option.toLowerCase()}`}
+                  onClick={() => handleTexteC2(exigence._id, option)}
+                >
+                  {option}
+                </div>
+              ))}
+            </div>
+          </div>
         </td>
-        <td>
-  <div className="Status-container">
-    <div className={`status-label status-${texte.conformiteE?.toLowerCase()}`}>
-      {texte.conformiteE || "ND"}
-    </div>
-    <div className="menu-Status">
-      {["C", "AV", "NC"].map((option) => (
-        <div
-          key={option}
-          className={`option-Status status-${option.toLowerCase().replace(' ', '-')}`}
-          onClick={() => handleTexteC2(texte._id, option)}
-        >
-          {option}
-        </div>
-      ))}
-    </div>
-  </div>
-</td>
 
         <td>
           <input className="boxC" type="checkbox" />
         </td>
       </tr>
-    ))}
-  </tbody>
+    );
+  })}
+</tbody>
+
+
 </table>
 
 
