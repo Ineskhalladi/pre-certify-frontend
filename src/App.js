@@ -47,7 +47,7 @@ import ListeEntreprises from "./pages/ListeEnreprises.js";
 import DashboardS from "./pages/DashboardS.js"; 
 import CocherTexte from "./pages/CocherTexte.js"
 import Certificate from "./pages/Certificate.js"
-import ChoixEntr from "./pages/ChoixEntr.js"
+import ChoixEntr from "./components/ChoixEntr.js"
 import Sante from "./pages/Sante.js"
 import Infor from "./pages/Infor.js"
 import Gestion from "./pages/Gestion.js";
@@ -66,6 +66,10 @@ import TexteAppEn from "./pages/TexteAppEn.js";
 import ConformeEn from "./pages/ConformeEn.js";
 import PlanActionEn from "./pages/PlanActionEn.js";
 import StatistiquesEn from "./pages/StatistiquesEn.js";
+import Action from "./pages/Action.js";
+import AjoutAction from "./pages/AjoutAction.js";
+import EditAction from "./pages/EditAction.js";
+import PlanActionR from "./pages/PlanActionR.js";
 
 const App = () => {
   const location = useLocation();
@@ -87,7 +91,7 @@ const App = () => {
 
  // Pages تظهر فيهم Navbar5 فقط
  const isNavbar5Page = path.startsWith("/editerservice/") || 
- ["/messervices", "/ajouterservice"].includes(path);
+ ["/messervices", "/ajouterservice","/planactionr"].includes(path);
 
   // Pages يظهر فيهم Navbar + Footer فقط
   const isNavbarFooterPage = ["/home","/normes", "/","/veillereg", "/contact","/certificate","/sante"
@@ -174,6 +178,10 @@ const App = () => {
         <Route path="/conformeEn" element={<ConformeEn />} />
         <Route path="/planactionEn" element={<PlanActionEn />} />
         <Route path="/statistiquesEn" element={<StatistiquesEn />} />
+        <Route path="/action" element={<Action />} />
+        <Route path="/ajoutaction" element={<AjoutAction />} />
+        <Route path="/editaction/:id" element={<EditAction/>} />
+        <Route path="/planactionr" element={<PlanActionR />} />
 
     
       </Routes>

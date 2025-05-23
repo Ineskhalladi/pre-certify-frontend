@@ -44,10 +44,7 @@ const NavBar5 = () => {
       <div className="navbar-top3">
         <img src={logo} alt="PreCertify Logo" className="logo3" />
         <div className="navbar-right3">
-          <div className="user-info3">
-            <span className="user-ref">Ref : <span className="num-date">14016725</span></span>
-            <span className="user-expire">Expire le : <span className="num-date">12/06/2025</span></span>
-          </div>
+        
           <div className="user-profile"  tabIndex={0}  // Permet à l'élément de capter le focus
               onClick={() => setIsProfileOpen(!isProfileOpen)}> 
 <div className="avatar-container">
@@ -78,7 +75,7 @@ const NavBar5 = () => {
               <Link to="/texteinfo">Textes pour Information</Link>
               <Link to="/texteapp">Textes Applicables</Link>
               <Link to="/conformev">Évaluation de Conformité</Link>
-              <Link to="/planactionv">Mon Plan d'Action</Link>
+              <Link to="/planactionr">Mon Plan d'Action</Link>
               <Link to="/statistiquesv">Mes Statistiques</Link>
 
             </div>
