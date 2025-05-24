@@ -430,7 +430,7 @@ textesExigence.forEach((texte) => {
   <button className="exp-pdf">Sauvegarder dans historique<RiRefreshLine /></button>
 
 </div>
-<table>
+<table style={{ borderCollapse: "collapse", width: "100%" }}>
   <thead>
     <tr>
       <th>Action</th>
@@ -446,6 +446,7 @@ textesExigence.forEach((texte) => {
       const [domaine, theme, sousTheme] = key.split("-");
       return group.normal.map((texte, index) => {
         const exigence = group.exigence[index];
+        const filteredActions = actions.filter(a => a.exigenceId === exigence?._id);
 
         return (
           <React.Fragment key={`${texte._id}-${index}`}>
@@ -524,26 +525,35 @@ textesExigence.forEach((texte) => {
               </td>
             </tr>
 
-            {/* ✅ Ligne 4 - Action */}
-            {filteredActions.map((act, i) => (
-              <tr key={act._id} style={{ textAlign: "start" }}>
-                <td>{act.action}</td>
-                <td>{act.responsable?.name}</td>
-                <td>{new Date(act.echeance).toLocaleDateString()}</td>
-                <td></td>
-                <td>{act.validation ? "✅" : "❌"}</td>
-                <td>
-                  <BiEdit onClick={() => navigate(`/editaction/${act._id}`)} />
-                  <BiTrash onClick={() => deleteAction(act._id)} />
+            {/* ✅ Ligne 4 - Action ou aucune action */}
+            {filteredActions.length === 0 ? (
+              <tr style={{ textAlign: "start" }}>
+                <td colSpan="6" style={{ border: "none", fontStyle: "italic", color: "gray" }}>
+                  Aucune action
                 </td>
               </tr>
-            ))}
+            ) : (
+              filteredActions.map((act, i) => (
+                <tr key={act._id} style={{ textAlign: "start" }}>
+                  <td>{act.action}</td>
+                  <td>{act.responsable?.name}</td>
+                  <td>{new Date(act.echeance).toLocaleDateString()}</td>
+                  <td></td>
+                  <td>{act.validation ? "✅" : "❌"}</td>
+                  <td>
+                    <BiEdit onClick={() => navigate(`/editaction/${act._id}`)} />
+                    <BiTrash onClick={() => deleteAction(act._id)} />
+                  </td>
+                </tr>
+              ))
+            )}
           </React.Fragment>
         );
       });
     })}
   </tbody>
 </table>
+
 
 
   

@@ -214,6 +214,7 @@ table td svg {
 table td svg:hover {
   color: #E0A600;
 }
+
 .Status-container {
   position: relative;
   display: flex;

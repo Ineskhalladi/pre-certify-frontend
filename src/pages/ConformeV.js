@@ -11,7 +11,6 @@ import { Link } from "react-router-dom";
 import { RiRefreshLine } from "react-icons/ri";
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
-import ConformeE from "./ConformeE";
 
 const ConformeV = () => {
 
@@ -272,6 +271,8 @@ textesExigence.forEach((texte) => {
   groupesTextes[key].exigence.push(texte);
 });
 
+
+
   return (
     <>
       <div className="base-container">
@@ -385,7 +386,6 @@ textesExigence.forEach((texte) => {
       <th>Exigences</th>
       <th>AV/C/NC</th>
       <th>Constat</th>
-      <th>Ajouter monitoring</th>
     </tr>
   </thead>
   <tbody>
@@ -471,10 +471,8 @@ textesExigence.forEach((texte) => {
     Save
   </button>
 </td>
-          {/* Checkbox */}
-          <td>
-            <input className="boxC" type="checkbox" />
-          </td>
+         
+          
         </tr>
       );
     });

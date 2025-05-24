@@ -125,7 +125,16 @@
 
 }
 
- 
+ .text-base1{
+  margin-top: -70px;
+   font-size: 22px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #E0A600;
+  margin-left: 30px;
+ }
 .footer-base {
   font-weight: 400;
   font-size: 18px;
@@ -188,7 +197,7 @@ table {
   }
   
   
-  .dropdown-abrev2 {
+  .dropdown-abrev22 {
     position: absolute;
     top: 105%;
     left: 0;
@@ -205,7 +214,7 @@ table {
     font-size: 12.5px;
   }
   
-  .abrev-item2 {
+  .abrev-item22 {
     display: flex;
     align-items: center;
     gap: 2px;
@@ -213,41 +222,34 @@ table {
     border-bottom: 1px solid #ccc;
     padding-top: 3px;
   }
-  .dropdown-abrev2 .abrev-item2:last-child {
+  .dropdown-abrev22 .abrev-item22:last-child {
     border-bottom: none;
   }
   
   
-  .abrev-label2 {
-    padding: 2px 8px;
-    border-radius: 40px;
+  .abrev-label22 {
+    padding: 4px 8px;
+    border-radius: 2px;
     font-size: 11px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 10px;
-    height: 22px;
+    min-width: 20px;
+    height: 20px;
     text-align: center;
     box-sizing: border-box;
   }
   
-  .c {
-    color: green;
-    font-weight: 600;
+  .c2 {
+    background-color: lightgreen ;
     font-size: 14px;
     border: none;
   }
   
-  .avc {
-    color: orange;
-    font-weight: 600;
-    font-size: 14px;
-    border: none;
-  }
+ 
   
-  .nc {
-    color: red;
-    font-weight: 600;
+  .nc2 {
+    background: #f08080;
     font-size: 14px;
     border: none;
   }

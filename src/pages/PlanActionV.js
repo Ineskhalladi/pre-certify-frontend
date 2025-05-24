@@ -419,12 +419,17 @@ textesExigence.forEach((texte) => {
 <table>
   <thead>
     <tr>
+      <th>Reference</th>
+      <th>Conformite</th>
+      <th>Exigence</th>
+      <th>ConformiteE</th>
+      <th>Constat</th>
+      <th>Editer</th>
       <th>Action</th>
       <th>Responsable</th>
-      <th>Échéance</th>
-      <th>Conformité</th>
+      <th>Echeance</th>
       <th>Validation</th>
-      <th>Éditer</th>
+      <th>EditerAction</th>
     </tr>
   </thead>
   <tbody>
@@ -435,71 +440,62 @@ textesExigence.forEach((texte) => {
 
         return (
           <React.Fragment key={`${texte._id}-${index}`}>
-            {/* 🟨 Ligne 1 - Texte Normal */}
-            <tr style={{ backgroundColor: "#fff3cd", textAlign: "start" }}>
-              <td colSpan="6" style={{ border: "none" }}>
+            {/* Ligne principale avec toutes les colonnes alignées */}
+            <tr style={{ textAlign: "start" }}>
+              <td>
                 <strong>{texte.reference}</strong> - {texte.nature}
-                <div style={{ marginTop: "5px" }}>
+                <div>
                   {texte.texte?.split("\n").map((line, idx) => (
                     <div key={idx}>{line}</div>
                   ))}
                 </div>
-                <div className="Status-container">
-                  <div className={`status-label status-${texte.conformite?.toLowerCase()}`}>
-                    {texte.conformite}
-                  </div>
-                  <div className="menu-Status">
-                    {["C", "AV", "NC"].map((option) => (
-                      <div
-                        key={option}
-                        className={`option-Status status-${option.toLowerCase()}`}
-                        onClick={() => handleTexteC(texte._id, option)}
-                      >
-                        {option}
-                      </div>
-                    ))}
-                  </div>
-                </div>
               </td>
-            </tr>
-
-            {/* 📄 Ligne 2 - Exigence */}
-            <tr style={{ textAlign: "start" }}>
-              <td colSpan="3" style={{ border: "none" }}>
+                <td>
+            <div className="Status-container">
+              <div className={`status-label status-${texte.conformite?.toLowerCase()}`}>
+                {texte.conformite}
+              </div>
+              <div className="menu-Status">
+                {["C", "AV", "NC"].map((option) => (
+                  <div
+                    key={option}
+                    className={`option-Status status-${option.toLowerCase()}`}
+                    onClick={() => handleTexteC(texte._id, option)}
+                  >
+                    {option}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </td>
+              <td>
                 <strong>{exigence?.reference}</strong> - {exigence?.nature}
-                <div style={{ marginTop: "5px" }}>
+                <div>
                   {exigence?.texte?.split("\n").map((line, idx) => (
                     <div key={idx}>{line}</div>
                   ))}
                 </div>
               </td>
-              <td style={{ border: "none" }}>
-                <div className="Status-container">
-                  <div className={`status-label status-${exigence?.conformiteE?.toLowerCase()}`}>
-                    {exigence?.conformiteE || "ND"}
+                {/* Statut Exigence */}
+          <td>
+            <div className="Status-container">
+              <div className={`status-label status-${exigence?.conformiteE?.toLowerCase()}`}>
+                {exigence?.conformiteE || "ND"}
+              </div>
+              <div className="menu-Status">
+                {["C", "AV", "NC"].map((option) => (
+                  <div
+                    key={option}
+                    className={`option-Status status-${option.toLowerCase()}`}
+                    onClick={() => handleTexteC2(exigence?._id, option)}
+                  >
+                    {option}
                   </div>
-                  <div className="menu-Status">
-                    {["C", "AV", "NC"].map((option) => (
-                      <div
-                        key={option}
-                        className={`option-Status status-${option.toLowerCase()}`}
-                        onClick={() => handleTexteC2(exigence?._id, option)}
-                      >
-                        {option}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </td>
-              <td></td>
-              <td style={{ border: "none" }}>
-                <BiEdit onClick={() => navigate("/action")} />
-              </td>
-            </tr>
-
-            {/* 📝 Ligne 3 - Constat */}
-            <tr style={{ textAlign: "start" }}>
-              <td colSpan="6" style={{ border: "none" }}>
+                ))}
+              </div>
+            </div>
+          </td>
+              <td>
                 <textarea
                   value={exigence?.constat || ""}
                   onChange={(e) => handleConstat(exigence?._id, e.target.value)}
@@ -508,28 +504,35 @@ textesExigence.forEach((texte) => {
                   Enregistrer
                 </button>
               </td>
+              <td>
+                <BiEdit onClick={() => navigate("/action")} />
+              </td>
+              <td>
+                {filteredActions[index]?.action || ""}
+              </td>
+              <td>
+                {filteredActions[index]?.responsable?.name || ""}
+              </td>
+              <td>
+                {filteredActions[index]?.echeance
+                  ? new Date(filteredActions[index].echeance).toLocaleDateString()
+                  : ""}
+              </td>
+              <td>
+                {filteredActions[index]?.validation ? "✅" : "❌"}
+              </td>
+              <td>
+                <BiEdit onClick={() => navigate(`/editaction/${filteredActions[index]?._id}`)} />
+                <BiTrash onClick={() => deleteAction(filteredActions[index]?._id)} />
+              </td>
             </tr>
-
-            {/* ✅ Ligne 4 - Action */}
-            {filteredActions.map((act, i) => (
-              <tr key={act._id} style={{ textAlign: "start" }}>
-                <td>{act.action}</td>
-                <td>{act.responsable?.name}</td>
-                <td>{new Date(act.echeance).toLocaleDateString()}</td>
-                <td></td>
-                <td>{act.validation ? "✅" : "❌"}</td>
-                <td>
-                  <BiEdit onClick={() => navigate(`/editaction/${act._id}`)} />
-                  <BiTrash onClick={() => deleteAction(act._id)} />
-                </td>
-              </tr>
-            ))}
           </React.Fragment>
         );
       });
     })}
   </tbody>
 </table>
+
 
 
   

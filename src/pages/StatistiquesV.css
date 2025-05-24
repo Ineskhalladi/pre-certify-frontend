@@ -133,35 +133,59 @@
   padding: 10px 35px;
 }
 
-.etat-container {
-  font-family: 'Poppins', sans-serif;
+
+
+.etat-row {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
   padding: 20px;
-  background-color: #ffffff;
-  box-shadow: 0px 4px 6px 1px rgba(0, 0, 0, 0.25);
-  border-radius: 8px;
-  margin: 25px;
 }
 
-.etat-content{
-  margin-top: 10px;
-
+.etat-box {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 20px;
+  width: 46%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
-.etat-content h2 {
+.etat-row  h2 {
   font-size: 27px;
   font-weight: 500;
   color: #000;
 }
-.etat-content h3 {
+.etat-row h3 {
   font-size: 15px;
   font-weight: 500;
   color: #4e4e4e;
   text-align: center;
 }
+.chart-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
   .chart-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
   }
+  .etat-double-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+}
+
+/* Optionnel : pour s'assurer qu'ils prennent chacun 50% */
+.bar-chart-containerA,
+.etat-containerS {
+  flex: 1;
+}
+
   .bar-chart-containerA {
     font-family: 'Poppins', sans-serif;
     padding: 20px;
@@ -169,6 +193,7 @@
   box-shadow: 0px 4px 6px 1px rgba(0, 0, 0, 0.25);
   border-radius: 8px;
   margin: 25px;
+  height: 450px;
   
   }
   .bar-chart-titleA {
@@ -178,14 +203,16 @@
   }
   
   .bar-chart-wrapperA {
-    width: 70%;
+    width: 120%;
     height: 265px;
-    margin-left: 80px;
+    margin-left: -200px;
+    margin-top: 40px;
     
   }
   .bar-chart-containerA h3 {
     font-size: 15px;
     font-weight: 500;
+    margin-top: 50px;
     color: #4e4e4e;
     text-align: center;
   }
@@ -197,12 +224,14 @@
     box-shadow: 0px 4px 6px 1px rgba(0, 0, 0, 0.25);
     border-radius: 8px;
     margin: 25px;
+    height: 450px;
   }
   
   .etat-containerS h2 {
-    font-size: 27px;
+    font-size: 25px;
     font-weight: 500;
     color: #000;
+    margin-top: -2px;
   }
   
   .etat-S {
@@ -211,7 +240,7 @@
   }
   
   .etat-graphS {
-    width: 70%; /* Diagramme 70% */
+    margin-left: 50px;
   }
   
   .etat-graphS h3 {
@@ -220,28 +249,7 @@
   color: #4e4e4e;
   text-align: center;
     margin-bottom: 30px;
-    margin-left: -300px;
+    margin-left: -100px;
   }
   
-  .etat-legendS {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .etat-legendS h3 {
-    font-size: 18px;
-    color: #0a1d3b;
-  }
-  
-  .service-legendS p {
-  
-    font-size: 16px;
-    margin-bottom: 15px;
-    text-align: center;
-  }
-  
-  .service-legendS strong {
-    color: #0a1d3b;
-  }
   
