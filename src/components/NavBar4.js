@@ -83,7 +83,7 @@ const NavBar4 = () => {
         <FiGrid className="icon-nav3" /> Monitoring</Link>
          
              <Link to="/alertes"  className={`menu-item3 ${location.pathname === "/alertes" ? "active" : ""}`}>
-             <LuBell className="icon-nav3" /> Mes Alertes <span className="alert-count">20</span></Link>        
+             <LuBell className="icon-nav3" /> Mes Alertes <span className="alert-count">2</span></Link>        
       </nav>
 
       {isProfileOpen && (

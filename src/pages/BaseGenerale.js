@@ -295,7 +295,7 @@ const handleAppChange = (id, newStatus) => {
             <td>
               <div className="APP-container">
                 <div className={`app-status ${texte.etat?.toLowerCase().replace(' ', '-')}`}>
-                  {texte.etat || "mich mawjoud"}
+                  {texte.etat || "--"}
                 </div>
                 <div className="menu-APP">
                   {["APP", "N APP", "AV"].map((option) => (
@@ -322,9 +322,7 @@ const handleAppChange = (id, newStatus) => {
   <ul className="pagination">
     <li className="btn-item">Précédent</li>
     <li className="btn-item active">1</li>
-    <li className="btn-item">2</li>
-    <li className="btn-item">3</li>
-    <li className="btn-item">Suivant</li>
+     <li className="btn-item">Suivant</li>
     <li className="btn-item">Fin</li>
   </ul>
 </div>

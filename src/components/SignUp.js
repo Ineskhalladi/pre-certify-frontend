@@ -60,7 +60,7 @@ const SignUp = () => {
     let errors = {};
     if (!name) errors.name = "Le nom est obligatoire.";
     if (!email) errors.email = "L'email est obligatoire.";
-    if (!rnu) errors.nif = "Le NIF est obligatoire.";
+    if (!rnu) errors.rnu = "Le rnu est obligatoire.";
     if (!sector) errors.sector = "Le secteur est obligatoire.";
     if (!password) errors.password = "Le mot de passe est obligatoire.";
     if (!confirmPassword) errors.confirmPassword = "Veuillez confirmer votre mot de passe.";

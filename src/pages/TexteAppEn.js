@@ -280,13 +280,10 @@ const handleAppChange = (id, newStatus) => {
 
   {isAbreviationOpen && (
     <div className="dropdown-abrev">
-      <div className="abrev-item"><span className="abrev-lettre bold">a</span> : abrogeant</div>
-      <div className="abrev-item"><span className="abrev-lettre bold">m</span> : modifiant</div>
-      <div className="abrev-item"><span className="abrev-lettre bold">c</span> : complétant</div>
+
       <div className="abrev-item"><span className="abrev-label app">APP</span> : Applicable</div>
       <div className="abrev-item"><span className="abrev-label napp">N APP</span> : Non applicable</div>
       <div className="abrev-item"><span className="abrev-label av">AV</span> : À vérifier</div>
-      <div className="abrev-item"><span className="abrev-label info">INFO</span> : Pour information</div>
     </div>
   )}
 </div>
@@ -315,7 +312,6 @@ const handleAppChange = (id, newStatus) => {
       <th>Thème</th>
       <th>Sous thème</th>
       <th>Référence</th>
-      <th>a/m/c</th>
       <th>Texte</th>
       <th>APP/N APP/Info</th>
       <th>AV/C/NC</th>
@@ -339,14 +335,13 @@ const handleAppChange = (id, newStatus) => {
     ))}
   </div>
 </td>
-        <td>{texte.type || '---'}</td>
         <td>
           <BsEye />
         </td>
         <td>
           <div className="APP-container">
             <div className={`app-status ${texte.etat?.toLowerCase().replace(' ', '-')}`}>
-              {texte.etat || "mich mawjoud"}
+              {texte.etat || "--"}
             </div>
             <div className="menu-APP">
               {["APP", "N APP", "AV"].map((option) => (
@@ -374,8 +369,6 @@ const handleAppChange = (id, newStatus) => {
   <ul className="pagination">
     <li className="btn-item">Précédent</li>
     <li className="btn-item active">1</li>
-    <li className="btn-item">2</li>
-    <li className="btn-item">3</li>
     <li className="btn-item">Suivant</li>
     <li className="btn-item">Fin</li>
   </ul>

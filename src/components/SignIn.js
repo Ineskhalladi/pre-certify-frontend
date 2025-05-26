@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaUser, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaUser, FaLock, FaEye, FaEyeSlash ,FaSignInAlt} from "react-icons/fa";
 import "../App.css"; 
 import logo from "../assets/logo.png";
 import sign from "../assets/sign.png";
@@ -115,7 +115,7 @@ const SignIn = () => {
             {passwordError && <p className="error-msg">{passwordError}</p>}
 
             <Link to="/forget" className="forgot-password">Forgot password?</Link>
-            <button className="login-button" onClick={handleSignIn} disabled={!!passwordError}>Login</button>
+            <button className="login-button" onClick={handleSignIn} disabled={!!passwordError}><FaSignInAlt/> Login</button>
           </div>
         </div>
      <Link to="/home" className="back-link1">Back to <span className="lien-login1">Home</span></Link>

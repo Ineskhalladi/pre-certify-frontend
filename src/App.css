@@ -162,11 +162,15 @@
   margin-top: 10px;
   cursor: pointer;
   border: 0;
+  
 
 }
 .login-button:hover{
   background-color: #c99a1a;
-
+}
+.login-button svg{
+  margin-bottom: -3px;
+  margin-right: 2px;
 }
 .left-section2 {
   flex: 1;

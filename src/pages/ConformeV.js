@@ -81,7 +81,7 @@ const textesAvecConformite = textesApplicablesDetail.map((texte) => {
   console.log("🔗 Conformité trouvée :", conformiteTexte);
   return {
     ...texte,
-    conformite: conformiteTexte?.conformite || "Non défini",
+    conformite: conformiteTexte?.conformite || "--",
   };
 });
 
@@ -109,7 +109,7 @@ setCheckedTextes(textesAvecConformite);
 
   return {
     ...texte,
-    conformiteE: conf?.conformiteE || "Non défini",
+    conformiteE: conf?.conformiteE || "",
      constat: conf?.constat || "",
   };
 });
@@ -390,71 +390,66 @@ textesExigence.forEach((texte) => {
   </thead>
   <tbody>
   {Object.entries(groupesTextes).map(([key, group], groupIndex) => {
-    const [domaine, theme, sousTheme] = key.split("-");
+  const [domaine, theme, sousTheme] = key.split("-");
+  const exigCount = group.exigence.length;
 
-    return group.normal.map((texte, index) => {
-      const exigence = group.exigence[index];
-
-      return (
-        <tr key={`${texte._id}-${index}`}>
-          {/* Domaine / Thème / Sous-Thème */}
-          <td>{Comparetheme(theme, domaine)}</td>
-          <td>{ComparesousTheme(sousTheme, theme)}</td>
-
-          {/* Texte Normal */}
-          <td>
-            <div>
-              {texte.nature} : {texte.reference}
-            </div>
-            <div style={{ paddingTop: "5px" }}>
-              {texte.texte?.split("\n").map((line, idx) => (
-                <div key={idx}>{line}</div>
-              ))}
-            </div>
-          </td>
-
-          {/* Statut Texte Normal */}
-          <td>
-            <div className="Status-container">
-              <div className={`status-label status-${texte.conformite?.toLowerCase()}`}>
-                {texte.conformite}
-              </div>
-              <div className="menu-Status">
-                {["C", "AV", "NC"].map((option) => (
-                  <div
-                    key={option}
-                    className={`option-Status status-${option.toLowerCase()}`}
-                    onClick={() => handleTexteC(texte._id, option)}
-                  >
-                    {option}
+  return group.exigence.length > 0
+    ? group.exigence.map((exigence, index) => (
+        <tr key={`row-${key}-${index}`}>
+          {/* Affichage texte normal une seule fois (sur la première ligne) */}
+          {index === 0 ? (
+            <>
+              <td rowSpan={exigCount}>{Comparetheme(theme, domaine)}</td>
+              <td rowSpan={exigCount}>{ComparesousTheme(sousTheme, theme)}</td>
+              <td rowSpan={exigCount}>
+                <div>{group.normal[0]?.nature} : {group.normal[0]?.reference}</div>
+                <div style={{ paddingTop: "5px" }}>
+                  {group.normal[0]?.texte?.split("\n").map((line, idx) => (
+                    <div key={idx}>{line}</div>
+                  ))}
+                </div>
+              </td>
+              <td rowSpan={exigCount}>
+                <div className="Status-container">
+                  <div className={`status-label status-${group.normal[0]?.conformite?.toLowerCase()}`}>
+                    {group.normal[0]?.conformite}
                   </div>
-                ))}
-              </div>
-            </div>
-          </td>
+                  <div className="menu-Status">
+                    {["C", "AV", "NC"].map((option) => (
+                      <div
+                        key={option}
+                        className={`option-Status status-${option.toLowerCase()}`}
+                        onClick={() => handleTexteC(group.normal[0]._id, option)}
+                      >
+                        {option}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </td>
+            </>
+          ) : null}
 
-          {/* Texte Exigence */}
+          {/* Colonnes exigences */}
           <td>
-            <div>{exigence?.reference}</div>
+            <div>{exigence.reference}</div>
             <div style={{ paddingTop: "5px" }}>
-              {exigence?.texte?.split("\n").map((line, idx) => (
+              {exigence.texte?.split("\n").map((line, idx) => (
                 <div key={idx}>{line}</div>
               ))}
             </div>
           </td>
-
-          {/* Statut Exigence */}
           <td>
             <div className="Status-container">
               <div className={`status-label status-${exigence?.conformiteE?.toLowerCase()}`}>
-                {exigence?.conformiteE || "ND"}
+                {exigence?.conformiteE || ""}
               </div>
               <div className="menu-Status">
                 {["C", "AV", "NC"].map((option) => (
                   <div
                     key={option}
                     className={`option-Status status-${option.toLowerCase()}`}
-                    onClick={() => handleTexteC2(exigence?._id, option)}
+                    onClick={() => handleTexteC2(exigence._id, option)}
                   >
                     {option}
                   </div>
@@ -462,22 +457,55 @@ textesExigence.forEach((texte) => {
               </div>
             </div>
           </td>
-<td>
-  <textarea
-    value={exigence?.constat || ""}
-    onChange={(e) => handleConstat(exigence?._id, e.target.value)}
-  />
-  <button onClick={() => handleSave(exigence?._id, exigence?.constat)}>
-    Save
-  </button>
-</td>
-         
-          
+          <td>
+            <textarea
+              value={exigence.constat || ""}
+              onChange={(e) => handleConstat(exigence._id, e.target.value)}
+            />
+            <button className="save" onClick={() => handleSave(exigence._id, exigence.constat)}>
+              Save
+            </button>
+          </td>
         </tr>
-      );
-    });
-  })}
+      ))
+    : (
+      // Cas où il n'y a pas d'exigence, juste le texte normal
+      <tr key={`normal-${key}`}>
+        <td>{Comparetheme(theme, domaine)}</td>
+        <td>{ComparesousTheme(sousTheme, theme)}</td>
+        <td>
+          <div>{group.normal[0]?.nature} : {group.normal[0]?.reference}</div>
+          <div style={{ paddingTop: "5px" }}>
+            {group.normal[0]?.texte?.split("\n").map((line, idx) => (
+              <div key={idx}>{line}</div>
+            ))}
+          </div>
+        </td>
+        <td>
+          <div className="Status-container">
+            <div className={`status-label status-${group.normal[0]?.conformite?.toLowerCase()}`}>
+              {group.normal[0]?.conformite}
+            </div>
+            <div className="menu-Status">
+              {["C", "AV", "NC"].map((option) => (
+                <div
+                  key={option}
+                  className={`option-Status status-${option.toLowerCase()}`}
+                  onClick={() => handleTexteC(group.normal[0]._id, option)}
+                >
+                  {option}
+                </div>
+              ))}
+            </div>
+          </div>
+        </td>
+        <td colSpan={3}></td>
+      </tr>
+    );
+})}
+
 </tbody>
+
 
 
 </table>
