@@ -248,10 +248,7 @@ const handleTexteC2 = (id, newStatus) => {
 </select>
     </div>
    
-    <div className="form-group">
-      <label>Mot clé</label>
-      <input type="text" placeholder="" />
-    </div>
+   
   </div>
 
   <div className="button-group">

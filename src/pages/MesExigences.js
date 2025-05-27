@@ -5,12 +5,14 @@ import { MdRefresh } from "react-icons/md";
 import { ImFilePdf } from "react-icons/im";
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
+import { BiTrash } from "react-icons/bi";
 
 const MesExigences = () => {
 
   const [checkedTextes, setCheckedTextes] = useState([]);
   const [textesNormaux, setTextesNormaux] = useState([]);
   const [textesExigence, setTextesExigence] = useState([]);
+   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchTextes = async () => {
@@ -192,7 +194,34 @@ const handleTexteC = (id, newStatus) => {
     );
   };
 
-  
+
+  const [formData, setFormData] = useState({
+    domaine: "",
+    nature: "",
+    reference: "",
+    applicabilite: "",
+    conformite: "",
+    texte: "",
+  });
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async () => {
+    try {
+
+      const response = await axios.post("http://localhost:5000/api/auth/mesEx", formData);
+          console.log("✅ Réponse du serveur :", response); // ✅ الرد الكامل من السيرفر
+
+      console.log("✅ Enregistré :", response.data);
+      alert("Exigence ajoutée avec succès !");
+    } catch (error) {
+      console.error("❌ Erreur :", error);
+      alert("Erreur lors de l'enregistrement.");
+    }
+  };
+
+
   return (
     <>
       
@@ -231,10 +260,7 @@ const handleTexteC = (id, newStatus) => {
 </select>
     </div>
    
-    <div className="form-group">
-      <label>Mot clé</label>
-      <input type="text" placeholder="" />
-    </div>
+    
   </div>
 
   <div className="button-group">
@@ -243,7 +269,105 @@ const handleTexteC = (id, newStatus) => {
   </div>
   </div>
 </div>
- 
+ <div className="text-list-container">
+        <div className="text-list-header">
+    <h3 className="text-base"><FaFolderOpen /> Ajouter référence</h3>
+
+  </div>
+<div className="line-horiz"></div>
+<div className="button-group">
+    <button className="btn-search" onClick={handleSubmit}><FaSave /> Enregistrer</button>
+    <button className="btn-cancel"><FaSyncAlt /> Annuler</button>
+  </div>
+<div className="content-resM">
+       <div className="search-label-groupM">
+         <label htmlFor="searchInput" className="label-rechercheM">Recherche :</label>
+         <input
+           type="text"
+           id="searchInputM"
+            className="search-resM"
+           value={searchTerm}
+           onChange={(e) => setSearchTerm(e.target.value)}
+         />
+       </div>
+       <button className="add-res">
+       <FaPlus />
+     </button>
+     </div>
+
+<table>
+         <thead>
+         <tr>
+              <th>Domaine</th>
+              <th>Nature</th>
+              <th>Référence</th>
+              <th>App/N APP/AV</th>
+              <th>Av/C/NC</th>
+              <th>Texte</th>
+              <th>Action</th>
+
+
+            </tr>
+         </thead>
+         <tbody>
+            <tr>
+           <td>
+           {/* <select>
+                <option>--Choisir un domaine--</option>
+            </select>
+            <br></br>
+            */}
+            <input type="text" placeholder="Nouveau domaine" name="domaine" value={formData.domaine} onChange={handleChange}/>
+           </td>
+           <td>
+          {/* <select>
+                <option>--Choisir un nature--</option>
+            </select>
+            <br></br>
+            */}
+            <input type="text" placeholder="Nouveau nature" name="nature" value={formData.nature} onChange={handleChange}/>
+           </td>
+           <td>
+           <input type="text" placeholder="Nouveau référence" name="reference"  value={formData.reference} onChange={handleChange}/>
+           </td>
+           <td>
+           <select name="applicabilite" value={formData.applicabilite} onChange={handleChange}>
+                <option>APP</option>
+                <option>NAPP</option>
+                <option>AV</option>
+
+            </select>
+           </td>
+           <td>
+           <select name="conformite" value={formData.conformite} onChange={handleChange}>
+                <option>AV</option>
+                <option>C</option>
+                <option>NC</option>
+            </select>
+           </td>
+           <td>
+           <textarea name="texte" value={formData.texte} onChange={handleChange}></textarea>
+
+           </td>
+           <td><BiTrash />
+           </td>
+           </tr>
+         </tbody>
+       </table>
+
+    
+
+    </div>
+
+
+  <div className="pagination-container">
+  <ul className="pagination">
+    <li className="btn-item">Précédent</li>
+    <li className="btn-item active">1</li>
+    <li className="btn-item">Suivant</li>
+    <li className="btn-item">Fin</li>
+  </ul>
+</div>
 
     <div className="text-list-container">
         <div className="text-list-header">

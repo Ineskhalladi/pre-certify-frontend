@@ -107,7 +107,7 @@ const rnuEntreprise = entrepriseData?.rnu || "RNU indisponible";
         <Link to="/monitoring" className={`menu-item3 ${location.pathname === "/monitoring" ? "active" : ""}`}>
         <FiGrid className="icon-nav3" /> Monitoring</Link>
         <Link to="/mes alertes"  className={`menu-item3 ${location.pathname === "/mes alertes" ? "active" : ""}`}>
-        <LuBell className="icon-nav3" /> Mes Alertes <span className="alert-count">20</span></Link>        
+        <LuBell className="icon-nav3" /> Mes Alertes <span className="alert-count">3</span></Link>        
         <div className="search-container3">
   <BiSearch className="search-icon3" onClick={() => console.log("Recherche activée")} />
   <input type="text" placeholder="Rechercher..." className="search-input2" />

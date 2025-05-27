@@ -322,10 +322,7 @@ textesExigence.forEach((texte) => {
 </select>
     </div>
    
-    <div className="form-group">
-      <label>Mot clé</label>
-      <input type="text" placeholder="" />
-    </div>
+   
   </div>
 
   <div className="button-group">
@@ -432,7 +429,7 @@ textesExigence.forEach((texte) => {
 
           {/* Colonnes exigences */}
           <td>
-            <div>{exigence.reference}</div>
+            <div><strong>{exigence.reference}</strong></div>
             <div style={{ paddingTop: "5px" }}>
               {exigence.texte?.split("\n").map((line, idx) => (
                 <div key={idx}>{line}</div>

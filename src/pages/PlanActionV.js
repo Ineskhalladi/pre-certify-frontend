@@ -417,120 +417,197 @@ textesExigence.forEach((texte) => {
 
 </div>
 <table>
-  <thead>
-    <tr>
-      <th>Reference</th>
-      <th>Conformite</th>
-      <th>Exigence</th>
-      <th>ConformiteE</th>
-      <th>Constat</th>
-      <th>Editer</th>
-      <th>Action</th>
-      <th>Responsable</th>
-      <th>Echeance</th>
-      <th>Validation</th>
-      <th>EditerAction</th>
-    </tr>
-  </thead>
-  <tbody>
-    {Object.entries(groupesTextes).map(([key, group]) => {
-      const [domaine, theme, sousTheme] = key.split("-");
-      return group.normal.map((texte, index) => {
-        const exigence = group.exigence[index];
+ <thead>
+  <tr>
+    <th>Reference</th>
+    <th>Conformite</th>
+    <th>Exigence</th>
+    <th>ConformiteE</th>
+    <th>Constat</th>
+    <th>Editer</th>
+    <th>Action</th>
+    <th>Responsable</th>
+    <th>Echeance</th>
+    <th>Validation</th>
+    <th>EditerAction</th>
+  </tr>
+</thead>
+<tbody>
+  {Object.entries(groupesTextes).map(([key, group]) => {
+    const [domaine, theme, sousTheme] = key.split("-");
 
-        return (
-          <React.Fragment key={`${texte._id}-${index}`}>
-            {/* Ligne principale avec toutes les colonnes alignées */}
-            <tr style={{ textAlign: "start" }}>
+    const exigencesNC = group.exigence.filter(e => e.conformiteE === "NC");
+    const exigCount = exigencesNC.length;
+
+    if (exigCount > 0) {
+      // afficher une seule ligne avec texte normal et première exigence
+      return (
+        <>
+          <tr key={`row-${key}-0`}>
+            <td rowSpan={exigCount}>
+              <div>{group.normal[0]?.nature} : {group.normal[0]?.reference}</div>
+              <div style={{ paddingTop: "5px" }}>
+                {group.normal[0]?.texte?.split("\n").map((line, idx) => (
+                  <div key={idx}>{line}</div>
+                ))}
+              </div>
+            </td>
+            <td rowSpan={exigCount}>
+              <div className="Status-container">
+                <div className={`status-label status-${group.normal[0]?.conformite?.toLowerCase()}`}>
+                  {group.normal[0]?.conformite}
+                </div>
+                <div className="menu-Status">
+                  {["C", "AV", "NC"].map((option) => (
+                    <div
+                      key={option}
+                      className={`option-Status status-${option.toLowerCase()}`}
+                      onClick={() => handleTexteC(group.normal[0]._id, option)}
+                    >
+                      {option}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </td>
+            <td>
+              <div><strong>{exigencesNC[0].reference}</strong></div>
+              <div style={{ paddingTop: "5px" }}>
+                {exigencesNC[0].texte?.split("\n").map((line, idx) => (
+                  <div key={idx}>{line}</div>
+                ))}
+              </div>
+            </td>
+            <td>
+              <div className="Status-container">
+                <div className={`status-label status-${exigencesNC[0].conformiteE.toLowerCase()}`}>
+                  {exigencesNC[0].conformiteE}
+                </div>
+                <div className="menu-Status">
+                  {["C", "AV", "NC"].map((option) => (
+                    <div
+                      key={option}
+                      className={`option-Status status-${option.toLowerCase()}`}
+                      onClick={() => handleTexteC2(exigencesNC[0]._id, option)}
+                    >
+                      {option}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </td>
+            <td>
+              <textarea
+                value={exigencesNC[0].constat || ""}
+                onChange={(e) => handleConstat(exigencesNC[0]._id, e.target.value)}
+              />
+              <button className="save" onClick={() => handleSave(exigencesNC[0]._id, exigencesNC[0].constat)}>
+                Save
+              </button>
+            </td>
+            <td>
+              <BiEdit onClick={() => navigate("/action/")} />
+            </td>
+            <td>{exigencesNC[0].action || ""}            </td>
+            <td>{exigencesNC[0].responsable || ""}</td>
+            <td>{exigencesNC[0].echeance || ""}</td>
+            <td>{exigencesNC[0].validation || ""}</td>
+            <td>
+              <BiEdit onClick={() => navigate("/editaction/" + exigencesNC[0]._id)} />
+              <BiTrash onClick={() => deleteAction(exigencesNC[0]._id)} />
+            </td>
+          </tr>
+          {exigencesNC.slice(1).map((exigence, index) => (
+            <tr key={`row-${key}-${index + 1}`}>
               <td>
-                <strong>{texte.reference}</strong> - {texte.nature}
-                <div>
-                  {texte.texte?.split("\n").map((line, idx) => (
+                <div><strong>{exigence.reference}</strong></div>
+                <div style={{ paddingTop: "5px" }}>
+                  {exigence.texte?.split("\n").map((line, idx) => (
                     <div key={idx}>{line}</div>
                   ))}
                 </div>
               </td>
-                <td>
-            <div className="Status-container">
-              <div className={`status-label status-${texte.conformite?.toLowerCase()}`}>
-                {texte.conformite}
-              </div>
-              <div className="menu-Status">
-                {["C", "AV", "NC"].map((option) => (
-                  <div
-                    key={option}
-                    className={`option-Status status-${option.toLowerCase()}`}
-                    onClick={() => handleTexteC(texte._id, option)}
-                  >
-                    {option}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </td>
               <td>
-                <strong>{exigence?.reference}</strong> - {exigence?.nature}
-                <div>
-                  {exigence?.texte?.split("\n").map((line, idx) => (
-                    <div key={idx}>{line}</div>
-                  ))}
+                <div className="Status-container">
+                  <div className={`status-label status-${exigence?.conformiteE?.toLowerCase()}`}>
+                    {exigence?.conformiteE || ""}
+                  </div>
+                  <div className="menu-Status">
+                    {["C", "AV", "NC"].map((option) => (
+                      <div
+                        key={option}
+                        className={`option-Status status-${option.toLowerCase()}`}
+                        onClick={() => handleTexteC2(exigence._id, option)}
+                      >
+                        {option}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </td>
-                {/* Statut Exigence */}
-          <td>
-            <div className="Status-container">
-              <div className={`status-label status-${exigence?.conformiteE?.toLowerCase()}`}>
-                {exigence?.conformiteE || "ND"}
-              </div>
-              <div className="menu-Status">
-                {["C", "AV", "NC"].map((option) => (
-                  <div
-                    key={option}
-                    className={`option-Status status-${option.toLowerCase()}`}
-                    onClick={() => handleTexteC2(exigence?._id, option)}
-                  >
-                    {option}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </td>
               <td>
                 <textarea
-                  value={exigence?.constat || ""}
-                  onChange={(e) => handleConstat(exigence?._id, e.target.value)}
+                  value={exigence.constat || ""}
+                  onChange={(e) => handleConstat(exigence._id, e.target.value)}
                 />
-                <button onClick={() => handleSave(exigence?._id, exigence?.constat)}>
-                  Enregistrer
+                <button className="save" onClick={() => handleSave(exigence._id, exigence.constat)}>
+                  Save
                 </button>
               </td>
               <td>
-                <BiEdit onClick={() => navigate("/action")} />
+                <BiEdit onClick={() => navigate("/action/")} />
               </td>
+              <td>{exigence.action || ""}</td>
+              <td>{exigence.responsable || ""}</td>
+              <td>{exigence.echeance || ""}</td>
+              <td>{exigence.validation || ""}</td>
               <td>
-                {filteredActions[index]?.action || ""}
-              </td>
-              <td>
-                {filteredActions[index]?.responsable?.name || ""}
-              </td>
-              <td>
-                {filteredActions[index]?.echeance
-                  ? new Date(filteredActions[index].echeance).toLocaleDateString()
-                  : ""}
-              </td>
-              <td>
-                {filteredActions[index]?.validation ? "✅" : "❌"}
-              </td>
-              <td>
-                <BiEdit onClick={() => navigate(`/editaction/${filteredActions[index]?._id}`)} />
-                <BiTrash onClick={() => deleteAction(filteredActions[index]?._id)} />
+                <BiEdit onClick={() => navigate("/editaction/" + exigence._id)} />
+                <BiTrash onClick={() => deleteAction(exigence._id)} />
               </td>
             </tr>
-          </React.Fragment>
-        );
-      });
-    })}
-  </tbody>
+          ))}
+        </>
+      );
+    } else {
+      // afficher juste le texte normal si pas d'exigences NC
+      return (
+        <tr key={`normal-${key}`}>
+          <td>
+            <div>{group.normal[0]?.nature} : {group.normal[0]?.reference}</div>
+            <div style={{ paddingTop: "5px" }}>
+              {group.normal[0]?.texte?.split("\n").map((line, idx) => (
+                <div key={idx}>{line}</div>
+              ))}
+            </div>
+          </td>
+          <td>
+            <div className="Status-container">
+              <div className={`status-label status-${group.normal[0]?.conformite?.toLowerCase()}`}>
+                {group.normal[0]?.conformite}
+              </div>
+              <div className="menu-Status">
+                {["C", "AV", "NC"].map((option) => (
+                  <div
+                    key={option}
+                    className={`option-Status status-${option.toLowerCase()}`}
+                    onClick={() => handleTexteC(group.normal[0]._id, option)}
+                  >
+                    {option}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </td>
+          <td colSpan={9}></td>
+        </tr>
+      );
+    }
+  })}
+</tbody>
+
+
+
 </table>
 
 

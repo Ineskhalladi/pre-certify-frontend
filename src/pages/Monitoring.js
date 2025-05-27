@@ -113,7 +113,7 @@ console.log("🔍 Textes avec conformitéExigences : ", textesExigenceAvecConfor
 
      <div className="text-list-container">
       <div className="text-list-header">
-      <h3 className="text-base1"><FaFolderOpen /> Liste des Textes pour évaluation de conformité</h3>
+      <h3 className="text-base1"><FaFolderOpen /> Liste de resultat</h3>
       <div 
     className="abreviation" 
     onMouseEnter={() => setIsAbreviationOpen(true)}
