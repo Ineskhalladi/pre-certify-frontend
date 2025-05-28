@@ -8,41 +8,194 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
 const StatistiquesEn = () => {
-  const data = [
-    { name: 'À vérifier', value: 29, color:'#d9a500' },
-    { name: 'Conforme', value: 97, color:'#5b8750' },
-    { name: 'Non conforme', value: 10, color:'#9ea19e'  },
+
+ const [checkedTextes, setCheckedTextes] = useState([]);
+  const [textesNormaux, setTextesNormaux] = useState([]);
+  const [textesExigence, setTextesExigence] = useState([]);
+  const [dataTextes, setDataTextes] = useState([]);
+const [dataExigences, setDataExigences] = useState([]);
+
+  useEffect(() => {
+    const fetchTextes = async () => {
+      try {
+        console.log("📥 Début récupération des textes");
+  
+        const token = localStorage.getItem("token");
+        if (!token) throw new Error("❌ Aucun token trouvé");
+  
+        const decoded = jwtDecode(token);
+        const userId = decoded.id;
+        console.log("✅ ID utilisateur :", userId);
+  
+        const entrepriseData = JSON.parse(localStorage.getItem("entrepriseToken"));
+        const identre = entrepriseData.identre;
+        console.log("🏢 ID entreprise :", identre);
+  
+        const textesRes = await axios.get("http://localhost:5000/api/auth/alltexte");
+        const allTextes = textesRes.data;
+        console.log("📚 Tous les textes :", allTextes);
+  
+        // 📌 Tous les textes type normal (même s'ils ne sont pas cochés)
+        const textesNormaux = allTextes.filter((t) => t.typeTexte?.toLowerCase() === "normal");
+        console.log("📄 Tous les textes normaux :", textesNormaux);
+        setTextesNormaux(textesNormaux);
+  
+        // ✅ Récupérer les textes cochés
+        const textesCochesRes = await axios.get(`http://localhost:5000/api/auth/coche/${userId}`);
+        const texteIDs = textesCochesRes.data.textes || [];
+        console.log("☑️ IDs des textes cochés :", texteIDs);
+  
+  
+        // ✅ Filtrer les textes cochés avec type normal
+        const textesFiltres = allTextes.filter(
+          (texte) => 
+            texte.typeTexte?.toLowerCase() === "normal" &&
+            texteIDs.includes(texte._id)
+        );
+        
+
+        console.log("✅ Textes cochés détaillés :", textesFiltres);
+        // ✅ Récupérer les états des textes
+        const textesApplicableRes = await axios.get(`http://localhost:5000/api/auth/etat/${userId}`);
+        const textesApplicable = textesApplicableRes.data?.filter(etat => etat.etat === "APP") || [];
+        console.log("📄 États des textes applicables :", textesApplicable);
+
+        const textesApplicablesDetail = textesFiltres.filter((texte) =>
+          textesApplicable.some((etat) => etat.texteId === texte._id)
+        );
+        
+// ✅ Récupérer la conformité pour chaque texte applicable
+    console.log("📡 Envoi de la requête vers l'API avec identre et conformite :");
+    const conformitesRes = await axios.get(`http://localhost:5000/api/auth/conforallv/${userId}`);
+    const conformites = conformitesRes.data || [];
+    console.log("🟢 Conformités récupérées :", conformites);
+
+
+// 🔁 Associer la conformité à chaque texte applicable
+const textesAvecConformite = textesApplicablesDetail.map((texte) => {
+  const conformiteTexte = conformites.find(c => c.texteId._id?.toString() === texte._id?.toString());
+  console.log("🔗 Conformité trouvée :", conformiteTexte);
+  return {
+    ...texte,
+    conformite: conformiteTexte?.conformite || "Non défini",
+  };
+});
+
+console.log("✅ Textes avec conformité associée :", textesAvecConformite);
+setCheckedTextes(textesAvecConformite);
+setDataTextes(getConformiteData(textesAvecConformite, "conformite"));
+
+   // 🟡 1. Filtrer les textes cochés et applicables de type exigence
+    const textesExigenceApplicables = allTextes.filter(
+     (texte) =>
+      texte.typeTexte?.toLowerCase() === "exigence" &&
+       texteIDs.includes(texte._id)
+     );
+          
+    
+    console.log("📌 Textes exigences applicables :", textesExigenceApplicables);
+    
+      
+   // 🔹 7. Récupérer conformité des exigences
+   const conformitesExRes = await axios.get(`http://localhost:5000/api/auth/confoalle/${userId}`);
+   const conformitesEx = conformitesExRes.data || [];
+
+ const textesExigenceAvecConformite = textesExigenceApplicables.map((texte) => {
+  const conf = conformitesEx.find(c => c.texteId?.toString() === texte._id?.toString());
+
+  return {
+    ...texte,
+    conformiteE: conf?.conformiteE || "Non défini",
+     constat: conf?.constat || "",
+  };
+});
+console.log("🔍 Textes avec conformitéExigences : ", textesExigenceAvecConformite);
+
+   setTextesExigence(textesExigenceAvecConformite);
+setDataExigences(getConformiteData(textesExigenceAvecConformite, "conformiteE"));
+
+   const data = getConformiteData(textesAvecConformite, "conformite");
+const dataE = getConformiteData(textesExigenceAvecConformite, "conformiteE");
+
+      } catch (err) {
+        console.error("❌ Erreur :", err.message);
+        alert("Erreur lors du chargement des textes");
+      }
+    };
+  
+    fetchTextes();
+  }, []);
+  
+
+
+const getConformiteData = (textes, key = "conformite") => {
+  const counts = { "Conforme": 0, "Non conforme": 0, "À vérifier": 0 };
+
+  textes.forEach((texte) => {
+    let conf = texte[key]?.toUpperCase(); // S'assure que c'est en majuscule pour éviter les surprises
+
+    // 🔁 Traduction des codes courts en libellés
+    if (conf === "C") conf = "Conforme";
+    else if (conf === "NC") conf = "Non conforme";
+    else if (conf === "AV") conf = "À vérifier";
+    else conf = "À vérifier"; // Sécurité en cas de valeur inattendue
+
+    counts[conf]++;
+  });
+
+  return [
+    { name: "Conforme", value: counts["Conforme"], color: "#5b8750" },
+    { name: "Non conforme", value: counts["Non conforme"], color: "#9ea19e" },
+    { name: "À vérifier", value: counts["À vérifier"], color: "#d9a500" },
   ];
-  const dataE = [
-    { name: 'À vérifier', value: 80, color:'#d9a500' },
-    { name: 'Conforme', value: 500,color:'#5b8750' },
-    { name: 'Non conforme', value: 30, color:'#9ea19e'  },
-  ];
-  const barDataA = [
-    { name: "100", value: 48, fill: "#2e4731" },
-    { name: "75", value: 22, fill: "#88a373" },
-    { name: "50", value: 39, fill: "#56c16f" },
-    { name: "25", value: 14, fill: "#d9a500" },
-    { name: "0", value: 5, fill: "#f7e393" },
-  ];
-  const dataS = [
-    {
-      name: 'service1',
-      '0%': 8,
-      '25%': 1,
-      '50%': 1,
-      '75%': 1,
-      '100%': 35,
-    },
-    {
-      name: 'service2',
-      '0%': 0,
-      '25%': 0,
-      '50%': 0,
-      '75%': 0,
-      '100%': 0,
-    },
-  ];
+};
+    const [actions, setActions] = useState([]);
+
+  useEffect(() => {
+    fetchActions();
+  }, []);
+const [barDataA, setBarDataA] = useState([]);
+
+const fetchActions = async () => {
+  try {
+    const response = await axios.get("http://localhost:5000/api/auth/actionall");
+    const actions = response.data;
+    setActions(actions);
+
+    // 🎯 Étape 1 : Calculer le taux d’avancement (validation) pour chaque action
+    const categories = {
+      "100": 0,
+      "75": 0,
+      "50": 0,
+      "25": 0,
+      "0": 0,
+    };
+
+    actions.forEach((action) => {
+      const val = action.validation; // Doit être un nombre entre 0 et 100
+      if (val === 100) categories["100"] += 1;
+      else if (val >= 75) categories["75"] += 1;
+      else if (val >= 50) categories["50"] += 1;
+      else if (val >= 25) categories["25"] += 1;
+      else categories["0"] += 1;
+    });
+
+    // 🎨 Étape 2 : Préparer les données pour le graphique
+    const dataFormatted = [
+      { name: "100", value: categories["100"], fill: "#2e4731" },
+      { name: "75", value: categories["75"], fill: "#88a373" },
+      { name: "50", value: categories["50"], fill: "#56c16f" },
+      { name: "25", value: categories["25"], fill: "#d9a500" },
+      { name: "0", value: categories["0"], fill: "#f7e393" },
+    ];
+
+    setBarDataA(dataFormatted);
+  } catch (err) {
+    console.error("Erreur lors du chargement des actions :", err);
+  }
+};
+
+
   const dataR = [
     {
       name: 'responsable1',
@@ -52,14 +205,7 @@ const StatistiquesEn = () => {
       '75%': 1,
       '100%': 35,
     },
-    {
-      name: 'responsable2',
-      '0%': 0,
-      '25%': 0,
-      '50%': 0,
-      '75%': 0,
-      '100%': 0,
-    },
+   
   ];
   const COLORS = {
     '0%': '#2e4731',
@@ -70,31 +216,6 @@ const StatistiquesEn = () => {
   };
 
   
-  const [domaines, setDomaines] = useState([]);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        const userId = decoded.id; 
-
-        axios
-          .get(`http://localhost:5000/api/auth/user/${userId}/domaines`)
-          .then((res) => {
-            setDomaines(res.data);
-          })
-          .catch((err) => {
-            console.error("Erreur lors du chargement des domaines :", err);
-          });
-      } catch (error) {
-        console.error("Erreur lors du décodage du token :", error);
-      }
-    } else {
-      console.warn("Token non trouvé dans le localStorage");
-    }
-  }, []);
 
   return (
     <>
@@ -123,11 +244,6 @@ const StatistiquesEn = () => {
                 <label>Domaine</label>
                 <select>
                   <option value="">--Choisir un domaine--</option>
-                  {domaines.map((domaine) => (
-                    <option key={domaine._id} value={domaine._id}>
-                      {domaine.nom}
-                    </option>
-                  ))}
                 </select>
               </div>
 
@@ -142,149 +258,105 @@ const StatistiquesEn = () => {
       </div>
 
       {/* Etat conformité container */}
-      <div className="etat-container">
-        <div className="etat-content">
-          <h2>Etat de conformité des textes</h2>
-          <h3>Tout les domaines</h3>
-          <div className="chart-wrapper">
-            <PieChart width={400} height={400}>
-              <Pie
-                data={data}
-                cx="50%"
-                cy="50%"
-                innerRadius={0}
-                outerRadius={150}
-                fill="#8884d8"
-                paddingAngle={2}
-                dataKey="value"
-                label={({ value }) => value}
-                
-              >
-                {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Legend verticalAlign="top" height={36} />
-            </PieChart>
-          </div>
-        </div>
-      </div>
-
-      <div className="etat-container">
-        <div className="etat-content">
-          <h2>Etat de conformité des exigences</h2>
-          <h3>Tout les domaines</h3>
-          <div className="chart-wrapper">
-            <PieChart width={400} height={400}>
-              <Pie
-                data={dataE}
-                cx="50%"
-                cy="50%"
-                innerRadius={0}
-                outerRadius={150}
-                fill="#8884d8"
-                paddingAngle={2}
-                dataKey="value"
-                label={({ value }) => value}
-                
-              >
-                {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Legend verticalAlign="top" height={36} />
-            </PieChart>
-          </div>
-        </div>
-      </div>
- {/* Bar Chart */}
-         <div className="bar-chart-containerA">
-          <div className="bar-chart-titleA">Etat d'avancement des actions</div>
-          <h3>Tout les domaines</h3>
-
-          <div className="bar-chart-wrapperA">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={barDataA}
-                 layout="vertical"
-                margin={{ top: 20, right: 10, left: 80, bottom: 20 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                <XAxis  type="number" />
-                <YAxis
-                type="category"
-                 dataKey="name"
-                  tick={{ fill: "#000",fontSize: 12 }}
-                  width={200}
-                  />
-                <Tooltip />
-                <Bar dataKey="value" barSize={35} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        <div className="etat-containerS">
-  <h2>Etat d'avancement des actions par service</h2>
-  <div className="etat-S">
-    <div className="etat-graphS">
-      <h3>Tous les domaines</h3>
-      <ResponsiveContainer width="70%" height={350}>
-        <BarChart data={dataS} barCategoryGap="20%">
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend verticalAlign="top" align="center" iconType="square" />
-
-          {/* Bars séparés */}
-          {Object.keys(COLORS).map((key) => (
-            <Bar key={key} dataKey={key} fill={COLORS[key]} />
-          ))}
-        </BarChart>
-      </ResponsiveContainer>
+      <div className="etat-row">
+  <div className="etat-box">
+    <h2>Etat de conformité des textes</h2>
+    <h3>Tous les domaines</h3>
+    <div className="chart-wrapper">
+      <PieChart width={400} height={400}>
+        <Pie
+          data={dataTextes}
+          cx="50%"
+          cy="50%"
+          innerRadius={0}
+          outerRadius={150}
+          paddingAngle={2}
+          dataKey="value"
+          label={({ value }) => value}
+        >
+         {dataTextes.map((entry, index) => (
+      <Cell key={`cell-textes-${index}`} fill={entry.color} />
+    ))}
+        </Pie>
+        <Legend verticalAlign="top" height={36} />
+      </PieChart>
     </div>
+  </div>
 
-    <div className="etat-legendS">
-      <h3>Légende des services</h3>
-      <div className="service-legendS">
-        <p><strong>service1</strong> : QSE</p>
-        <p><strong>service2</strong> : RH</p>
-      </div>
+  <div className="etat-box">
+    <h2>Etat de conformité des exigences</h2>
+    <h3>Tous les domaines</h3>
+    <div className="chart-wrapper">
+      <PieChart width={400} height={400}>
+        <Pie
+          data={dataExigences}
+          cx="50%"
+          cy="50%"
+          innerRadius={0}
+          outerRadius={150}
+          paddingAngle={2}
+          dataKey="value"
+          label={({ value }) => value}
+        >
+           {dataExigences.map((entry, index) => (
+      <Cell key={`cell-exigences-${index}`} fill={entry.color} />
+    ))}
+        </Pie>
+        <Legend verticalAlign="top" height={36} />
+      </PieChart>
     </div>
   </div>
 </div>
 
-<div className="etat-containerS">
-  <h2>Etat d'avancement des actions par responsable</h2>
-  <div className="etat-S">
-    <div className="etat-graphS">
-      <h3>Tous les domaines</h3>
-      <ResponsiveContainer width="70%" height={350}>
-        <BarChart data={dataR} barCategoryGap="20%">
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
+<div className="etat-double-container">
+  {/* Bloc 1 : Etat d'avancement des actions */}
+  <div className="bar-chart-containerA">
+    <div className="bar-chart-titleA">Etat d'avancement des actions</div>
+    <h3>Tous les domaines</h3>
+    <div className="bar-chart-wrapperA">
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart
+          data={barDataA}
+          layout="vertical"
+          margin={{ top: 20, right: 10, left: 80, bottom: 20 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+          <XAxis type="number" />
+          <YAxis
+            type="category"
+            dataKey="name"
+            tick={{ fill: "#000", fontSize: 12 }}
+            width={200}
+          />
           <Tooltip />
-          <Legend verticalAlign="top" align="center" iconType="square" />
-
-          {/* Bars séparés */}
-          {Object.keys(COLORS).map((key) => (
-            <Bar key={key} dataKey={key} fill={COLORS[key]} />
-          ))}
+          <Bar dataKey="value" barSize={35} />
         </BarChart>
       </ResponsiveContainer>
     </div>
+  </div>
 
-    <div className="etat-legendS">
-      <h3>Légende des responsables</h3>
-      <div className="service-legendS">
-        <p><strong>responsable1</strong> : nourhen bn</p>
-        <p><strong>responsable2</strong> : oussama af</p>
+  {/* Bloc 2 : Etat d'avancement des actions par responsable */}
+  <div className="etat-containerS">
+    <h2>Etat d'avancement des actions par responsable</h2>
+      <div className="etat-graphS">
+        <h3>Tous les domaines</h3>
+        <ResponsiveContainer width="80%" height={300}>
+          <BarChart data={dataR} barCategoryGap="0%">
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend verticalAlign="top" align="center" iconType="square" />
+            {Object.keys(COLORS).map((key) => (
+              <Bar key={key} dataKey={key} fill={COLORS[key]} />
+            ))}
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    
       </div>
     </div>
-  </div>
-</div>
+
 
   
       <p className="footer-base">Copyright © 2025 PreCertify. Tous les droits réservés.</p>

@@ -8,135 +8,76 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
 const StatistiquesE = () => {
-  const data = [
-    { name: 'À vérifier', value: 2, color:'#d9a500' },
-    { name: 'Conforme', value: 100, color:'#5b8750' },
-    { name: 'Non conforme', value: 0, color:'#9ea19e'  },
-  ];
+ const [data, setData] = useState([]);
+const [exigences, setExigences] = useState([]);
+const [selectedTexteId, setSelectedTexteId] = useState(null);
+const [domaines, setDomaines] = useState([]);
+const [natures, setNatures] = useState([]);
+// جلب جميع البيانات الخاصة بمحتوى mesEx
+useEffect(() => {
+  const fetchMesEx = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/auth/allmesEx");
+      const allData = response.data;
 
+      // استخراج المجالات والنatures بدون تكرار
+      const uniqueDomaines = [...new Set(allData.map((item) => item.domaine).filter(Boolean))];
+      const uniqueNatures = [...new Set(allData.map((item) => item.nature).filter(Boolean))];
 
-  const [checkedTextes, setCheckedTextes] = useState([]);
-  const [textesNormaux, setTextesNormaux] = useState([]);
-  const [textesExigence, setTextesExigence] = useState([]);
+      setDomaines(uniqueDomaines);
+      setNatures(uniqueNatures);
+      setData(allData);
+    } catch (error) {
+      console.error("❌ Erreur lors de la récupération des données", error);
+    }
+  };
 
-  useEffect(() => {
-    const fetchTextes = async () => {
-      try {
-        console.log("📥 Début récupération des textes");
-  
-        const token = localStorage.getItem("token");
-        if (!token) throw new Error("❌ Aucun token trouvé");
-  
-        const decoded = jwtDecode(token);
-        const userId = decoded.id;
-        console.log("✅ ID utilisateur :", userId);
-  
-        const entrepriseData = JSON.parse(localStorage.getItem("entrepriseToken"));
-        const identre = entrepriseData.identre;
-        console.log("🏢 ID entreprise :", identre);
-  
-        const textesRes = await axios.get("http://localhost:5000/api/auth/alltexte");
-        const allTextes = textesRes.data;
-        console.log("📚 Tous les textes :", allTextes);
-  
-  
-        // ✅ Récupérer les textes cochés
-        const textesCochesRes = await axios.get(`http://localhost:5000/api/auth/coche/${identre}`);
-        const texteIDs = textesCochesRes.data.textes || [];
-        console.log("☑️ IDs des textes cochés :", texteIDs);
+  fetchMesEx();
+}, []);
 
-// ✅ Tous les textes de type "exigence"
-const textesNormaux = allTextes.filter((t) => t.typeTexte?.toLowerCase() === "exigence");
-console.log("📄 Tous les textes normaux :", textesNormaux);
-setTextesNormaux(textesNormaux);
+// جلب جميع المتطلبات الأخرى (autreEx)
+useEffect(() => {
+  const fetchExigences = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/auth/allautreEx");
+      setExigences(response.data.data); // تأكد إلي `data` هو المفتاح الصحيح
+    } catch (error) {
+      console.error("❌ Erreur lors de la récupération des exigences :", error);
+    }
+  };
 
-// ✅ Filtrer uniquement les textes cochés avec type "exigence"
-const textesFiltres = textesNormaux.filter((texte) => texteIDs.includes(texte._id));
-
-// ✅ Récupérer les états des textes
-const textesApplicableRes = await axios.get(`http://localhost:5000/api/auth/autreexall/${identre}`);
-const textesApplicable = textesApplicableRes.data || [];
-console.log("📄 États des textes exigences :", textesApplicable);
-
-        // ✅ Fusionner avec état
-        const textesAvecEtat = textesFiltres.map((texte) => {
-          const match = textesApplicable.exigences.find((t) => t.texteId === texte._id);
-          return {
-            ...texte,
-            etat: match?.etat || "APP"
-          };
-        });
-        
-        // ✅ Récupérer la conformité pour chaque texte applicable
-        console.log("📡 Envoi de la requête vers l'API avec identre et conformite :");
-        const conformitesRes = await axios.get(`http://localhost:5000/api/auth/autreconfoexalle/${identre}`);
-        const conformites = conformitesRes.data || [];
-        console.log("🟢 Conformités récupérées :", conformites);
-    
-    
-    // 🔁 Associer la conformité à chaque texte applicable
-    const textesAvecConformite = textesAvecEtat.map((texte) => {
-      const conformiteTexte = conformites.find(c => c.texteId?.toString() === texte._id?.toString());
-      console.log("🔗 Conformité trouvée :", conformiteTexte);
-      return {
-        ...texte,
-        conformiteAEX: conformiteTexte?.conformiteAEX || "Non défini",
-      };
-    });
-    
-    console.log("✅ Textes avec conformité associée :", textesAvecConformite);
-    setCheckedTextes(textesAvecConformite);
-
-    
-   // 🟡 1. Filtrer les textes cochés et applicables de type exigence
-   const textesExigenceApplicables = allTextes.filter(
-    (texte) =>
-     texte.typeTexte?.toLowerCase() === "exigence" &&
-      texteIDs.includes(texte._id)
-    );
-         
-   
-   console.log("📌 Textes exigences applicables :", textesExigenceApplicables);
-   
-     
-  // 🔹 7. Récupérer conformité des exigences
-  const conformitesExRes = await axios.get(`http://localhost:5000/api/auth/confoalle/${identre}`);
-  const conformitesEx = conformitesExRes.data || [];
-
-const textesExigenceAvecConformite = textesExigenceApplicables.map((texte) => {
- const conf = conformitesEx.find(c => c.texteId?.toString() === texte._id?.toString());
-
- return {
-   ...texte,
-   conformiteE: conf?.conformiteE || "Non défini",
- };
-});
-console.log("🔍 Textes avec conformitéExigences : ", textesExigenceAvecConformite);
-
-  setTextesExigence(textesExigenceAvecConformite);
-  
-      } catch (err) {
-        console.error("❌ Erreur :", err.message);
-        alert("Erreur lors du chargement des textes");
-      }
-    };
-  
-    fetchTextes();
-  }, []);
-  
-   // ✅ Calcul dynamique des statistiques de conformité
-const conformityStats = {
+  fetchExigences();
+}, []);
+const [conformityStats, setConformityStats] = useState({
   C: 0,
   NC: 0,
   AV: 0,
-};
-
-textesExigence.forEach((texte) => {
-  const value = texte.conformiteE;
-  if (value === "C") conformityStats.C += 1;
-  else if (value === "NC") conformityStats.NC += 1;
-  else if (value === "AV") conformityStats.AV += 1;
 });
+
+// 🧠 Mettre à jour automatiquement les stats quand les données changent
+useEffect(() => {
+  const countStats = () => {
+    const stats = { C: 0, NC: 0, AV: 0 };
+
+    data.forEach((item) => {
+      const val = item.conformite?.trim().toUpperCase();
+      if (val === "C") stats.C += 1;
+      else if (val === "NC") stats.NC += 1;
+      else if (val === "AV") stats.AV += 1;
+    });
+
+    exigences.forEach((item) => {
+      const val = item.statut?.trim().toUpperCase();
+      if (val === "C") stats.C += 1;
+      else if (val === "NC") stats.NC += 1;
+      else if (val === "AV") stats.AV += 1;
+    });
+
+    setConformityStats(stats);
+  };
+
+  countStats();
+}, [data, exigences]);
 
 // ✅ Construction du tableau de données pour le PieChart
 const pieData = [
@@ -208,9 +149,9 @@ const pieData = [
                 label={({ value }) => value}
                 
               >
-                {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
+               {pieData.map((entry, index) => (
+  <Cell key={`cell-${index}`} fill={entry.color} />
+))}
               </Pie>
               <Legend verticalAlign="top" height={36} />
             </PieChart>

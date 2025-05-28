@@ -23,33 +23,7 @@ const PlanActionV = () => {
     
   const navigate = useNavigate();
 
-  // Charger les actions au démarrage
-  useEffect(() => {
-    fetchActions();
-  }, []);
-
-  const fetchActions = async () => {
-    try {
-      const response = await axios.get("http://localhost:5000/api/auth/actionall");
-      setActions(response.data);
-    } catch (err) {
-      console.error("Erreur lors du chargement des actions :", err);
-    }
-  };
-
-  const deleteAction = async (id) => {
-    if (!window.confirm("Êtes-vous sûr de vouloir supprimer cette action ?")) return;
-    try {
-      await axios.delete(`http://localhost:5000/api/auth/deleteaction/${id}`);
-      setActions(actions.filter((action) => action._id !== id));
-    } catch (err) {
-      console.error("Erreur lors de la suppression :", err);
-    }
-  };
-    const filteredActions = actions.filter((a) =>
-    a.action?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  ///////////////////////////////
+ 
 
   useEffect(() => {
     const fetchTextes = async () => {
@@ -291,7 +265,33 @@ const handleConstat = (id, newConstat) => {
   updateTexteconformiteEx(id, null, newConstat);
 };
 
+ // Charger les actions au démarrage
+  useEffect(() => {
+    fetchActions();
+  }, []);
 
+  const fetchActions = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/auth/actionall");
+      setActions(response.data);
+    } catch (err) {
+      console.error("Erreur lors du chargement des actions :", err);
+    }
+  };
+
+  const deleteAction = async (id) => {
+    if (!window.confirm("Êtes-vous sûr de vouloir supprimer cette action ?")) return;
+    try {
+      await axios.delete(`http://localhost:5000/api/auth/deleteaction/${id}`);
+      setActions(actions.filter((action) => action._id !== id));
+    } catch (err) {
+      console.error("Erreur lors de la suppression :", err);
+    }
+  };
+    const filteredActions = actions.filter((a) =>
+    a.action?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+ 
 
   // 🧠 Regrouper les textes par Domaine/Thème/SousThème
 const groupesTextes = {};
@@ -307,7 +307,9 @@ textesExigence.forEach((texte) => {
   if (!groupesTextes[key]) groupesTextes[key] = { normal: [], exigence: [] };
   groupesTextes[key].exigence.push(texte);
 });
-    
+  
+
+
     return (
       <>
       
@@ -361,10 +363,7 @@ textesExigence.forEach((texte) => {
         <label>Année de publication</label>
         <select><option>--Choisir --</option></select>
       </div>
-      <div className="form-group">
-        <label>Mot clé</label>
-        <input type="text" placeholder="" />
-      </div>
+   
     </div>
   
     <div className="button-group">
@@ -413,7 +412,6 @@ textesExigence.forEach((texte) => {
 {/* NOUVEAU BOUTON PDF EN DESSOUS */}
 <div className="export-section">
   <button className="exp-pdf">Exporter vers PDF <ImFilePdf /></button>
-  <button className="exp-pdf">Sauvegarder dans historique<RiRefreshLine /></button>
 
 </div>
 <table>
@@ -506,16 +504,25 @@ textesExigence.forEach((texte) => {
               </button>
             </td>
             <td>
-              <BiEdit onClick={() => navigate("/action/")} />
+            <BiEdit onClick={() => navigate("/ajoutaction", { state: { idexigence: exigencesNC[0]._id } })} />
             </td>
-            <td>{exigencesNC[0].action || ""}            </td>
-            <td>{exigencesNC[0].responsable || ""}</td>
-            <td>{exigencesNC[0].echeance || ""}</td>
-            <td>{exigencesNC[0].validation || ""}</td>
-            <td>
-              <BiEdit onClick={() => navigate("/editaction/" + exigencesNC[0]._id)} />
-              <BiTrash onClick={() => deleteAction(exigencesNC[0]._id)} />
-            </td>
+<td>{actions.find((a) => a.texteExigence === exigencesNC[0]._id)?.action || "" }</td>
+<td>{actions.find((a) => a.texteExigence === exigencesNC[0]._id)?.responsable?.name || ""}</td>
+<td>{actions.find((a) => a.texteExigence === exigencesNC[0]._id)?.echeance?.split("T")[0] || ""}</td>
+<td>{actions.find((a) => a.texteExigence === exigencesNC[0]._id)?.validation ?  "✅" : "❌"}</td>
+
+<td>
+  {(() => {
+  const action = actions.find((a) => a.texteExigence === exigencesNC[0]._id);
+  return (
+    <>
+      <BiEdit onClick={() => navigate("/editaction/" + action?._id)} />
+      <BiTrash onClick={() => deleteAction(action?._id)} />
+    </>
+  );
+})()}
+
+</td>
           </tr>
           {exigencesNC.slice(1).map((exigence, index) => (
             <tr key={`row-${key}-${index + 1}`}>
@@ -555,15 +562,24 @@ textesExigence.forEach((texte) => {
                 </button>
               </td>
               <td>
-                <BiEdit onClick={() => navigate("/action/")} />
+               <BiEdit onClick={() => navigate("/ajoutaction", { state: { id: exigence._id } })} />
               </td>
-              <td>{exigence.action || ""}</td>
-              <td>{exigence.responsable || ""}</td>
-              <td>{exigence.echeance || ""}</td>
-              <td>{exigence.validation || ""}</td>
+         <td>{actions.find((a) => a.texteExigence === exigencesNC[0]._id)?.action || "" }</td>
+<td>{actions.find((a) => a.texteExigence === exigence._id)?.responsable?.name || ""}</td>
+<td>{actions.find((a) => a.texteExigence === exigence._id)?.echeance?.split("T")[0] || ""}</td>
+<td>{actions.find((a) => a.texteExigence === exigence._id)?.validation ?  "✅" : "❌"}</td>
+
               <td>
-                <BiEdit onClick={() => navigate("/editaction/" + exigence._id)} />
-                <BiTrash onClick={() => deleteAction(exigence._id)} />
+               {(() => {
+  const action = actions.find((a) => a.texteExigence === exigence._id);
+  return (
+    <>
+      <BiEdit onClick={() => navigate("/editaction/" + action?._id)} />
+      <BiTrash onClick={() => deleteAction(action?._id)} />
+    </>
+  );
+})()}
+
               </td>
             </tr>
           ))}

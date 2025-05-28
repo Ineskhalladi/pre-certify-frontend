@@ -13,7 +13,7 @@ import axios from "axios";
 import {jwtDecode} from "jwt-decode";
 import ConformeE from "./ConformeE";
 
-const ConformeEn = () => {
+const ConformeR = () => {
   const [isAbreviationOpen, setIsAbreviationOpen] = useState(false);
   const [checkedTextes, setCheckedTextes] = useState([]);
   const [textesNormaux, setTextesNormaux] = useState([]);
@@ -32,6 +32,10 @@ const ConformeEn = () => {
         const userId = decoded.id;
         console.log("✅ ID utilisateur :", userId);
    
+        const entrepriseData = JSON.parse(localStorage.getItem("entrepriseToken"));
+        const identre = entrepriseData.identre;
+        console.log("🏢 ID entreprise :", identre);
+  
         const textesRes = await axios.get("http://localhost:5000/api/auth/alltexte");
         const allTextes = textesRes.data;
         console.log("📚 Tous les textes :", allTextes);
@@ -42,7 +46,7 @@ const ConformeEn = () => {
         setTextesNormaux(textesNormaux);
   
         // ✅ Récupérer les textes cochés
-        const textesCochesRes = await axios.get(`http://localhost:5000/api/auth/coche/${userId}`);
+        const textesCochesRes = await axios.get(`http://localhost:5000/api/auth/coche/${identre}`);
         const texteIDs = textesCochesRes.data.textes || [];
         console.log("☑️ IDs des textes cochés :", texteIDs);
   
@@ -57,7 +61,7 @@ const ConformeEn = () => {
 
         console.log("✅ Textes cochés détaillés :", textesFiltres);
         // ✅ Récupérer les états des textes
-        const textesApplicableRes = await axios.get(`http://localhost:5000/api/auth/etat/${userId}`);
+        const textesApplicableRes = await axios.get(`http://localhost:5000/api/auth/etat/${identre}`);
         const textesApplicable = textesApplicableRes.data?.filter(etat => etat.etat === "APP") || [];
         console.log("📄 États des textes applicables :", textesApplicable);
 
@@ -67,7 +71,7 @@ const ConformeEn = () => {
         
 // ✅ Récupérer la conformité pour chaque texte applicable
     console.log("📡 Envoi de la requête vers l'API avec identre et conformite :");
-    const conformitesRes = await axios.get(`http://localhost:5000/api/auth/conforallv/${userId}`);
+    const conformitesRes = await axios.get(`http://localhost:5000/api/auth/conforallv/${identre}`);
     const conformites = conformitesRes.data || [];
     console.log("🟢 Conformités récupérées :", conformites);
 
@@ -98,7 +102,7 @@ setCheckedTextes(textesAvecConformite);
     
       
    // 🔹 7. Récupérer conformité des exigences
-   const conformitesExRes = await axios.get(`http://localhost:5000/api/auth/confoalle/${userId}`);
+   const conformitesExRes = await axios.get(`http://localhost:5000/api/auth/confoalle/${identre}`);
    const conformitesEx = conformitesExRes.data || [];
 
  const textesExigenceAvecConformite = textesExigenceApplicables.map((texte) => {
@@ -473,4 +477,4 @@ textesExigence.forEach((texte) => {
   );
 };
 
-export default ConformeEn;
+export default ConformeR;

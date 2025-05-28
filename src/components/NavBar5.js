@@ -57,7 +57,7 @@ const NavBar5 = () => {
       </div>
 
       <nav className="navbar-bottom3">
-        <Link to="/dashboard" className={`menu-item3 ${location.pathname === "/dashboard" ? "active" : ""}`}><FiMonitor className="icon-nav3" /> Tableau de Bord</Link>
+        <Link to="/dashboardR" className={`menu-item3 ${location.pathname === "/dashboard" ? "active" : ""}`}><FiMonitor className="icon-nav3" /> Tableau de Bord</Link>
         <Link to="/messervices" className={`menu-item3 ${location.pathname === "/textesE" ? "active" : ""}`}
         ><RiToolsFill className="icon-nav3" /> Les Services </Link>
 
@@ -72,11 +72,10 @@ const NavBar5 = () => {
           </div>
           {isMaVeilleOpen && (
             <div className="dropdown-content3">
-              <Link to="/texteinfo">Textes pour Information</Link>
-              <Link to="/texteapp">Textes Applicables</Link>
-              <Link to="/conformev">Évaluation de Conformité</Link>
-              <Link to="/planactionr">Mon Plan d'Action</Link>
-              <Link to="/statistiquesv">Mes Statistiques</Link>
+              <Link to="/texteappR">Textes Applicables</Link>
+              <Link to="/conformeR">Évaluation de Conformité</Link>
+              <Link to="/planactionR">Mon Plan d'Action</Link>
+              <Link to="/statistiquesR">Mes Statistiques</Link>
 
             </div>
           )}
@@ -100,7 +99,7 @@ const NavBar5 = () => {
           )}
         </div>
 
-        <Link to="/monitoring" className={`menu-item3 ${location.pathname === "/monitoring" ? "active" : ""}`}>
+        <Link to="/monitoringR" className={`menu-item3 ${location.pathname === "/monitoring" ? "active" : ""}`}>
         <FiGrid className="icon-nav3" /> Monitoring</Link>
          
              <Link to="/alertes"  className={`menu-item3 ${location.pathname === "/alertes" ? "active" : ""}`}>
@@ -110,8 +109,6 @@ const NavBar5 = () => {
       {isProfileOpen && (
         <div className="dropdown-menu3">
             <div className="dropdown-item3">
-    <BiUser className="icon-profiles" />
-    <Link to="/moncompte" onClick={() => setIsProfileOpen(false)}>Mon compte</Link>
   </div>
   
           <div className="dropdown-item3 logout"

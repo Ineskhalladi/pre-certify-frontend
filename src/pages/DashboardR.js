@@ -16,7 +16,8 @@ import {
 
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
-const Dashboard = () => {
+const DashboardS = () => {
+  
     const [checkedTextes, setCheckedTextes] = useState([]);
     const [textesNormaux, setTextesNormaux] = useState([]);
     const [textesExigence, setTextesExigence] = useState([]);
@@ -520,4 +521,4 @@ useEffect(() => {
   );
 };
 
-export default Dashboard;
+export default DashboardS;

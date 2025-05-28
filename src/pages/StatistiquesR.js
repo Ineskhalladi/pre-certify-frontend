@@ -7,7 +7,7 @@ import { MdRefresh } from "react-icons/md";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-const StatistiquesV = () => {
+const StatistiquesR = () => {
 
  const [checkedTextes, setCheckedTextes] = useState([]);
   const [textesNormaux, setTextesNormaux] = useState([]);
@@ -364,4 +364,4 @@ const fetchActions = async () => {
   );
 };
 
-export default StatistiquesV;
+export default StatistiquesR;

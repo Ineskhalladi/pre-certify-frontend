@@ -74,6 +74,7 @@ useEffect(() => {
     }
   }, [id]);
 
+  
   // ✅ Mettre à jour l'action
   const handleUpdate = async () => {
     if (!action || !date || !selectedResponsable) {
@@ -90,7 +91,7 @@ useEffect(() => {
 
       if (response.status === 200) {
         alert("✅ Action mise à jour avec succès !");
-        navigate("/action");
+        navigate("/planactionv");
       }
     } catch (error) {
       console.error("❌ Erreur lors de la mise à jour de l'action :", error);

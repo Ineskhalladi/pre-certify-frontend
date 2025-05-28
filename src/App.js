@@ -70,6 +70,12 @@ import Action from "./pages/Action.js";
 import AjoutAction from "./pages/AjoutAction.js";
 import EditAction from "./pages/EditAction.js";
 import PlanActionR from "./pages/PlanActionR.js";
+import DashboardR from "./pages/DashboardR.js";
+import TexteAppRes from "./pages/TexteAppRes.js";
+import ConformeR from "./pages/ConformeR.js";
+import StatistiquesR from "./pages/StatistiquesR.js";
+import MonitoringEn from "./pages/MonitoringEn.js";
+import MonitoringR from "./pages/MonitoringR.js";
 
 const App = () => {
   const location = useLocation();
@@ -87,11 +93,12 @@ const App = () => {
  // Pages تظهر فيهم Navbar4 فقط
  const isNavbar4Page = path.startsWith("/editerresponsable") || 
  ["/textesE", "/mesresponsables", "/ajouterresponsable","/cochertexte",
-  "/dashboarde","/texteappEn","/conformeEn","/planactionEn","/statistiquesEn"].includes(path);
+  "/dashboardEn","/texteappEn","/conformeEn","/planactionEn","/statistiquesEn","/monitoringEn"].includes(path);
 
  // Pages تظهر فيهم Navbar5 فقط
  const isNavbar5Page = path.startsWith("/editerservice/") || 
- ["/messervices", "/ajouterservice","/planactionr"].includes(path);
+ ["/messervices", "/ajouterservice","/planactionr","/dashboardR", 
+"/texteappR","/conformeR","/statistiquesR","/monitoringR" ].includes(path);
 
   // Pages يظهر فيهم Navbar + Footer فقط
   const isNavbarFooterPage = ["/home","/normes", "/","/veillereg", "/contact","/certificate","/sante"
@@ -173,7 +180,7 @@ const App = () => {
         <Route path="/materiaux" element={<Materiaux/>} />
         <Route path="/batiment" element={<Batiment/>} />
         <Route path="/ingenierie" element={<Ingenierie/>} />
-        <Route path="/dashboarde" element={<DashboardE />} />
+        <Route path="/dashboardEn" element={<DashboardE />} />
         <Route path="/texteappEn" element={<TexteAppEn />} />
         <Route path="/conformeEn" element={<ConformeEn />} />
         <Route path="/planactionEn" element={<PlanActionEn />} />
@@ -181,7 +188,13 @@ const App = () => {
         <Route path="/action" element={<Action />} />
         <Route path="/ajoutaction" element={<AjoutAction />} />
         <Route path="/editaction/:id" element={<EditAction/>} />
-        <Route path="/planactionr" element={<PlanActionR />} />
+        <Route path="/planactionR" element={<PlanActionR />} />
+        <Route path="/dashboardR" element={<DashboardR />} />
+        <Route path="/texteappR" element={<TexteAppRes />} />
+        <Route path="/conformeR" element={<ConformeR />} />
+        <Route path="/statistiquesR" element={<StatistiquesR />} />
+        <Route path="/monitoringEn" element={<MonitoringEn />} />
+        <Route path="/monitoringR" element={<MonitoringR />} />
 
     
       </Routes>

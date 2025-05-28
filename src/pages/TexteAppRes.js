@@ -10,12 +10,12 @@ import { Link,useNavigate } from "react-router-dom";
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
 
-const TexteAppEn = () => {
+const TexteAppRes = () => {
   const navigate = useNavigate();
   const [isAbreviationOpen, setIsAbreviationOpen] = useState(false);
   const [data, setData] = useState([ ]);
   const [textes, setTextes] = useState([]);
-  const [checkedTextes, setCheckedTextes] = useState([]);
+   const [checkedTextes, setCheckedTextes] = useState([]);
   const [textesNormaux, setTextesNormaux] = useState([]);
 
   useEffect(() => {
@@ -30,6 +30,9 @@ const TexteAppEn = () => {
         const userId = decoded.id;
         console.log("✅ ID utilisateur :", userId);
   
+        const entrepriseData = JSON.parse(localStorage.getItem("entrepriseToken"));
+        const identre = entrepriseData.identre;
+        console.log("🏢 ID entreprise :", identre);
   
         const textesRes = await axios.get("http://localhost:5000/api/auth/alltexte");
         const allTextes = textesRes.data;
@@ -41,12 +44,12 @@ const TexteAppEn = () => {
         setTextesNormaux(textesNormaux);
   
         // ✅ Récupérer les textes cochés
-        const textesCochesRes = await axios.get(`http://localhost:5000/api/auth/coche/${userId}`);
+        const textesCochesRes = await axios.get(`http://localhost:5000/api/auth/coche/${identre}`);
         const texteIDs = textesCochesRes.data.textes || [];
         console.log("☑️ IDs des textes cochés :", texteIDs);
   
         // ✅ Récupérer les états des textes
-        const textesApplicableRes = await axios.get(`http://localhost:5000/api/auth/etat/${userId}`);
+        const textesApplicableRes = await axios.get(`http://localhost:5000/api/auth/etat/${identre}`);
         const textesApplicable = textesApplicableRes.data || [];
         console.log("📄 États des textes applicables :", textesApplicable);
   
@@ -64,19 +67,19 @@ const TexteAppEn = () => {
             etat: match?.etat || ""
           };
         });
-  
-  
-
+        // ✅ Garder seulement les textes avec etat === "APP"
+const textesAPP = textesAvecEtat.filter((texte) => texte.etat === "APP");
+console.log("✅ Textes avec état APP uniquement :", textesAPP);
   
        // ✅ Récupérer la conformité pour chaque texte applicable
     console.log("📡 Envoi de la requête vers l'API avec identre et conformite :");
-    const conformitesRes = await axios.get(`http://localhost:5000/api/auth/conforallv/${userId}`);
+    const conformitesRes = await axios.get(`http://localhost:5000/api/auth/conforallv/${identre}`);
     const conformites = conformitesRes.data || [];
     console.log("🟢 Conformités récupérées :", conformites);
 
 
 // 🔁 Associer la conformité à chaque texte applicable
-const textesAvecConformite = textesAvecEtat.map((texte) => {
+const textesAvecConformite = textesAPP.map((texte) => {
   const conformiteTexte = conformites.find(c => c.texteId._id?.toString() === texte._id?.toString());
   console.log("🔗 Conformité trouvée :", conformiteTexte);
   return {
@@ -177,34 +180,6 @@ setCheckedTextes(textesAvecConformite);
 
  
 
-// Fonction pour mettre à jour l'état d'un texte dans le backend
-const updateTexteEtat = async (texteId, etat) => {
-  try {
-    console.log("➡️ texteId :", texteId);
-    console.log("➡️ Nouvel état :", etat);
-
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("❌ Aucun token trouvé");
-    const decoded = jwtDecode(token);
-        const userId = decoded.id;
-        console.log("✅ ID utilisateur :", userId);
-        console.log("userId extracted:", userId);
-
-        const payload = {
-          userId,
-          texteId,
-          etat,
-        };
-    // Envoi de la requête pour mettre à jour l'état du texte
-    const response = await axios.post("http://localhost:5000/api/auth/appl",payload); 
-    console.log("Payload being sent:", payload);
-
-    console.log("✅ Texte mis à jour avec succès !");
-    console.log("📥 Réponse du serveur :", response.data);
-  } catch (err) {
-    console.error("❌ Erreur lors de la mise à jour :", err.message);
-  }
-};
 
 // Fonction de gestion du changement d'état dans l'interface utilisateur
 const handleAppChange = (id, newStatus) => {
@@ -215,8 +190,6 @@ const handleAppChange = (id, newStatus) => {
     )
   );
 
-  // 📤 Mise à jour backend
-  updateTexteEtat(id, newStatus);
 };
 
 // Fonction de gestion du changement d'état dans l'interface utilisateur
@@ -421,4 +394,4 @@ const handleTexteC = (id, newStatus) => {
   );
 };
 
-export default TexteAppEn;
+export default TexteAppRes;

@@ -7,7 +7,7 @@ import { BsInfoCircle } from "react-icons/bs";
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
 
-const Monitoring = () => {
+const MonitoringR = () => {
   const [isAbreviationOpen, setIsAbreviationOpen] = useState(false);
    const [searchTerm, setSearchTerm] = useState("");
   const [checkedTextes, setCheckedTextes] = useState([]);
@@ -239,4 +239,4 @@ console.log("🔍 Textes avec conformitéExigences : ", textesExigenceAvecConfor
   );
 };
 
-export default Monitoring;
+export default MonitoringR;

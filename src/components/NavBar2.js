@@ -117,13 +117,10 @@ const rnuEntreprise = entrepriseData?.rnu || "RNU indisponible";
       {isProfileOpen && (
         <div className="dropdown-menu3">
             <div className="dropdown-item3">
-    <BiUser className="icon-profiles" />
-    <Link to="/moncompte" onClick={() => setIsProfileOpen(false)}>Mon compte</Link>
+    
   </div>
-  <div className="dropdown-item3">
-    <TbUsersGroup className="icon-profiles" />
-    <Link to="/mesutilisateurs" onClick={() => setIsProfileOpen(false)}>Mes utilisateurs</Link>
-  </div>
+
+ 
  
           <div className="dropdown-item3 logout"
            onMouseDown={handleLogout}

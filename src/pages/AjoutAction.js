@@ -3,7 +3,7 @@ import "../pages/AjouterResponsable.css";
 import { FaSyncAlt, FaSave, FaUserPlus } from "react-icons/fa";
 import { MdRefresh } from "react-icons/md";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate ,useLocation} from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
 
 const AjouteAction = () => {
@@ -52,22 +52,40 @@ useEffect(() => {
   fetchTextes();
 }, []);
 
+const location = useLocation();
+const idExigence = location.state?.idexigence;
+
+useEffect(() => {
+  if (!idExigence) {
+    console.warn("⚠️ Aucun idExigence reçu depuis la page précédente.");
+  } else {
+    console.log("📌 idExigence reçu :", idExigence);
+  }
+}, [idExigence]);
+
 const handleSubmit = async () => {
   if (!action || !date || !selectedResponsable) {
     alert("Tous les champs sont obligatoires !");
     return;
   }
-
+console.log({
+  action,
+  echeance: date,
+  responsable: selectedResponsable,
+  texteExigence: idExigence,
+});
   try {
-    const response = await axios.post("http://localhost:5000/api/auth/action", {
+    const response = await axios.post("http://localhost:5000/api/auth/EXaction", {
       action,
       echeance: date,
       responsable: selectedResponsable,
+      texteExigence: idExigence,
     });
+
 
     if (response.status === 201) {
       alert("✅ Action enregistrée avec succès !");
-      navigate("/action"); // Redirection vers la page des actions
+      navigate("/planactionv"); // Redirection vers la page des actions
     }
   } catch (error) {
     console.error("❌ Erreur lors de l'enregistrement de l'action :", error);

@@ -7,7 +7,7 @@ import { BsInfoCircle } from "react-icons/bs";
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
 
-const Monitoring = () => {
+const MonitoringEn = () => {
   const [isAbreviationOpen, setIsAbreviationOpen] = useState(false);
    const [searchTerm, setSearchTerm] = useState("");
   const [checkedTextes, setCheckedTextes] = useState([]);
@@ -40,7 +40,7 @@ const Monitoring = () => {
         setTextesNormaux(textesNormaux);
   
         // ✅ Récupérer les textes cochés
-        const textesCochesRes = await axios.get(`http://localhost:5000/api/auth/coche/${identre}`);
+        const textesCochesRes = await axios.get(`http://localhost:5000/api/auth/coche/${userId}`);
         const texteIDs = textesCochesRes.data.textes || [];
         console.log("☑️ IDs des textes cochés :", texteIDs);
   
@@ -67,7 +67,7 @@ const Monitoring = () => {
     
       
    // 🔹 7. Récupérer conformité des exigences
-   const conformitesExRes = await axios.get(`http://localhost:5000/api/auth/confoalle/${identre}`);
+   const conformitesExRes = await axios.get(`http://localhost:5000/api/auth/confoalle/${userId}`);
    const conformitesEx = conformitesExRes.data || [];
 
  const textesExigenceAvecConformite = textesExigenceApplicables.map((texte) => {
@@ -239,4 +239,4 @@ console.log("🔍 Textes avec conformitéExigences : ", textesExigenceAvecConfor
   );
 };
 
-export default Monitoring;
+export default MonitoringEn;

@@ -526,3 +526,124 @@ table td svg:hover {
     font-size: 14px;
     border: none;
   }  
+
+ /* Superposition et centrage global de la modale */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Conteneur principal de la modale */
+.modal-box {
+  background: #fff;
+  padding: 25px 30px;
+  border-radius: 10px;
+  width: 600px;
+  max-width: 90%;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: -20px;
+}
+
+/* Tu peux garder ton style .add-res existant */
+
+/* Ligne horizontale sous le titre */
+.line-horiz2 {
+  height: 2px;
+  background-color: #ddd;
+  margin-bottom: 10px;
+}
+
+/* Une ligne de formulaire (textarea + select + icône) */
+.form-line {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Zone de texte */
+.form-line textarea {
+  flex: 1;
+  resize: vertical;
+  min-height: 60px;
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* Statut (select) */
+.form-line select {
+  width: 130px;
+  padding: 6px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* Icône poubelle */
+.form-line svg {
+  color:rgba(31, 58, 36, 0.92);
+  cursor: pointer;
+  font-size: 18px;
+  transition: transform 0.2s;
+}
+
+.form-line svg:hover {
+  transform: scale(1.1);
+}
+
+/* Bloc des boutons en bas */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+
+
+/* Bouton Enregistrer */
+.actions .btn-search11 {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.actions .btn-search11:hover {
+  background-color: #0056b3;
+}
+
+/* Bouton Annuler */
+.actions .btn-cancel11 {
+  background-color: #6c757d;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.actions .btn-cancel11:hover {
+  background-color: #5a6268;
+}

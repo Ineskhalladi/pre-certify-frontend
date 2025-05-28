@@ -1,6 +1,6 @@
 import React, { useState, useEffect} from "react";
 import "../pages/MesExigences.css";
-import { FaSearch, FaSyncAlt,  FaFolderOpen, FaSave, FaPlus } from "react-icons/fa";
+import { FaSearch, FaSyncAlt,  FaFolderOpen, FaSave, FaPlus, FaTimes, FaTrash } from "react-icons/fa";
 import { MdRefresh } from "react-icons/md";
 import { ImFilePdf } from "react-icons/im";
 import axios from "axios";
@@ -9,218 +9,181 @@ import { BiTrash } from "react-icons/bi";
 
 const MesExigences = () => {
 
-  const [checkedTextes, setCheckedTextes] = useState([]);
-  const [textesNormaux, setTextesNormaux] = useState([]);
-  const [textesExigence, setTextesExigence] = useState([]);
-   const [searchTerm, setSearchTerm] = useState("");
+const [searchTerm, setSearchTerm] = useState("");
+const [domaines, setDomaines] = useState([]);
+const [natures, setNatures] = useState([]);
+const [data, setData] = useState([]);
+useEffect(() => {
+  const fetchMesEx = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/auth/allmesEx");
 
-  useEffect(() => {
-    const fetchTextes = async () => {
-      try {
-        console.log("📥 Début récupération des textes");
-  
-        const token = localStorage.getItem("token");
-        if (!token) throw new Error("❌ Aucun token trouvé");
-  
-        const decoded = jwtDecode(token);
-        const userId = decoded.id;
-        console.log("✅ ID utilisateur :", userId);
-  
-        const entrepriseData = JSON.parse(localStorage.getItem("entrepriseToken"));
-        const identre = entrepriseData.identre;
-        console.log("🏢 ID entreprise :", identre);
-  
-        const textesRes = await axios.get("http://localhost:5000/api/auth/alltexte");
-        const allTextes = textesRes.data;
-        console.log("📚 Tous les textes :", allTextes);
-  
-  
-        // ✅ Récupérer les textes cochés
-        const textesCochesRes = await axios.get(`http://localhost:5000/api/auth/coche/${identre}`);
-        const texteIDs = textesCochesRes.data.textes || [];
-        console.log("☑️ IDs des textes cochés :", texteIDs);
+      const allData = response.data;
 
-// ✅ Tous les textes de type "exigence"
-const textesNormaux = allTextes.filter((t) => t.typeTexte?.toLowerCase() === "exigence");
-console.log("📄 Tous les textes normaux :", textesNormaux);
-setTextesNormaux(textesNormaux);
+      // Extraire domaines et natures uniques
+      const uniqueDomaines = [...new Set(allData.map((item) => item.domaine).filter(Boolean))];
+      const uniqueNatures = [...new Set(allData.map((item) => item.nature).filter(Boolean))];
 
-// ✅ Filtrer uniquement les textes cochés avec type "exigence"
-const textesFiltres = textesNormaux.filter((texte) => texteIDs.includes(texte._id));
-
-for (const texte of textesFiltres) {
-  try {
-    await axios.post("http://localhost:5000/api/auth/autreex", {
-      identre,
-      texteId: texte._id,
-    });
-    console.log(`✅ Exigence ajoutée pour texte ID: ${texte._id}`);
-  } catch (error) {
-    if (error.response && error.response.status === 409) {
-      console.log(`ℹ️ Texte déjà existant (pas grave): ${texte._id}`);
-    } else {
-      console.error(`❌ Erreur lors de l'ajout de texte ID ${texte._id}`, error);
+      setDomaines(uniqueDomaines);
+      setNatures(uniqueNatures);
+ setData(allData);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des données", error);
     }
-  }
-}
-
-
-// ✅ Récupérer les états des textes
-const textesApplicableRes = await axios.get(`http://localhost:5000/api/auth/autreexall/${identre}`);
-const textesApplicable = textesApplicableRes.data || [];
-console.log("📄 États des textes exigences :", textesApplicable);
-
-             // ✅ Fusionner avec état
-             const textesAvecEtat = textesFiltres.map((texte) => {
-              const match = textesApplicable.exigences.find((t) => t.texteId === texte._id);
-              return {
-                ...texte,
-                etat: match?.etat || "APP"
-              };
-            });
-            
-            // ✅ Récupérer la conformité pour chaque texte applicable
-            console.log("📡 Envoi de la requête vers l'API avec identre et conformite :");
-            const conformitesRes = await axios.get(`http://localhost:5000/api/auth/autreconfoexalle/${identre}`);
-            const conformites = conformitesRes.data || [];
-            console.log("🟢 Conformités récupérées :", conformites);
-        
-        
-        // 🔁 Associer la conformité à chaque texte applicable
-        const textesAvecConformite = textesAvecEtat.map((texte) => {
-          const conformiteTexte = conformites.find(c => c.texteId?.toString() === texte._id?.toString());
-          console.log("🔗 Conformité trouvée :", conformiteTexte);
-          return {
-            ...texte,
-            conformiteAEX: conformiteTexte?.conformiteAEX || "Non défini",
-          };
-        });
-        
-        console.log("✅ Textes avec conformité associée :", textesAvecConformite);
-        setCheckedTextes(textesAvecConformite);
-    
-        
-       // 🟡 1. Filtrer les textes cochés et applicables de type exigence
-       const textesExigenceApplicables = allTextes.filter(
-        (texte) =>
-         texte.typeTexte?.toLowerCase() === "exigence" &&
-          texteIDs.includes(texte._id)
-        );
-             
-       
-       console.log("📌 Textes exigences applicables :", textesExigenceApplicables);
-       
-         
-      // 🔹 7. Récupérer conformité des exigences
-      const conformitesExRes = await axios.get(`http://localhost:5000/api/auth/confoalle/${identre}`);
-      const conformitesEx = conformitesExRes.data || [];
-    
-    const textesExigenceAvecConformite = textesExigenceApplicables.map((texte) => {
-     const conf = conformitesEx.find(c => c.texteId?.toString() === texte._id?.toString());
-    
-     return {
-       ...texte,
-       conformiteE: conf?.conformiteE || "Non défini",
-     };
-    });
-    console.log("🔍 Textes avec conformitéExigences : ", textesExigenceAvecConformite);
-    
-      setTextesExigence(textesExigenceAvecConformite);
-  
-      } catch (err) {
-        console.error("❌ Erreur :", err.message);
-        alert("Erreur lors du chargement des textes");
-      }
-    };
-  
-    fetchTextes();
-  }, []);
-  
-
-
-  // 1. Pour les domaines
-const [domainesParSecteur, setDomainesParSecteur] = useState({});
-const fetchDomainesBySecteur = async (secteurId) => {
-  if (domainesParSecteur[secteurId]) return;
-  try {
-    const res = await axios.get(`http://localhost:5000/api/auth/domaines/bySecteur/${secteurId}`);
-    setDomainesParSecteur(prev => ({
-      ...prev,
-      [secteurId]: res.data,
-    }));
-  } catch (error) {
-    console.error("Erreur chargement domaines du secteur :", error);
-  }
-};
-const Comparedomaine = (domaineId, secteurId) => {
-  const domaines = domainesParSecteur[secteurId];
-  if (!domaines) {
-    fetchDomainesBySecteur(secteurId);
-    return "Chargement domaine...";
-  }
-  const domaine = domaines.find((d) => d._id === domaineId);
-  return domaine ? domaine.nom : "Domaine inconnu";
-};
-
-
-// Fonction de gestion du changement d'état dans l'interface utilisateur
-const handleAppChange = (id, newStatus) => {
-  // 🔁 Mise à jour du bon state : checkedTextes
-  setCheckedTextes(prev =>
-    prev.map(texte =>
-      texte._id === id ? { ...texte, etat: newStatus } : texte
-    )
-  );
-
-  };
- 
-
-// Fonction de gestion du changement d'état dans l'interface utilisateur
-const handleTexteC = (id, newStatus) => {
-  // 🔁 Mise à jour du bon state : checkedTextes
-  setCheckedTextes(prev =>
-    prev.map(texte =>
-      texte._id === id ? { ...texte, conformiteAEX: newStatus } : texte
-    )
-  );
-
-};
-  
-  const handleTexteC2 = (id, newStatus) => {
-    setTextesExigence(prev =>
-      prev.map(texte => texte._id === id ? { ...texte, conformiteE: newStatus } : texte
-  
-      )
-    );
   };
 
+  fetchMesEx();
+}, []);
 
-  const [formData, setFormData] = useState({
+  const [rows, setRows] = useState([
+  {
     domaine: "",
     nature: "",
     reference: "",
     applicabilite: "",
     conformite: "",
-    texte: "",
+    texte: ""
+  }
+]); // <- ici on gère les lignes du tableau
+  // ➕ Ajouter une nouvelle ligne vide
+  const handleAddRow = () => {
+    setRows([
+      ...rows,
+      {
+        domaine: "",
+        nature: "",
+        reference: "",
+        applicabilite: "",
+        conformite: "",
+        texte: ""
+      }
+    ]);
+  };
+const handleSubmit = async () => {
+  const champsManquants = [];
+
+  rows.forEach((row, i) => {
+    const champs = ["domaine", "nature", "reference", "applicabilite", "conformite", "texte"];
+    champs.forEach((champ) => {
+      if (!row[champ] || row[champ].trim() === "") {
+        champsManquants.push(`${champ} (ligne ${i + 1})`);
+      }
+    });
   });
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+
+
+  try {
+    const response = await axios.post("http://localhost:5000/api/auth/mesEx", rows);
+    console.log("✅ Réponse du serveur :", response.data);
+    alert("Exigences enregistrées avec succès !");
+  } catch (error) {
+    console.error("❌ Erreur :", error);
+    alert("Erreur lors de l'enregistrement.");
+  }
+};
+
+const handleChange = (index, e) => {
+  const { name, value } = e.target;
+  const updatedRows = [...rows];
+
+  // نعمل distinction بين les noms
+  if (name === "domaineSelect" || name === "domaineInput") {
+    updatedRows[index]["domaine"] = value;
+  } else if (name === "natureSelect" || name === "natureInput") {
+    updatedRows[index]["nature"] = value;
+  } else {
+    updatedRows[index][name] = value;
+  }
+
+  setRows(updatedRows);
+};
+
+  // 🗑 Supprimer une ligne spécifique
+  const handleDeleteRow = (indexToDelete) => {
+    setRows(rows.filter((_, index) => index !== indexToDelete));
   };
 
-  const handleSubmit = async () => {
-    try {
+   const [showModalEX, setShowModalEX] = useState(false);
+  const [exigencesEX, setExigencesEX] = useState([{ texte: "", statut: "AV" }]);
 
-      const response = await axios.post("http://localhost:5000/api/auth/mesEx", formData);
-          console.log("✅ Réponse du serveur :", response); // ✅ الرد الكامل من السيرفر
+useEffect(() => {
+  if (showModalEX && !selectedTexteId) {
+    setExigencesEX([{ texte: "", statut: "AV" }]);
+  }
+}, [showModalEX]);
 
-      console.log("✅ Enregistré :", response.data);
-      alert("Exigence ajoutée avec succès !");
-    } catch (error) {
-      console.error("❌ Erreur :", error);
-      alert("Erreur lors de l'enregistrement.");
+
+  const handleAddLineEX = () => {
+    setExigencesEX([...exigencesEX, { texte: "", statut: "AV" }]);
+  };
+
+  const handleRemoveLineEX = (index) => {
+    const updated = exigencesEX.filter((_, i) => i !== index);
+    setExigencesEX(updated);
+  };
+
+  const handleChangeEX = (index, field, value) => {
+    const updated = [...exigencesEX];
+    updated[index][field] = value;
+    setExigencesEX(updated);
+  };
+
+
+ const handleCancelEX = () => {
+  setExigencesEX([{ texte: "", statut: "AV" }]);
+  setSelectedTexteId(null);
+  setShowModalEX(false);
+};
+
+
+const handleSaveEX = async () => {
+  try {
+    const data = exigencesEX.filter(item => item.texte && item.statut);
+
+    if (data.length === 0) {
+      alert("Veuillez ajouter au moins une exigence complète.");
+      return;
     }
-  };
 
+ const exigencesPayload = data.map((exigenceAssociee, i) => ({
+  texte: exigenceAssociee.texte,
+  statut: exigenceAssociee.statut,
+  texteId: exigenceAssociee.texteId || null,
+}));
+
+
+
+    console.log("Exigences à envoyer :", exigencesPayload);
+
+    const response = await axios.post("http://localhost:5000/api/auth/autreex", exigencesPayload);
+
+    console.log("✅ Réponse backend :", response.data);
+    alert("Exigences enregistrées avec succès !");
+    setShowModalEX(false);
+    setExigencesEX([]);
+  } catch (error) {
+    console.error("❌ Erreur lors de l'envoi :", error);
+    alert("Erreur lors de l'enregistrement des exigences.");
+  }
+};
+
+  const [exigences, setExigences] = useState([]);
+
+  // Récupérer les exigences lors du chargement du composant
+  useEffect(() => {
+    const fetchExigences = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/auth/allautreEx");
+        setExigences(response.data.data); // Assurez-vous que la clé `data` contient les exigences
+      } catch (error) {
+        console.error("❌ Erreur lors de la récupération des exigences :", error);
+      }
+    };
+
+    fetchExigences();
+  }, []);
+  
+const [selectedTexteId, setSelectedTexteId] = useState(null);
 
   return (
     <>
@@ -290,7 +253,7 @@ const handleTexteC = (id, newStatus) => {
            onChange={(e) => setSearchTerm(e.target.value)}
          />
        </div>
-       <button className="add-res">
+       <button className="add-res" onClick={handleAddRow}>
        <FaPlus />
      </button>
      </div>
@@ -309,57 +272,100 @@ const handleTexteC = (id, newStatus) => {
 
             </tr>
          </thead>
-         <tbody>
-            <tr>
-           <td>
-           {/* <select>
-                <option>--Choisir un domaine--</option>
-            </select>
-            <br></br>
-            */}
-            <input type="text" placeholder="Nouveau domaine" name="domaine" value={formData.domaine} onChange={handleChange}/>
-           </td>
-           <td>
-          {/* <select>
-                <option>--Choisir un nature--</option>
-            </select>
-            <br></br>
-            */}
-            <input type="text" placeholder="Nouveau nature" name="nature" value={formData.nature} onChange={handleChange}/>
-           </td>
-           <td>
-           <input type="text" placeholder="Nouveau référence" name="reference"  value={formData.reference} onChange={handleChange}/>
-           </td>
-           <td>
-           <select name="applicabilite" value={formData.applicabilite} onChange={handleChange}>
-                <option>APP</option>
-                <option>NAPP</option>
-                <option>AV</option>
+        <tbody>
+          {rows.map((row, index) => (
+            <tr key={index}>
+              <td>
+                <select
+                  name="domaineSelect"
+                  value={row.domaine}
+                  onChange={(e) => handleChange(index, e)}
+                >
+                  <option value="">--Choisir un domaine--</option>
+                  {domaines.map((d, idx) => (
+                    <option key={idx} value={d}>{d}</option>
+                  ))}
+                </select>
+                <br />
+                <input
+                  type="text"
+                  name="domaineInput"
+                  placeholder="Nouveau domaine"
+                  value={row.domaine}
+                  onChange={(e) => handleChange(index, e)}
+                />
+              </td>
+              <td>
+                <select
+                  name="natureSelect"
+                  value={row.nature}
+                  onChange={(e) => handleChange(index, e)}
+                >
+                  <option value="">--Choisir une nature--</option>
+                  {natures.map((n, idx) => (
+                    <option key={idx} value={n}>{n}</option>
+                  ))}
+                </select>
+                <br />
+                <input
+                  type="text"
+                  name="natureInput"
+                  placeholder="Nouveau nature"
+                  value={row.nature}
+                  onChange={(e) => handleChange(index, e)}
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="reference"
+                  placeholder="Nouveau référence"
+                  value={row.reference}
+                  onChange={(e) => handleChange(index, e)}
+                />
+              </td>
+              <td>
+                <select
+                  name="applicabilite"
+                  value={row.applicabilite}
+                  onChange={(e) => handleChange(index, e)}
+                >
+                  <option value="">-- Choisir --</option>
+                  <option value="APP">APP</option>
+                  <option value="NAPP">NAPP</option>
+                  <option value="AV">AV</option>
+                </select>
+              </td>
+              <td>
+                <select
+                  name="conformite"
+                  value={row.conformite}
+                  onChange={(e) => handleChange(index, e)}
+                >
+                  <option value="">-- Choisir --</option>
+                  <option value="C">C</option>
+                  <option value="AV">AV</option>
+                  <option value="NC">NC</option>
+                </select>
+              </td>
+              <td>
+                <textarea
+                  name="texte"
+                  value={row.texte}
+                  onChange={(e) => handleChange(index, e)}
+                ></textarea>
+              </td>
+              <td>
+                <button onClick={() => handleDeleteRow(index)} style={{ border: "none", background: "none" }}>
+                  <BiTrash />
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
 
-            </select>
-           </td>
-           <td>
-           <select name="conformite" value={formData.conformite} onChange={handleChange}>
-                <option>AV</option>
-                <option>C</option>
-                <option>NC</option>
-            </select>
-           </td>
-           <td>
-           <textarea name="texte" value={formData.texte} onChange={handleChange}></textarea>
-
-           </td>
-           <td><BiTrash />
-           </td>
-           </tr>
-         </tbody>
        </table>
-
-    
-
     </div>
-
-
   <div className="pagination-container">
   <ul className="pagination">
     <li className="btn-item">Précédent</li>
@@ -376,112 +382,170 @@ const handleTexteC = (id, newStatus) => {
   </div>
 <div className="line-horiz"></div>
 
-<table>
-         <thead>
-         <tr>
-              <th>Domaine</th>
-              <th>Nature</th>
-              <th>Référence</th>
-              <th>App/N APP/AV</th>
-              <th>Av/C/NC</th>
-              <th>PDF</th>
-              <th>Exigences</th>
-              <th>Av/C/NC</th>
+
+ <table>
+  <thead>
+    <tr>
+      <th>Domaine</th>
+      <th>Nature</th>
+      <th>Référence</th>
+      <th>App/N APP/AV</th>
+      <th>Av/C/NC</th>
+      <th>Texte</th>
+      <th>Exigences</th>
+      <th>Av/C/NC</th>
+    </tr>
+  </thead>
+<tbody>
+  {data.map((texte, index) => {
+    // تعديل هذا الجزء لاستخدام texteId بشكل صحيح
+const exigenceAssociee = exigences.find(
+  (item) =>
+    item.texteId &&
+    item.texteId._id?.toString() === texte._id.toString()
+);
+
+    return (
+      <tr key={index}>
+        <td>{texte.domaine}</td>
+        <td>{texte.nature}</td>
+        <td>{texte.reference}</td>
+        <td>
+          <div className="APP-container">
+            <div className={`app-status ${texte.applicabilite?.toLowerCase()}`}>
+              {texte.applicabilite || ""}
+            </div>
+            <div className="menu-APP">
+              {["APP", "N APP", "AV"].map((option) => (
+                <div
+                  key={option}
+                  className={`option-APP ${option.toLowerCase().replace(" ", "-")}`}
+                >
+                  {option}
+                </div>
+              ))}
+            </div>
+          </div>
+        </td>
+        <td>
+          <div className="Status-container">
+            <div className={`status-label status-${texte.conformite?.toLowerCase()}`}>
+              {texte.conformite || ""}
+            </div>
+            <div className="menu-Status">
+              {["C", "AV", "NC"].map((option) => (
+                <div
+                  key={option}
+                  className={`option-Status status-${option.toLowerCase()}`}
+                >
+                  {option}
+                </div>
+              ))}
+            </div>
+          </div>
+        </td>
+        <td>{texte.texte}</td>
+
+        {/* 🟩 Colonne Exigence */}
+        <td>
+          <button
+            className="add-res"
+         onClick={() => {
+  setSelectedTexteId(texte._id);
+  setExigencesEX([
+    {
+      texte: "",
+      statut: "",
+      texteId: texte._id,  // اربط exigence بالـ texteId
+    },
+  ]);
+  setShowModalEX(true);
+
+            }}
+          >
+            <FaPlus />
+          </button>
+
+          {/* Affichage automatique de l’exigence */}
+          {exigenceAssociee && (
+            <div className="exigence-texte">{exigenceAssociee.texte}</div>
+          )}
+        </td>
+
+        {/* 🟩 Colonne Statut de l’exigence */}
+        <td>
+          {exigenceAssociee && (
+            <div className="Status-container">
+              <div className={`status-label status-${exigenceAssociee.statut?.toLowerCase()}`}>
+                {exigenceAssociee.statut}
+              </div>
+              <div className="menu-Status">
+                {["C", "AV", "NC"].map((option) => (
+                  <div
+                    key={option}
+                    className={`option-Status status-${option.toLowerCase()}`}
+                  >
+                    {option}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </td>
+      </tr>
+    );
+  })}
+</tbody>
 
 
-            </tr>
-         </thead>
-         <tbody>
-          {Array.isArray(checkedTextes) && checkedTextes.map((texte, index) => {
-           const exigence = textesExigence[index]; // 🟨 exigence correspondante
-           return (
-             <tr key={texte._id}>
-               <td>{Comparedomaine(texte.domaine, texte.secteur) || '---'}</td>
-         
-               <td>{texte.nature}</td>
-         
-               <td>
-                 <div>{texte.reference}</div>
-                 <div style={{ paddingTop: "5px" }}>
-                   {texte.texte?.split("\n").map((line, idx) => (
-                     <div key={idx}>{line}</div>
-                   ))}
-                 </div>
-               </td>
-         
-               <td>
-                 <div className="Status-container">
-                   <div className={`status-label status-${texte.conformiteAEX?.toLowerCase()}`}>
-                     {texte.conformiteAEX}
-                   </div>
-                   <div className="menu-Status">
-                     {["C", "AV", "NC"].map((option) => (
-                       <div
-                         key={option}
-                         className={`option-Status status-${option.toLowerCase()}`}
-                         onClick={() => handleTexteC(texte._id, option)}
-                       >
-                         {option}
-                       </div>
-                     ))}
-                   </div>
-                 </div>
-               </td>
-         
-               <td>
-                 <div className="APP-container">
-                   <div className={`app-status ${texte.etat?.toLowerCase().replace(' ', '-')}`}>
-                     {texte.etat || "mich mawjoud"}
-                   </div>
-                   <div className="menu-APP">
-                     {["APP", "N APP", "AV"].map((option) => (
-                       <div
-                         key={option}
-                         className={`option-APP ${option.toLowerCase().replace(' ', '-')}`}
-                         onClick={() => handleAppChange(texte._id, option)}
-                       >
-                         {option}
-                       </div>
-                     ))}
-                   </div>
-                 </div>
-               </td>
-         
-               <td><ImFilePdf /></td>
-         
-               <td>
-                 <div>{exigence?.reference}</div>
-                 <div style={{ paddingTop: "5px" }}>
-                   {exigence?.texte?.split("\n").map((line, idx) => (
-                     <div key={idx}>{line}</div>
-                   ))}
-                 </div>
-               </td>
-         
-               <td>
-                 <div className="Status-container">
-                   <div className={`status-label status-${exigence?.conformiteE?.toLowerCase()}`}>
-                     {exigence?.conformiteE || "ND"}
-                   </div>
-                   <div className="menu-Status">
-                     {["C", "AV", "NC"].map((option) => (
-                       <div
-                         key={option}
-                         className={`option-Status status-${option.toLowerCase()}`}
-                         onClick={() => handleTexteC2(exigence._id, option)}
-                       >
-                         {option}
-                       </div>
-                     ))}
-                   </div>
-                 </div>
-               </td>
-         
-             </tr>
-           );
-         })}
-         </tbody>
-       </table>
+
+</table>
+
+      {/* Mettre ceci en dehors du tableau, tout en bas du JSX */}
+{showModalEX && (
+  <div className="overlay">
+   <div className="modal-box">
+  <div className="modal-header">
+    <h2 className="text-base">Ajouter Exigence</h2>
+    <button className="add-res" onClick={handleAddLineEX}>
+      <FaPlus />
+    </button>
+  </div>
+  <div className="line-horiz2"></div>
+
+
+      {exigencesEX.map((item, index) => (
+        <div className="form-line" key={index}>
+          <textarea
+            placeholder="Exigence"
+            value={item.texte}
+            onChange={(e) => handleChangeEX(index, "texte", e.target.value)}
+          />
+          <select
+            value={item.statut}
+            onChange={(e) => handleChangeEX(index, "statut", e.target.value)}
+          >
+            <option value="AV">A vérifier</option>
+            <option value="C">Conforme</option>
+            <option value="NC">Non Conforme</option>
+          </select>
+
+            <FaTrash onClick={() => handleRemoveLineEX(index)} />
+          
+        </div>
+      ))}
+      <div className="actions">
+       
+        <button onClick={handleSaveEX} className="btn-search">
+          Enregistrer <FaSave />
+        </button>
+        <button onClick={handleCancelEX} className="btn-cancel">
+          Annuler <FaSyncAlt />
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
     </div>
       </div>

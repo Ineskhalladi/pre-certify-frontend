@@ -55,7 +55,7 @@ const NavBar4 = () => {
       </div>
 
       <nav className="navbar-bottom3">
-        <Link to="/dashboarde" className={`menu-item3 ${location.pathname === "/dashboard" ? "active" : ""}`}><FiMonitor className="icon-nav3" /> Tableau de Bord</Link>
+        <Link to="/dashboardEn" className={`menu-item3 ${location.pathname === "/dashboard" ? "active" : ""}`}><FiMonitor className="icon-nav3" /> Tableau de Bord</Link>
         <Link to="/cochertexte" className={`menu-item3 ${location.pathname === "/textesE" ? "active" : ""}`}
         ><BsFileText className="icon-nav3" /> Les Textes </Link>
          <div 
@@ -79,7 +79,7 @@ const NavBar4 = () => {
 <Link to="/mesresponsables" className={`menu-item3 ${location.pathname === "/textesE" ? "active" : ""}`}
         ><LuList className="icon-nav3" /> Liste des responsables</Link>
 
-        <Link to="/monitoring" className={`menu-item3 ${location.pathname === "/monitoring" ? "active" : ""}`}>
+        <Link to="/monitoringEn" className={`menu-item3 ${location.pathname === "/monitoring" ? "active" : ""}`}>
         <FiGrid className="icon-nav3" /> Monitoring</Link>
          
              <Link to="/alertes"  className={`menu-item3 ${location.pathname === "/alertes" ? "active" : ""}`}>
@@ -89,8 +89,6 @@ const NavBar4 = () => {
       {isProfileOpen && (
         <div className="dropdown-menu3">
             <div className="dropdown-item3">
-    <BiUser className="icon-profiles" />
-    <Link to="/moncompte" onClick={() => setIsProfileOpen(false)}>Mon compte</Link>
   </div>
   
           <div className="dropdown-item3 logout"
