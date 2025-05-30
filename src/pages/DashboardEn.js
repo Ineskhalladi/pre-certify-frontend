@@ -16,8 +16,7 @@ import {
 
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
-const DashboardE = () => {
-  
+const DashboardEn = () => {
     const [checkedTextes, setCheckedTextes] = useState([]);
     const [textesNormaux, setTextesNormaux] = useState([]);
     const [textesExigence, setTextesExigence] = useState([]);
@@ -86,6 +85,7 @@ const DashboardE = () => {
     console.log("🔗 Conformité trouvée :", conformiteTexte);
     return {
       ...texte,
+       etat: "APP", 
       conformite: conformiteTexte?.conformite || "Non défini",
     };
   });
@@ -194,60 +194,6 @@ const Comparedomaine = (domaineId, secteurId) => {
   return domaine ? domaine.nom : "Domaine inconnu";
 };
 
-// 2. Pour les thèmes
-const [themesParDomaine, setThemesParDomaine] = useState({});
-const fetchThemesByDomaine = async (domaineId) => {
-  if (themesParDomaine[domaineId]) return;
-  try {
-    const res = await axios.get(`http://localhost:5000/api/auth/themes/byDomaine/${domaineId}`);
-    setThemesParDomaine(prev => ({
-      ...prev,
-      [domaineId]: res.data,
-    }));
-  } catch (error) {
-    console.error("Erreur chargement des thèmes :", error);
-  }
-};
-
-const Comparetheme = (themeId, domaineId) => {
-  const themes = themesParDomaine[domaineId];
-  console.log("🔍 Comparetheme ID reçu :", themeId, "DomaineID :", domaineId);
-
-  if (!themes) {
-    fetchThemesByDomaine(domaineId);
-    return "Chargement thème...";
-  }
-  const theme = themes.find((t) => t._id === themeId);
-  return theme ? theme.nom : "Thème inconnu";
-};
-
-// 3. Pour les sous-thèmes
-const [sousThemesParTheme, setSousThemesParTheme] = useState({});
-const fetchSousThemesByTheme = async (themeId) => {
-  if (sousThemesParTheme[themeId]) return;
-  try {
-    const res = await axios.get(`http://localhost:5000/api/auth/sousthemes/byTheme/${themeId}`);
-    setSousThemesParTheme(prev => ({
-      ...prev,
-      [themeId]: res.data,
-    }));
-  } catch (error) {
-    console.error("Erreur chargement des sous-thèmes :", error);
-  }
-};
-const ComparesousTheme = (sousThemeId, themeId) => {
-  const sousThemes = sousThemesParTheme[themeId];
-  console.log("🔍 ComparesousTheme ID reçu :", sousThemeId, "ThemeID :", themeId);
-
-  if (!sousThemes) {
-    fetchSousThemesByTheme(themeId);
-    return "Chargement sous-thème...";
-  }
-  const sousTheme = sousThemes.find((s) => s._id === sousThemeId);
-  return sousTheme ? sousTheme.nom : "Sous-thème inconnu";
-
-
-};
 //////////////////////
 
 
@@ -313,24 +259,30 @@ const pieData = [
 
 const totalTextesCoches = checkedTextes.length;
 
-const colors = [
-  "#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#A28EFF", "#FF6F91", "#008080", "#FF6347"
+const colors = ["#5c7f4e", "#f7e095","#d09e00", "#203828" ,"#d8dbd8"
 ];
 
+
 const TextesDomaine = () => {
-  // تحسب عدد النصوص حسب domaineId
   const counts = {};
+  const domainesNames = {};
 
   checkedTextes.forEach((texte) => {
-    const domaineId = texte.domaineId; // نفترض أن texte يحتوي على domaineId
+    const domaineId = texte.domaine;
+    const secteurId = texte.secteur;
+
     if (domaineId) {
       counts[domaineId] = (counts[domaineId] || 0) + 1;
+
+      // احفظ اسم الدومين باش ما تعاودش تنادي Comparedomaine
+      if (!domainesNames[domaineId]) {
+        domainesNames[domaineId] = Comparedomaine(domaineId, secteurId);
+      }
     }
   });
 
-  // نرجعو مصفوفة للأوبجكتس مع الاسم و العدد و اللون
   return Object.entries(counts).map(([domaineId, value], index) => ({
-    name: Comparedomaine(domaineId, /* secteurId - إذا تعرفه هنا */ ""), // تستعمل الدالة للمقارنة
+    name: domainesNames[domaineId] || "Inconnu",
     value,
     color: colors[index % colors.length],
   }));
@@ -342,14 +294,99 @@ useEffect(() => {
   setTextesDomaineData(TextesDomaine());
 }, [checkedTextes]);
 
-   const barData = [
-    { name: "Texte applicable", value: 48, fill: "#2e4731" },
-    { name: "Textes conformes", value: 39, fill: "#56c16f" },
-    { name: "Textes non conformes", value: 14, fill: "#d9a500" },
-    { name: "Textes à vérifier", value: 5, fill: "#f7e393" },
-    { name: "Action non valide", value: 2, fill: "#FFF761" },
-  ];
+   const [actions, setActions] = useState([]);
 
+  useEffect(() => {
+    fetchActions();
+  }, []);
+
+const fetchActions = async () => {
+  try {
+    const response = await axios.get("http://localhost:5000/api/auth/actionall");
+    const actions = response.data;
+    setActions(actions);
+  } catch (err) {
+    console.error("Erreur lors du chargement des actions :", err);
+  }
+};
+const [groupedBarData, setGroupedBarData] = useState({}); // domaineId => [{ name, value, fill }]
+const [domainesNoms, setDomainesNoms] = useState({});     // domaineId => nom domaine
+
+
+useEffect(() => {
+  if (checkedTextes.length === 0 || actions.length === 0) return;
+
+  const groupes = {};
+  const nomsDomaines = {};
+
+  checkedTextes.forEach((texte) => {
+    const domaineId = texte.domaine;
+    const secteurId = texte.secteur;
+
+    if (!groupes[domaineId]) {
+      groupes[domaineId] = {
+        applicables: 0,
+        conformes: 0,
+        nonConformes: 0,
+        aVerifier: 0,
+        actionsNonValidees: 0,
+      };
+    }
+
+    groupes[domaineId].applicables += 1;
+
+    if (texte.conformite === "C") groupes[domaineId].conformes += 1;
+    else if (texte.conformite === "NC") groupes[domaineId].nonConformes += 1;
+    else if (texte.conformite === "AV") groupes[domaineId].aVerifier += 1;
+
+    // 🏷️ Préparer le nom du domaine
+    if (!nomsDomaines[domaineId]) {
+      const nom = Comparedomaine(domaineId, secteurId);
+      nomsDomaines[domaineId] = nom;
+    }
+  });
+
+  // 🔍 ربط actions بال domaine متاع texteExigence
+  actions.forEach((action) => {
+    if (!action.validation && action.texteExigence) {
+const texte = checkedTextes.find(t => t._id === action.texteExigence) ||
+              textesExigence.find(t => t._id === action.texteExigence);
+      if (texte && texte.domaine) {
+        const domaineId = texte.domaine;
+        if (groupes[domaineId]) {
+          groupes[domaineId].actionsNonValidees += 1;
+        } else {
+          groupes[domaineId] = {
+            applicables: 0,
+            conformes: 0,
+            nonConformes: 0,
+            aVerifier: 0,
+            actionsNonValidees: 1,
+          };
+        }
+      }
+    }
+  });
+
+  // 📊 تجهيز البيانات لعرضها
+  const chartDataParDomaine = {};
+
+  for (const domaineId in groupes) {
+    chartDataParDomaine[domaineId] = [
+      { name: "Textes applicables", value: groupes[domaineId].applicables, fill: "#2e4731" },
+      { name: "Textes conformes", value: groupes[domaineId].conformes, fill: "#56c16f" },
+      { name: "Textes non conformes", value: groupes[domaineId].nonConformes, fill: "#d9a500" },
+      { name: "Textes à vérifier", value: groupes[domaineId].aVerifier, fill: "#f7e393" },
+      { name: "Actions non validées", value: groupes[domaineId].actionsNonValidees, fill: "#FFF761" },
+    ];
+  }
+
+  setGroupedBarData(chartDataParDomaine);
+  setDomainesNoms(nomsDomaines);
+}, [checkedTextes, actions]);
+
+
+   
   return (
     <>
       <div className="dashboard-charts-wrapper">
@@ -439,80 +476,23 @@ useEffect(() => {
 </div>
 
 <div className="second-line">
+{Object.entries(groupedBarData).map(([domaineId, data]) => (
+  <div key={domaineId} className="bar-chart-container">
+    <div className="bar-chart-title">{domainesNoms[domaineId] || "Statistiques"}</div>
+    <div className="bar-chart-wrapper">
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={data} margin={{ top: 20, right: 10, left: 10, bottom: 50 }}>
+          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+          <XAxis dataKey="name" interval={0} angle={-25} textAnchor="end" tick={{ fill: "#000", fontSize: 12 }} />
+          <YAxis />
+          <Tooltip />
+          <Bar dataKey="value" barSize={35} />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  </div>
+))}
 
-         {/* Bar Chart */}
-         <div className="bar-chart-container">
-          <div className="bar-chart-title">Quantité</div>
-          <div className="bar-chart-wrapper">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={barData}
-                margin={{ top: 20, right: 10, left: 10, bottom: 50 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis
-                  dataKey="name"
-                  interval={0}
-                  angle={-25}
-                  textAnchor="end"
-                  tick={{ fill: "#000",fontSize: 12 }}
-                />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="value" barSize={35} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-         {/* Bar Chart */}
-         <div className="bar-chart-container">
-          <div className="bar-chart-title">Risques Industriels et autres</div>
-          <div className="bar-chart-wrapper">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={barData}
-                margin={{ top: 20, right: 10, left: 10, bottom: 50 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis
-                  dataKey="name"
-                  interval={0}
-                  angle={-25}
-                  textAnchor="end"
-                  tick={{ fill: "#000",fontSize: 12 }}
-                />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="value" barSize={35} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        <div className="bar-chart-container">
-          <div className="bar-chart-title">Environnement</div>
-          <div className="bar-chart-wrapper">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={barData}
-                margin={{ top: 20, right: 10, left: 10, bottom: 50 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis
-                  dataKey="name"
-                  interval={0}
-                  angle={-25}
-                  textAnchor="end"
-                  tick={{ fill: "#000",fontSize: 12 }}
-                />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="value" barSize={35} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
         </div>
       </div>
       <p className="footer-base">Copyright © 2025 PreCertify. Tous les droits réservés.</p>
@@ -521,4 +501,4 @@ useEffect(() => {
   );
 };
 
-export default DashboardE;
+export default DashboardEn;

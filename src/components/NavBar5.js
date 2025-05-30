@@ -81,23 +81,7 @@ const NavBar5 = () => {
           )}
         </div>
 
-        <div 
-          className="dropdown3" 
-          onMouseEnter={() => setIsExigencesOpen(true)}
-          onMouseLeave={() => setIsExigencesOpen(false)}
-        >
-          <div className={`menu-item3 ${location.pathname === "/mes autres exigences" ? "active" : ""}`}>
-            <FiZap className="icon-nav3" /> Mes Autres Exigences 
-          </div>
-          {isExigencesOpen && (
-            <div className="dropdown-content3">
-              <Link to="/mesexigences">Mes Exigences</Link>
-              <Link to="/conformee">Évaluation de Conformité</Link>
-              <Link to="/planactione">Mon Plan d'Action</Link>
-              <Link to="/statistiquese">Statistiques des Exigences</Link>
-            </div>
-          )}
-        </div>
+    
 
         <Link to="/monitoringR" className={`menu-item3 ${location.pathname === "/monitoring" ? "active" : ""}`}>
         <FiGrid className="icon-nav3" /> Monitoring</Link>

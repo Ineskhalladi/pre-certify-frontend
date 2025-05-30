@@ -86,6 +86,21 @@ const pieData = [
   { name: 'Non conforme', value: conformityStats.NC, color: '#9ea19e' },
 ];
 
+const [selectedDomaine, setSelectedDomaine] = useState("");
+const [filteredData, setFilteredData] = useState([]);
+
+const handleSearch = () => {
+  const results = data.filter((item) => {
+    const domaineMatch = selectedDomaine ? item.domaine === selectedDomaine : true;
+    return domaineMatch ;
+  });
+  setFilteredData(results);
+};
+
+const handleReset = () => {
+  setSelectedDomaine("");
+  setFilteredData(data); // ترجع الكل
+};
 
 
 
@@ -112,18 +127,21 @@ const pieData = [
 
           <div className="base-rech">
             <div className="filters-S">
-              <div className="form-group">
-                <label>Domaine</label>
-                <select>
-                  <option value="">--Choisir un domaine--</option>
-            
-                </select>
-              </div>
+           <div className="form-group">
+      <label>Domaine</label>
+     <select value={selectedDomaine} onChange={(e) => setSelectedDomaine(e.target.value)}>
+    <option value="">--Choisir un domaine--</option>
+    {domaines.map((domaine, index) => (
+      <option key={index} value={domaine}>{domaine}</option>
+    ))}
+  </select>
+  
+    </div>
 
               {/* Buttons sous l'input directement */}
               <div className="button-group-S">
-                <button className="btn-search"><FaSearch /> Recherche</button>
-                <button className="btn-cancel"><FaSyncAlt /> Annuler</button>
+                 <button className="btn-search" onClick={handleSearch}><FaSearch /> Recherche</button>
+                    <button className="btn-cancel" onClick={handleReset}><FaSyncAlt /> Annuler</button>
               </div>
             </div>
           </div>

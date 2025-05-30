@@ -54,11 +54,11 @@ const SignIn = () => {
       if (userRole === 'super_admin') {
         navigate("/dashboards");
       } else if (userRole === 'user_entreprise') {
-        navigate("/dashboarde");
+        navigate("/dashboardEn");
       } else if (userRole === 'auditeur') {
         navigate("/choixentr");
       } else if (userRole === 'responsable') {
-        navigate("/messervices");
+        navigate("/dashboardR");
       } else {
         setError("Rôle non autorisé");
       }

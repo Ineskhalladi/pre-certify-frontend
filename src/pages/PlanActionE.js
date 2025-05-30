@@ -7,58 +7,83 @@ import { ImFilePdf } from "react-icons/im";
 import "../pages/PlanActionE.css"
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
+import { BiEdit } from "react-icons/bi";
+import { Link,useNavigate } from "react-router-dom";
 
 const PlanActionE = () => {
+  const navigate = useNavigate();
 
-  const [data, setData] = useState([
-    {
-      id: 1,
-      action: "",
-      responsbale: "",
-      efficacité:"",
-    statusAvant: "",
-    },
- 
-  ]);
-  
+const [searchTerm, setSearchTerm] = useState("");
+const [domaines, setDomaines] = useState([]);
+const [natures, setNatures] = useState([]);
+const [data, setData] = useState([]);
+const [exigences, setExigences] = useState([]);
+
+// جلب جميع البيانات الخاصة بمحتوى mesEx
+useEffect(() => {
+ const fetchMesEx = async () => {
+  try {
+    const response = await axios.get("http://localhost:5000/api/auth/allmesEx");
+    const allData = response.data;
+
+    // فلترة اللي عندهم conformite = "NC"
+    const ncData = allData.filter((item) => item.conformite === "NC");
+
+    const uniqueDomaines = [...new Set(ncData.map((item) => item.domaine).filter(Boolean))];
+    const uniqueNatures = [...new Set(ncData.map((item) => item.nature).filter(Boolean))];
+
+    setDomaines(uniqueDomaines);
+    setNatures(uniqueNatures);
+    setData(ncData); // نخزنو فقط البيانات اللي عندها NC
+    setFilteredData(ncData);
+  } catch (error) {
+    console.error("❌ Erreur lors de la récupération des données", error);
+  }
+};
+
+ // on initialise le tableau filtré avec toutes les données
+
+  fetchMesEx();
+}, []);
+
+const [selectedTexteId, setSelectedTexteId] = useState(null);
+const [selectedDomaine, setSelectedDomaine] = useState("");
+const [selectedNature, setSelectedNature] = useState("");
+const [filteredData, setFilteredData] = useState([]);
+
+const handleSearch = () => {
+  const results = data.filter((item) => {
+    const domaineMatch = selectedDomaine ? item.domaine === selectedDomaine : true;
+    const natureMatch = selectedNature ? item.nature === selectedNature : true;
+    return domaineMatch && natureMatch;
+  });
+  setFilteredData(results);
+};
+
+const handleReset = () => {
+  setSelectedDomaine("");
+  setSelectedNature("");
+  setFilteredData(data); // ترجع الكل
+};
 
 
-  const handleStatusChange = (id, newStatus, champ) => {
-    setData(prevData =>
-      prevData.map(row =>
-        row.id === id ? { ...row, [champ]: newStatus } : row
-      )
-    );
-  };
-  
-  const [domaines, setDomaines] = useState([]);
-    const [selectedDomaine, setSelectedDomaine] = useState("");
-    const [natures, setNatures] = useState([]);
-    
-  
-    useEffect(() => {
-      const token = localStorage.getItem("token");
-    
-      if (token) {
-        try {
-          const decoded = jwtDecode(token);
-          const userId = decoded.id; // ou decoded._id selon ton backend
-    
-          axios
-            .get(`http://localhost:5000/api/auth/user/${userId}/domaines`)
-            .then((res) => {
-              setDomaines(res.data);
-            })
-            .catch((err) => {
-              console.error("Erreur lors du chargement des domaines :", err);
-            });
-        } catch (error) {
-          console.error("Erreur lors du décodage du token :", error);
-        }
-      } else {
-        console.warn("Token non trouvé dans le localStorage");
-      }
-    }, []);
+// جلب جميع المتطلبات الأخرى (autreEx)
+useEffect(() => {
+ const fetchExigences = async () => {
+  try {
+    const response = await axios.get("http://localhost:5000/api/auth/allautreEx");
+    const allExigences = response.data.data;
+
+    const ncExigences = allExigences.filter((item) => item.statut === "NC");
+
+    setExigences(ncExigences);         // إذا تستعملها في مكان آخر
+  } catch (error) {
+    console.error("❌ Erreur lors de la récupération des exigences :", error);
+  }
+};
+
+  fetchExigences();
+}, []);
     
    
     
@@ -76,57 +101,41 @@ const PlanActionE = () => {
       </div>
     </div>
   
-    <div className="titre-multicritere">
-      <FaSearch className="icon-search" />
-      <h2>Recherche Multicritères</h2>
-    </div>
-  
-  <div className="base-rech">
-    <div className="filters">
-      <div className="form-group">
-        <label>Domaine</label>
-        <select value={selectedDomaine} onChange={(e) => {
-    const selectedId = e.target.value;
-    setSelectedDomaine(selectedId);
-  
-    // Trouve le domaine sélectionné
-    const domaineChoisi = domaines.find(d => d._id === selectedId);
-    // Mets à jour la liste des natures
-    setNatures(domaineChoisi ? domaineChoisi.nature : []);
-  
-  }}>
+  <div className="titre-multicritere">
+        <FaSearch className="icon-search" />
+        <h2>Recherche Multicritères</h2>
+      </div>
+      <div className="base-rech">
+  <div className="filters">
+    <div className="form-group">
+      <label>Domaine</label>
+     <select value={selectedDomaine} onChange={(e) => setSelectedDomaine(e.target.value)}>
     <option value="">--Choisir un domaine--</option>
-    {domaines.map((domaine) => (
-      <option key={domaine._id} value={domaine._id}>
-        {domaine.nom}
-      </option>
+    {domaines.map((domaine, index) => (
+      <option key={index} value={domaine}>{domaine}</option>
     ))}
   </select>
-      </div>
-      
-      
-      <div className="form-group">
-        <label>Nature</label>
-        <select>
-    <option>--Choisir une nature --</option>
-    {natures.map((nature, idx) => (
-      <option key={idx} value={nature}>{nature}</option>
-    ))}
-  </select>
-      </div>
-     
-      <div className="form-group">
-        <label>Mot clé</label>
-        <input type="text" placeholder="" />
-      </div>
+  
     </div>
   
-    <div className="button-group">
-      <button className="btn-search"><FaSearch /> Recherche</button>
-      <button className="btn-cancel"><FaSyncAlt /> Annuler</button>
-    </div>
+    <div className="form-group">
+      <label>Nature</label>
+      <select value={selectedNature} onChange={(e) => setSelectedNature(e.target.value)}>
+    <option value="">--Choisir une nature--</option>
+    {natures.map((nature, index) => (
+      <option key={index} value={nature}>{nature}</option>
+    ))}
+  </select>
     </div>
   </div>
+  
+    
+     <div className="button-group">
+    <button className="btn-search" onClick={handleSearch}><FaSearch /> Recherche</button>
+    <button className="btn-cancel" onClick={handleReset}><FaSyncAlt /> Annuler</button>
+  </div>
+      </div>
+    </div>
 
         <div className="text-list-container">
         <div className="text-list-header">
@@ -142,64 +151,93 @@ const PlanActionE = () => {
 
 </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Action</th>
-            <th>Responsable</th>
-            <th>Référence</th>
-            <th>Echéance</th>
-            <th>Avancement</th>
-            <th>Efficacité</th>
-            <th>Conformité</th>
-            <th>Editer</th>
-          
-        
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((row) => (
-            <tr key={row.id}>
-              <td>{row.action}</td>
-              <td>{row.responsbale}</td>
-              <td>
-                {row.efficacité.split("\n").map((line, idx) => (
-                  <div key={idx}>{line}</div>
-                ))}
-              </td>
-              <td></td>
-              <td></td>
-              <td></td>
-
-              <td>
-  <div className="Status-container">
-  <div className={`status-label status-${row.statusAvant?.toLowerCase()}`}>
-  {row.statusAvant}
-</div>
-
-    <div className="menu-Status">
-    {["C", "AV", "NC"].map((option) => (
-  <div
-    key={option}
-    className={`option-Status status-${option.toLowerCase()}`}
-    onClick={() => handleStatusChange(row.id, option, "statusAvant")}
-  >
-    {option}
-  </div>
-))}
-
     </div>
+ <table>
+  <thead>
+    <tr>
+      <th>Référence</th>
+      <th>Av/C/NC</th>
+      <th>Exigences</th>
+      <th>Av/C/NC</th>
+      <th>Editer</th>
+    <th>Action</th>
+    <th>Responsable</th>
+    <th>Echeance</th>
+    <th>Validation</th>
+    <th>EditerAction</th>
+    </tr>
+  </thead>
+<tbody>
+  {filteredData.map((texte, index) => {
+    const exigenceAssociee = exigences.find(
+      (item) =>
+        item.texteId &&
+        item.texteId._id?.toString() === texte._id.toString()
+    );
+
+    const hasAction =
+      exigenceAssociee &&
+      (exigenceAssociee.action ||
+        exigenceAssociee.responsable ||
+        exigenceAssociee.echeance ||
+        exigenceAssociee.validation);
+
+    return (
+      <tr key={index}>
+        <td>{texte.reference}</td>
+
+        <td>
+          <div className="Status-container">
+            <div className={`status-label status-${texte.conformite?.toLowerCase()}`}>
+              {texte.conformite || ""}
+            </div>
+          </div>
+        </td>
+
+        <td>
+          {exigenceAssociee && (
+            <div className="exigence-texte">{exigenceAssociee.texte}</div>
+          )}
+        </td>
+
+        <td>
+          {exigenceAssociee && (
+            <div className="Status-container">
+              <div className={`status-label status-${exigenceAssociee.statut?.toLowerCase()}`}>
+                {exigenceAssociee.statut}
+              </div>
+            </div>
+          )}
+        </td>
+
+        <td>
+          <BiEdit onClick={() => navigate("/ajoutaction")} />
+        </td>
+
+        {/* 🔽 Ici on affiche soit les 5 colonnes normalement, soit une seule avec colSpan=5 */}
+        {hasAction ? (
+          <>
+            <td>{exigenceAssociee?.action}</td>
+            <td>{exigenceAssociee?.responsable}</td>
+            <td>{exigenceAssociee?.echeance}</td>
+            <td>{exigenceAssociee?.validation}</td>
+            <td>
+              <BiEdit onClick={() => navigate(`/editaction/${exigenceAssociee._id}`)} />
+            </td>
+          </>
+        ) : (
+          <td colSpan="5" style={{ fontStyle: 'italic', color: 'gray', textAlign: 'center' }}>
+            Aucune action pour cette exigence
+          </td>
+        )}
+      </tr>
+    );
+  })}
+</tbody>
+
+
+</table>
   </div>
-</td>
-              <td></td>
-              </tr>
-          ))}
-        </tbody>
-      </table>
-  
-    </div>
-    
-      </div>
     <p className="footer-base">Copyright © 2025 PreCertify. Tous les droits réservés.</p>
     </>
   );

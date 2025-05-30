@@ -61,7 +61,7 @@ import Alimentation from "./pages/Alimentation.js";
 import Materiaux from "./pages/Materiaux.js";
 import Batiment from "./pages/Batiment.js";
 import Ingenierie from "./pages/Ingenierie.js";
-import DashboardE from "./pages/DashboardE.js";
+import DashboardEn from "./pages/DashboardEn.js";
 import TexteAppEn from "./pages/TexteAppEn.js";
 import ConformeEn from "./pages/ConformeEn.js";
 import PlanActionEn from "./pages/PlanActionEn.js";
@@ -180,7 +180,7 @@ const App = () => {
         <Route path="/materiaux" element={<Materiaux/>} />
         <Route path="/batiment" element={<Batiment/>} />
         <Route path="/ingenierie" element={<Ingenierie/>} />
-        <Route path="/dashboardEn" element={<DashboardE />} />
+        <Route path="/dashboardEn" element={<DashboardEn />} />
         <Route path="/texteappEn" element={<TexteAppEn />} />
         <Route path="/conformeEn" element={<ConformeEn />} />
         <Route path="/planactionEn" element={<PlanActionEn />} />

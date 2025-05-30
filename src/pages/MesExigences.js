@@ -27,6 +27,8 @@ useEffect(() => {
       setDomaines(uniqueDomaines);
       setNatures(uniqueNatures);
  setData(allData);
+    setFilteredData(allData);
+
     } catch (error) {
       console.error("Erreur lors de la récupération des données", error);
     }
@@ -184,6 +186,24 @@ const handleSaveEX = async () => {
   }, []);
   
 const [selectedTexteId, setSelectedTexteId] = useState(null);
+const [selectedDomaine, setSelectedDomaine] = useState("");
+const [selectedNature, setSelectedNature] = useState("");
+const [filteredData, setFilteredData] = useState([]);
+
+const handleSearch = () => {
+  const results = data.filter((item) => {
+    const domaineMatch = selectedDomaine ? item.domaine === selectedDomaine : true;
+    const natureMatch = selectedNature ? item.nature === selectedNature : true;
+    return domaineMatch && natureMatch;
+  });
+  setFilteredData(results);
+};
+
+const handleReset = () => {
+  setSelectedDomaine("");
+  setSelectedNature("");
+  setFilteredData(data); // ترجع الكل
+};
 
   return (
     <>
@@ -205,31 +225,33 @@ const [selectedTexteId, setSelectedTexteId] = useState(null);
   </div>
 
 <div className="base-rech">
-  <div className="filters">
-    <div className="form-group">
-      <label>Domaine</label>
-      <select >
+<div className="filters">
+  <div className="form-group">
+    <label>Domaine</label>
+   <select value={selectedDomaine} onChange={(e) => setSelectedDomaine(e.target.value)}>
   <option value="">--Choisir un domaine--</option>
- 
+  {domaines.map((domaine, index) => (
+    <option key={index} value={domaine}>{domaine}</option>
+  ))}
 </select>
-    </div>
-    
-    
-    <div className="form-group">
-      <label>Nature</label>
-      <select>
-  <option>--Choisir une nature --</option>
- 
-</select>
-    </div>
-   
-    
+
   </div>
 
-  <div className="button-group">
-    <button className="btn-search"><FaSearch /> Recherche</button>
-    <button className="btn-cancel"><FaSyncAlt /> Annuler</button>
+  <div className="form-group">
+    <label>Nature</label>
+    <select value={selectedNature} onChange={(e) => setSelectedNature(e.target.value)}>
+  <option value="">--Choisir une nature--</option>
+  {natures.map((nature, index) => (
+    <option key={index} value={nature}>{nature}</option>
+  ))}
+</select>
   </div>
+</div>
+
+   <div className="button-group">
+  <button className="btn-search" onClick={handleSearch}><FaSearch /> Recherche</button>
+  <button className="btn-cancel" onClick={handleReset}><FaSyncAlt /> Annuler</button>
+</div>
   </div>
 </div>
  <div className="text-list-container">
@@ -397,7 +419,7 @@ const [selectedTexteId, setSelectedTexteId] = useState(null);
     </tr>
   </thead>
 <tbody>
-  {data.map((texte, index) => {
+ {filteredData.map((texte, index) => {
     // تعديل هذا الجزء لاستخدام texteId بشكل صحيح
 const exigenceAssociee = exigences.find(
   (item) =>

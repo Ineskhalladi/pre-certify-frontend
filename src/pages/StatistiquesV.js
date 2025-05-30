@@ -82,7 +82,54 @@ const textesAvecConformite = textesApplicablesDetail.map((texte) => {
 });
 
 console.log("✅ Textes avec conformité associée :", textesAvecConformite);
-setCheckedTextes(textesAvecConformite);
+const textesAvecInfos = await Promise.all(
+textesAvecConformite.map(async (texte) => {
+    const secteurId = texte.secteur; // ✅ صحّحت الاسم
+    const domaineId = texte.domaine;
+    const themeId = texte.theme;
+    const sousThemeId = texte.sousTheme;
+    const natureNomDirect = texte.nature; // على ما يبدو nature فيها الاسم مش الـ id
+
+    let domaineNom = "";
+    let themeNom = "";
+    let sousThemeNom = "";
+    let natureNom = natureNomDirect || "";
+
+    try {
+      if (domaineId && secteurId) {
+        const domainesRes = await axios.get(`http://localhost:5000/api/auth/domaines/bySecteur/${secteurId}`);
+        const domaine = domainesRes.data.find(d => d._id === domaineId);
+        domaineNom = domaine?.nom || "Domaine inconnu";
+      }
+
+      if (themeId && domaineId) {
+        const themesRes = await axios.get(`http://localhost:5000/api/auth/themes/byDomaine/${domaineId}`);
+        const theme = themesRes.data.find(t => t._id === themeId);
+        themeNom = theme?.nom || "Thème inconnu";
+      }
+
+      if (sousThemeId && themeId) {
+        const sousThemesRes = await axios.get(`http://localhost:5000/api/auth/sousthemes/byTheme/${themeId}`);
+        const sousTheme = sousThemesRes.data.find(s => s._id === sousThemeId);
+        sousThemeNom = sousTheme?.nom || "Sous-thème inconnu";
+      }
+
+      // Pas besoin d'appeler l'API pour nature si texte.nature déjà contient le nom
+    } catch (error) {
+      console.error("❌ Erreur récupération des infos :", error);
+    }
+
+    return {
+      ...texte,
+      domaineNom,
+      themeNom,
+      sousThemeNom,
+      natureNom,
+    };
+  })
+);
+
+setCheckedTextes(textesAvecInfos);
 setDataTextes(getConformiteData(textesAvecConformite, "conformite"));
 
    // 🟡 1. Filtrer les textes cochés et applicables de type exigence
@@ -172,7 +219,7 @@ const fetchActions = async () => {
     };
 
     actions.forEach((action) => {
-      const val = action.validation; // Doit être un nombre entre 0 et 100
+      const val = action; // Doit être un nombre entre 0 et 100
       if (val === 100) categories["100"] += 1;
       else if (val >= 75) categories["75"] += 1;
       else if (val >= 50) categories["50"] += 1;
@@ -195,26 +242,35 @@ const fetchActions = async () => {
   }
 };
 
+const countValidatedActions = actions.filter(a => a.validation === true).length;
 
-  const dataR = [
-    {
-      name: 'responsable1',
-      '0%': 8,
-      '25%': 1,
-      '50%': 1,
-      '75%': 1,
-      '100%': 35,
-    },
+const dataValidation = [
+  { name: "responsable", value: countValidatedActions },
+];
+
+ const [selectedDomaine, setSelectedDomaine] = useState("");
+   const [filteredTextes, setFilteredTextes] = useState([]); // tableau filtré
    
-  ];
-  const COLORS = {
-    '0%': '#2e4731',
-    '25%': '#88a373',
-    '50%': '#f7e393',
-    '75%': '#56c16f',
-    '100%': '#d9a500',
-  };
+   const handleSearch = () => {
+     const result = checkedTextes.filter(t => {
+       return (
+         (selectedDomaine === "" || t.domaineNom === selectedDomaine) 
 
+       );
+     });
+   
+     setFilteredTextes(result);
+   };
+   
+   const handleReset = () => {
+     setSelectedDomaine("");
+  
+     setFilteredTextes(checkedTextes); // تعاود تعرض الكل
+   };
+   
+   useEffect(() => {
+     setFilteredTextes(checkedTextes); // لما يجي texte جديد
+   }, [checkedTextes]);
   
 
   return (
@@ -240,17 +296,25 @@ const fetchActions = async () => {
 
           <div className="base-rech">
             <div className="filters-S">
-              <div className="form-group">
-                <label>Domaine</label>
-                <select>
-                  <option value="">--Choisir un domaine--</option>
-                </select>
-              </div>
+              {/* Domaine */}
+  <div className="form-group">
+    <label>Domaine</label>
+    <select value={selectedDomaine} onChange={(e) => setSelectedDomaine(e.target.value)}>
+  <option value="">--Choisir un domaine--</option>
+  {[...new Set(checkedTextes.map(t => t.domaineNom))].filter(Boolean).map((nom, index) => (
+    <option key={index} value={nom}>{nom}</option>
+  ))}
+</select>
+  </div>
 
               {/* Buttons sous l'input directement */}
               <div className="button-group-S">
-                <button className="btn-search"><FaSearch /> Recherche</button>
-                <button className="btn-cancel"><FaSyncAlt /> Annuler</button>
+                <button className="btn-search" onClick={handleSearch}>
+                  <FaSearch /> Recherche
+                </button>
+                <button className="btn-cancel" onClick={handleReset}>
+                  <FaSyncAlt /> Annuler
+                </button>
               </div>
             </div>
           </div>
@@ -341,15 +405,15 @@ const fetchActions = async () => {
       <div className="etat-graphS">
         <h3>Tous les domaines</h3>
         <ResponsiveContainer width="80%" height={300}>
-          <BarChart data={dataR} barCategoryGap="0%">
+          <BarChart data={dataValidation} barCategoryGap="0%">
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
             <Legend verticalAlign="top" align="center" iconType="square" />
-            {Object.keys(COLORS).map((key) => (
-              <Bar key={key} dataKey={key} fill={COLORS[key]} />
-            ))}
+       
+      <Bar dataKey="value" fill="#88a373" />
+          
           </BarChart>
         </ResponsiveContainer>
       </div>

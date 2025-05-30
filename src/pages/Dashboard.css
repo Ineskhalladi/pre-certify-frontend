@@ -128,8 +128,8 @@
   position: absolute;
   font-size: 26px;
   font-weight: bold;
-  top: 65%;
-  left: 50%;
+  top: 56%;
+  left: 50.5%;
   transform: translate(-50%, -50%);
 }
 .bar-chart-container:hover,.pie-chart-container:hover,

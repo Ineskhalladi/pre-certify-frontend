@@ -92,8 +92,7 @@ const NavBar3 = () => {
       {isProfileOpen && (
         <div className="dropdown-menu3">
             <div className="dropdown-item3">
-    <BiUser className="icon-profiles" />
-    <Link to="/compteS" onClick={() => setIsProfileOpen(false)}>Mon compte</Link>
+  
   </div>
  
           <div className="dropdown-item3 logout"

@@ -9,41 +9,11 @@ import {jwtDecode} from "jwt-decode";
 
 const ConformeE = () => {
 
-
-  const [checkedTextes, setCheckedTextes] = useState([]);
-  const [textesExigence, setTextesExigence] = useState([]);
-
-
-
-  // 1. Pour les domaines
-const [domainesParSecteur, setDomainesParSecteur] = useState({});
-const fetchDomainesBySecteur = async (secteurId) => {
-  if (domainesParSecteur[secteurId]) return;
-  try {
-    const res = await axios.get(`http://localhost:5000/api/auth/domaines/bySecteur/${secteurId}`);
-    setDomainesParSecteur(prev => ({
-      ...prev,
-      [secteurId]: res.data,
-    }));
-  } catch (error) {
-    console.error("Erreur chargement domaines du secteur :", error);
-  }
-};
-const Comparedomaine = (domaineId, secteurId) => {
-  const domaines = domainesParSecteur[secteurId];
-  if (!domaines) {
-    fetchDomainesBySecteur(secteurId);
-    return "Chargement domaine...";
-  }
-  const domaine = domaines.find((d) => d._id === domaineId);
-  return domaine ? domaine.nom : "Domaine inconnu";
-};
 const [searchTerm, setSearchTerm] = useState("");
 const [domaines, setDomaines] = useState([]);
 const [natures, setNatures] = useState([]);
 const [data, setData] = useState([]);
 const [exigences, setExigences] = useState([]);
-const [selectedTexteId, setSelectedTexteId] = useState(null);
 
 // جلب جميع البيانات الخاصة بمحتوى mesEx
 useEffect(() => {
@@ -59,13 +29,35 @@ useEffect(() => {
       setDomaines(uniqueDomaines);
       setNatures(uniqueNatures);
       setData(allData);
+      setFilteredData(allData);
     } catch (error) {
       console.error("❌ Erreur lors de la récupération des données", error);
     }
   };
+ // on initialise le tableau filtré avec toutes les données
 
   fetchMesEx();
 }, []);
+
+const [selectedTexteId, setSelectedTexteId] = useState(null);
+const [selectedDomaine, setSelectedDomaine] = useState("");
+const [selectedNature, setSelectedNature] = useState("");
+const [filteredData, setFilteredData] = useState([]);
+
+const handleSearch = () => {
+  const results = data.filter((item) => {
+    const domaineMatch = selectedDomaine ? item.domaine === selectedDomaine : true;
+    const natureMatch = selectedNature ? item.nature === selectedNature : true;
+    return domaineMatch && natureMatch;
+  });
+  setFilteredData(results);
+};
+
+const handleReset = () => {
+  setSelectedDomaine("");
+  setSelectedNature("");
+  setFilteredData(data); // ترجع الكل
+};
 
 // جلب جميع المتطلبات الأخرى (autreEx)
 useEffect(() => {
@@ -80,6 +72,46 @@ useEffect(() => {
 
   fetchExigences();
 }, []);
+
+const handleUpdateTexteField = async (index, field, value) => {
+  const updated = [...filteredData];
+  updated[index][field] = value;
+  setFilteredData(updated);
+
+  const updatedTexte = updated[index];
+
+  try {
+    await axios.put(`http://localhost:5000/api/auth/updatemesEx/${updatedTexte._id}`, {
+      [field]: value,
+    });
+    console.log("✅ Champ mis à jour avec succès");
+  } catch (error) {
+    console.error("❌ Erreur lors de la mise à jour du champ :", error);
+  }
+};
+
+const handleUpdateExigenceStatut = async (texteId, newStatut) => {
+  const updatedExigences = exigences.map((item) => {
+    if (item.texteId?._id === texteId) {
+      return { ...item, statut: newStatut };
+    }
+    return item;
+  });
+  setExigences(updatedExigences);
+
+  const exigenceToUpdate = exigences.find(item => item.texteId?._id === texteId);
+
+  if (exigenceToUpdate && exigenceToUpdate._id) {
+    try {
+      await axios.put(`http://localhost:5000/api/auth/upadateautreEx/${exigenceToUpdate._id}`, {
+        statut: newStatut,
+      });
+      console.log("✅ Statut mis à jour avec succès");
+    } catch (error) {
+      console.error("❌ Erreur lors de la mise à jour du statut :", error);
+    }
+  }
+};
 
 
     return (
@@ -100,31 +132,34 @@ useEffect(() => {
       <h2>Recherche Multicritères</h2>
     </div>
     <div className="base-rech">
-  <div className="filters">
-    <div className="form-group">
-      <label>Domaine</label>
-      <select >
+<div className="filters">
+  <div className="form-group">
+    <label>Domaine</label>
+   <select value={selectedDomaine} onChange={(e) => setSelectedDomaine(e.target.value)}>
   <option value="">--Choisir un domaine--</option>
- 
+  {domaines.map((domaine, index) => (
+    <option key={index} value={domaine}>{domaine}</option>
+  ))}
 </select>
-    </div>
-    
-    
-    <div className="form-group">
-      <label>Nature</label>
-      <select>
-  <option>--Choisir une nature --</option>
- 
-</select>
-    </div>
-   
-    
+
   </div>
+
+  <div className="form-group">
+    <label>Nature</label>
+    <select value={selectedNature} onChange={(e) => setSelectedNature(e.target.value)}>
+  <option value="">--Choisir une nature--</option>
+  {natures.map((nature, index) => (
+    <option key={index} value={nature}>{nature}</option>
+  ))}
+</select>
+  </div>
+</div>
+
   
-    <div className="button-group">
-      <button className="btn-search"><FaSearch /> Recherche</button>
-      <button className="btn-cancel"><FaSyncAlt /> Annuler</button>
-    </div>
+   <div className="button-group">
+  <button className="btn-search" onClick={handleSearch}><FaSearch /> Recherche</button>
+  <button className="btn-cancel" onClick={handleReset}><FaSyncAlt /> Annuler</button>
+</div>
     </div>
   </div>
 
@@ -156,7 +191,7 @@ useEffect(() => {
     </tr>
   </thead>
 <tbody>
-  {data.map((texte, index) => {
+ {filteredData.map((texte, index) => {
     const exigenceAssociee = exigences.find(
       (item) =>
         item.texteId &&
@@ -168,39 +203,68 @@ useEffect(() => {
         <td>{texte.domaine}</td>
         <td>{texte.nature}</td>
         <td>{texte.reference}</td>
-        <td>
+       <td>
           <div className="APP-container">
             <div className={`app-status ${texte.applicabilite?.toLowerCase()}`}>
               {texte.applicabilite || ""}
             </div>
-          </div>
-        </td>
-        <td>
-          <div className="Status-container">
-            <div className={`status-label status-${texte.conformite?.toLowerCase()}`}>
-              {texte.conformite || ""}
+            <div className="menu-APP">
+              {["APP", "N APP", "AV"].map((option) => (
+                <div
+                  key={option}
+                  className={`option-APP ${option.toLowerCase().replace(" ", "-")}`}
+                >
+                  {option}
+                </div>
+              ))}
             </div>
           </div>
         </td>
+  <td>
+  <div className="Status-container">
+    <div className={`status-label status-${texte.conformite?.toLowerCase()}`}>
+      {texte.conformite || ""}
+    </div>
+    <div className="menu-Status">
+      {["C", "AV", "NC"].map((option) => (
+        <div
+          key={option}
+          className={`option-Status status-${option.toLowerCase()}`}
+          onClick={() => handleUpdateTexteField(index, "conformite", option)}
+        >
+          {option}
+        </div>
+      ))}
+    </div>
+  </div>
+</td>
+
         <td>{texte.texte}</td>
 
         {/* 🟩 Colonne Exigence */}
-        <td>
-          {exigenceAssociee && (
-            <div className="exigence-texte">{exigenceAssociee.texte}</div>
-          )}
-        </td>
+      <td>
+  {exigenceAssociee && (
+    <div className="Status-container">
+      <div className={`status-label status-${exigenceAssociee.statut?.toLowerCase()}`}>
+        {exigenceAssociee.statut}
+      </div>
+      <div className="menu-Status">
+        {["C", "AV", "NC"].map((option) => (
+          <div
+            key={option}
+            className={`option-Status status-${option.toLowerCase()}`}
+            onClick={() =>
+              handleUpdateExigenceStatut(texte._id, option)
+            }
+          >
+            {option}
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+</td>
 
-        {/* 🟩 Colonne Statut de l’exigence */}
-        <td>
-          {exigenceAssociee && (
-            <div className="Status-container">
-              <div className={`status-label status-${exigenceAssociee.statut?.toLowerCase()}`}>
-                {exigenceAssociee.statut}
-              </div>
-            </div>
-          )}
-        </td>
       </tr>
     );
   })}

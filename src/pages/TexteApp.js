@@ -70,7 +70,8 @@ const TexteApp = () => {
         // ✅ Garder seulement les textes avec etat === "APP"
 const textesAPP = textesAvecEtat.filter((texte) => texte.etat === "APP");
 console.log("✅ Textes avec état APP uniquement :", textesAPP);
-  
+    
+
        // ✅ Récupérer la conformité pour chaque texte applicable
     console.log("📡 Envoi de la requête vers l'API avec identre et conformite :");
     const conformitesRes = await axios.get(`http://localhost:5000/api/auth/conforallv/${identre}`);
@@ -89,7 +90,55 @@ const textesAvecConformite = textesAPP.map((texte) => {
 });
 
 console.log("✅ Textes avec conformité associée :", textesAvecConformite);
-setCheckedTextes(textesAvecConformite);
+
+const textesAvecInfos = await Promise.all(
+textesAvecConformite.map(async (texte) => {
+    const secteurId = texte.secteur; // ✅ صحّحت الاسم
+    const domaineId = texte.domaine;
+    const themeId = texte.theme;
+    const sousThemeId = texte.sousTheme;
+    const natureNomDirect = texte.nature; // على ما يبدو nature فيها الاسم مش الـ id
+
+    let domaineNom = "";
+    let themeNom = "";
+    let sousThemeNom = "";
+    let natureNom = natureNomDirect || "";
+
+    try {
+      if (domaineId && secteurId) {
+        const domainesRes = await axios.get(`http://localhost:5000/api/auth/domaines/bySecteur/${secteurId}`);
+        const domaine = domainesRes.data.find(d => d._id === domaineId);
+        domaineNom = domaine?.nom || "Domaine inconnu";
+      }
+
+      if (themeId && domaineId) {
+        const themesRes = await axios.get(`http://localhost:5000/api/auth/themes/byDomaine/${domaineId}`);
+        const theme = themesRes.data.find(t => t._id === themeId);
+        themeNom = theme?.nom || "Thème inconnu";
+      }
+
+      if (sousThemeId && themeId) {
+        const sousThemesRes = await axios.get(`http://localhost:5000/api/auth/sousthemes/byTheme/${themeId}`);
+        const sousTheme = sousThemesRes.data.find(s => s._id === sousThemeId);
+        sousThemeNom = sousTheme?.nom || "Sous-thème inconnu";
+      }
+
+      // Pas besoin d'appeler l'API pour nature si texte.nature déjà contient le nom
+    } catch (error) {
+      console.error("❌ Erreur récupération des infos :", error);
+    }
+
+    return {
+      ...texte,
+      domaineNom,
+      themeNom,
+      sousThemeNom,
+      natureNom,
+    };
+  })
+);
+
+setCheckedTextes(textesAvecInfos);
   
       } catch (err) {
         console.error("❌ Erreur :", err.message);
@@ -203,6 +252,37 @@ const handleTexteC = (id, newStatus) => {
 
   };
   
+  const [selectedDomaine, setSelectedDomaine] = useState("");
+  const [selectedTheme, setSelectedTheme] = useState("");
+  const [selectedSousTheme, setSelectedSousTheme] = useState("");
+  const [selectedNature, setSelectedNature] = useState("");
+  const [filteredTextes, setFilteredTextes] = useState([]); // tableau filtré
+  
+  const handleSearch = () => {
+    const result = checkedTextes.filter(t => {
+      return (
+        (selectedDomaine === "" || t.domaineNom === selectedDomaine) &&
+        (selectedTheme === "" || t.themeNom === selectedTheme) &&
+        (selectedSousTheme === "" || t.sousThemeNom === selectedSousTheme) &&
+        (selectedNature === "" || t.natureNom === selectedNature)
+      );
+    });
+  
+    setFilteredTextes(result);
+  };
+  
+  const handleReset = () => {
+    setSelectedDomaine("");
+    setSelectedTheme("");
+    setSelectedSousTheme("");
+    setSelectedNature("");
+    setFilteredTextes(checkedTextes); // تعاود تعرض الكل
+  };
+  
+  useEffect(() => {
+    setFilteredTextes(checkedTextes); // لما يجي texte جديد
+  }, [checkedTextes]);
+  
   return (
     <>
      
@@ -223,45 +303,68 @@ const handleTexteC = (id, newStatus) => {
   </div>
 
 <div className="base-rech">
-<div className="filters">
-    <div className="form-group">
-      <label>Domaine</label>
-      <select>
-  <option>--Choisir un domaine--</option>
- 
+  <div className="filters">
+  {/* Domaine */}
+  <div className="form-group">
+    <label>Domaine</label>
+    <select value={selectedDomaine} onChange={(e) => setSelectedDomaine(e.target.value)}>
+  <option value="">--Choisir un domaine--</option>
+  {[...new Set(checkedTextes.map(t => t.domaineNom))].filter(Boolean).map((nom, index) => (
+    <option key={index} value={nom}>{nom}</option>
+  ))}
 </select>
-    </div>
-    <div className="form-group">
-      <label>Thème</label>
-      <select >
-  <option>--Choisir un thème--</option>
-
-</select>
-   </div>
-    <div className="form-group">
-      <label>Sous thème</label>
-      <select>
-  <option>--Choisir un sous thème --</option>
-  
-</select> 
-   </div>
-    <div className="form-group">
-      <label>Nature</label>
-      <select>
-  <option>--Choisir une nature --</option>
-
-</select>
-    </div>
-   
-    <div className="form-group">
-      <label>Mot clé</label>
-      <input type="text" placeholder="" />
-    </div>
   </div>
 
+  {/* Thème */}
+  <div className="form-group">
+    <label>Thème</label>
+  <select value={selectedTheme} onChange={(e) => setSelectedTheme(e.target.value)}>
+  <option value="">--Choisir un thème--</option>
+  {[...new Set(checkedTextes.map(t => t.themeNom))]
+    .filter(Boolean)
+    .map((nom, index) => (
+      <option key={index} value={nom}>{nom}</option>
+  ))}
+</select>
+
+  </div>
+
+  {/* Sous Thème */}
+  <div className="form-group">
+    <label>Sous thème</label>
+ <select value={selectedSousTheme} onChange={(e) => setSelectedSousTheme(e.target.value)}>
+  <option value="">--Choisir un sous thème --</option>
+  {[...new Set(checkedTextes.map(t => t.sousThemeNom))]
+    .filter(Boolean)
+    .map((nom, index) => (
+      <option key={index} value={nom}>{nom}</option>
+  ))}
+</select>
+
+  </div>
+
+  {/* Nature */}
+  <div className="form-group">
+    <label>Nature</label>
+  <select value={selectedNature} onChange={(e) => setSelectedNature(e.target.value)}>
+  <option value="">--Choisir une nature --</option>
+  {[...new Set(checkedTextes.map(t => t.natureNom))]
+    .filter(Boolean)
+    .map((nom, index) => (
+      <option key={index} value={nom}>{nom}</option>
+  ))}
+</select>
+
+  </div>
+</div>
+
   <div className="button-group">
-    <button className="btn-search"><FaSearch /> Recherche</button>
-    <button className="btn-cancel"><FaSyncAlt /> Annuler</button>
+<button className="btn-search" onClick={handleSearch}>
+  <FaSearch /> Recherche
+</button>
+<button className="btn-cancel" onClick={handleReset}>
+  <FaSyncAlt /> Annuler
+</button>
   </div>
   </div>
 </div>
@@ -323,7 +426,7 @@ const handleTexteC = (id, newStatus) => {
     </tr>
   </thead>
   <tbody>
-  {Array.isArray(checkedTextes) && checkedTextes.map((texte, index) => (
+{Array.isArray(filteredTextes) && filteredTextes.map((texte, index) => (
     <tr key={texte._id}>
       <td>{index + 1}</td>
       <td>{Comparedomaine(texte.domaine, texte.secteur)|| '---'}</td>
