@@ -97,7 +97,7 @@ const App = () => {
 
  // Pages تظهر فيهم Navbar5 فقط
  const isNavbar5Page = path.startsWith("/editerservice/") || 
- ["/messervices", "/ajouterservice","/planactionr","/dashboardR", 
+ ["/messervices", "/ajouterservice","/planactionR","/dashboardR", 
 "/texteappR","/conformeR","/statistiquesR","/monitoringR" ].includes(path);
 
   // Pages يظهر فيهم Navbar + Footer فقط

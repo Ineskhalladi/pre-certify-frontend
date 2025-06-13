@@ -241,8 +241,11 @@ const handleUpdateExigenceStatut = async (texteId, newStatut) => {
 
         <td>{texte.texte}</td>
 
+<td>{exigenceAssociee?.texte || "—"}</td>
+
         {/* 🟩 Colonne Exigence */}
       <td>
+
   {exigenceAssociee && (
     <div className="Status-container">
       <div className={`status-label status-${exigenceAssociee.statut?.toLowerCase()}`}>

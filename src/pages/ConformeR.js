@@ -78,7 +78,9 @@ const ConformeR = () => {
 
 // 🔁 Associer la conformité à chaque texte applicable
 const textesAvecConformite = textesApplicablesDetail.map((texte) => {
-  const conformiteTexte = conformites.find(c => c.texteId._id?.toString() === texte._id?.toString());
+const conformiteTexte = conformites.find(c =>
+  c.texteId?._id?.toString() === texte._id?.toString()
+);
   console.log("🔗 Conformité trouvée :", conformiteTexte);
   return {
     ...texte,
